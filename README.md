@@ -1,5 +1,7 @@
 norfs
-=============
+=====
+[![Build Status](https://travis-ci.org/Galbar/norfs.svg?branch=master)](https://travis-ci.org/Galbar/norfs)
+[![Coverage Status](https://coveralls.io/repos/github/Galbar/norfs/badge.svg?branch=master)](https://coveralls.io/github/Galbar/norfs?branch=master)
 
 **Nor**malized **f**ile**s**ystem. This library offers a common interface to interact with multiple filesystems,
 local or remote.
