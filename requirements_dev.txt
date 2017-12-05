@@ -1,0 +1,7 @@
+boto3~=1.4.8
+coverage~=4.4.1
+flake8~=3.5.0
+moto~=1.1.25
+mypy~=0.550
+pytest-cov~=2.5.1
+pytest~=3.1.3

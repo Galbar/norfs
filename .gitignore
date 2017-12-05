@@ -1,0 +1,4 @@
+*.pyc
+.coverage
+.cache
+.mypy_cache
