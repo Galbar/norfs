@@ -1,7 +1,7 @@
 norfs
 =============
 
-**Nor**malized **f**ile**s**ystem. This library aims to offer a common interface to interact with multiple filesystems,
+**Nor**malized **f**ile**s**ystem. This library offers a common interface to interact with multiple filesystems,
 local or remote.
 
 Features
