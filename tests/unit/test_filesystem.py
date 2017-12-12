@@ -20,6 +20,7 @@ from norfs.filesystem import (
 from norfs.fs import (
     BaseFileSystem,
     DirListResult,
+    FileSystemOperationError,
     NotAFileError,
     Path,
 )
@@ -86,7 +87,7 @@ class FileSystemObjectTestCase(Generic[T], TestCase):
         self.filesystem.path_exists.assert_called_once_with(self.path)
 
     def test_remove(self) -> None:
-        with self.assertRaises(NotImplementedError):
+        with self.assertRaises(FileSystemOperationError):
             self.sut.remove()
 
     def test_parent(self) -> None:

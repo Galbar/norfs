@@ -30,10 +30,10 @@ class TestNorfs(TestCase):
     initial_config: Dict[str, Any]
 
     def setUp(self) -> None:
-        self.initial_config = norfs._config.copy()
+        self.initial_config = norfs._get_config().copy()
 
     def tearDown(self) -> None:
-        norfs._config = self.initial_config
+        norfs._config = None
         norfs._copy_handler = None
         norfs._local_fs = None
         norfs._s3_fs = None
