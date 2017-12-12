@@ -27,20 +27,15 @@ from .fs.memory import (
 )
 
 
+_config: Dict[str, Any] = None
 _copy_handler: CopyHandler = None
 _local_fs: LocalFileSystem = None
 _s3_fs: S3FileSystem = None
 _memory_fs: MemoryFileSystem = None
 
-_config: Dict[str, Any] = {
-    "s3_client": None,
-    "s3_protocol": "s3",
-    "s3_separator": "/",
-    "memory_separator": "/",
-}
-
 
 def get_copy_handler() -> CopyHandler:
+    """ Returns the global instance of CopyHandler. """
     global _copy_handler
 
     if _copy_handler is None:
@@ -49,9 +44,30 @@ def get_copy_handler() -> CopyHandler:
     return _copy_handler
 
 
-def configure(**kwargs: Any) -> None:
+def _get_config() -> Dict[str, Any]:
     global _config
-    _config.update(kwargs)
+
+    if _config is None:
+        _config = {
+            "s3_client": None,
+            "s3_protocol": "s3",
+            "s3_separator": "/",
+            "memory_separator": "/",
+        }
+
+    return _config
+
+
+def configure(**kwargs: Any) -> None:
+    """ Set the configuration for the library.
+    Accepted keyword values:
+
+    *  `s3_client`: boto3 S3 client instance for S3FileSystem.
+    *  `s3_protocol`: protocol to use for S3FileSystem uri. Defaults to "s3".
+    *  `s3_separator`: directory separator to use for S3FileSystem. Defaults to "/".
+    *  `memory_separator`: directory separator to use for MemoryFileSystem. Defaults to "/".
+    """
+    _get_config().update(kwargs)
 
 
 def _init_local_fs() -> None:
@@ -63,6 +79,7 @@ def _init_local_fs() -> None:
 
 
 def get_local_fs() -> LocalFileSystem:
+    """ Returns the global instance of LocalFileSystem. """
     global _local_fs
 
     if _local_fs is None:
@@ -72,10 +89,12 @@ def get_local_fs() -> LocalFileSystem:
 
 
 def localdir(path: str) -> Directory:
+    """ Return a Directory instance with the given `path` for the LocalFileSystem. """
     return Directory(get_local_fs(), path, get_copy_handler())
 
 
 def localfile(path: str) -> File:
+    """ Return a File instance with the given `path` for the LocalFileSystem. """
     return File(get_local_fs(), path, get_copy_handler())
 
 
@@ -98,6 +117,7 @@ def _init_s3_fs() -> None:
 
 
 def get_s3_fs() -> S3FileSystem:
+    """ Returns the global instance of S3FileSystem. """
     global _s3_fs
 
     if _s3_fs is None:
@@ -113,11 +133,19 @@ def _get_s3_path(path_or_bucket: str, prefix: str=None) -> str:
 
 
 def s3dir(path_or_bucket: str, prefix: str=None) -> Directory:
+    """ Return a Directory instance with the given bucket and path for the S3FileSystem.
+
+    If only one parameter is given the bucket name will be everything up to the first "/".
+    """
     global _config
     return Directory(get_s3_fs(), _get_s3_path(path_or_bucket, prefix), get_copy_handler())
 
 
 def s3file(path_or_bucket: str, prefix: str=None) -> File:
+    """ Return a File instance with the given bucket and path for the S3FileSystem.
+
+    If only one parameter is given the bucket name will be everything up to the first "/".
+    """
     global _config
     return File(get_s3_fs(), _get_s3_path(path_or_bucket, prefix), get_copy_handler())
 
@@ -130,6 +158,7 @@ def _init_memory_fs() -> None:
 
 
 def get_memory_fs() -> MemoryFileSystem:
+    """ Returns the global instance of MemoryFileSystem. """
     global _memory_fs
 
     if _memory_fs is None:
@@ -139,8 +168,10 @@ def get_memory_fs() -> MemoryFileSystem:
 
 
 def memorydir(path: str) -> Directory:
+    """ Return a Directory instance with the given `path` for the MemoryFileSystem. """
     return Directory(get_memory_fs(), path, get_copy_handler())
 
 
 def memoryfile(path: str) -> File:
+    """ Return a File instance with the given `path` for the MemoryFileSystem. """
     return File(get_memory_fs(), path, get_copy_handler())
