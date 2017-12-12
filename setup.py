@@ -1,16 +1,15 @@
 from setuptools import setup, find_packages
-
-VERSION = "1.1.0"
+from version import RELEASE
 
 setup(name="norfs",
-      version=VERSION,
+      version=RELEASE,
       author="Alessio Linares",
       author_email="alessio@alessio.cc",
-      description=("Normalized filesystem. "
-                   "This library offers a common interface to interact with multiple filesystems, local or remote."),
+      description=("Normalized filesystem. This library offers a common interface to interact with multiple "
+                   "filesystems, local or remote."),
       keywords=["filesystem", "boto", "s3", "file", "directory", "norfs"],
       url="https://github.com/Galbar/norfs",
-      download_url="https://github.com/Galbar/norfs/archive/{}.tar.gz".format(VERSION),
+      download_url="https://github.com/Galbar/norfs/archive/{}.tar.gz".format(RELEASE),
       license='MIT',
       classifiers=[
           # How mature is this project? Common values are
