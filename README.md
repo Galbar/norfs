@@ -2,6 +2,11 @@ norfs
 =====
 [![Build Status](https://travis-ci.org/Galbar/norfs.svg?branch=master)](https://travis-ci.org/Galbar/norfs)
 [![Coverage Status](https://coveralls.io/repos/github/Galbar/norfs/badge.svg?branch=master)](https://coveralls.io/github/Galbar/norfs?branch=master)
+[![PyPI](https://img.shields.io/pypi/status/norfs.svg)](https://pypi.python.org/pypi/norfs/)
+[![PyPI](https://img.shields.io/pypi/v/norfs.svg)](https://pypi.python.org/pypi/norfs/)
+[![PyPI](https://img.shields.io/pypi/pyversions/norfs.svg)](https://pypi.python.org/pypi/norfs/)
+[![PyPI](https://img.shields.io/pypi/l/norfs.svg)](https://pypi.python.org/pypi/norfs/)
+[![PyPI](https://img.shields.io/pypi/format/norfs.svg)](https://pypi.python.org/pypi/norfs/)
 
 **Nor**malized **f**ile**s**ystem. This library offers a common interface to interact with multiple filesystems,
 local or remote.
