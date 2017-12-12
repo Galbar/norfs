@@ -2,6 +2,7 @@ norfs
 =====
 [![Build Status](https://travis-ci.org/Galbar/norfs.svg?branch=master)](https://travis-ci.org/Galbar/norfs)
 [![Coverage Status](https://coveralls.io/repos/github/Galbar/norfs/badge.svg?branch=master)](https://coveralls.io/github/Galbar/norfs?branch=master)
+[![Documentation Status](https://readthedocs.org/projects/norfs/badge/?version=latest)](http://norfs.readthedocs.io/en/latest/?badge=latest)
 [![PyPI](https://img.shields.io/pypi/status/norfs.svg)](https://pypi.python.org/pypi/norfs/)
 [![PyPI](https://img.shields.io/pypi/v/norfs.svg)](https://pypi.python.org/pypi/norfs/)
 [![PyPI](https://img.shields.io/pypi/pyversions/norfs.svg)](https://pypi.python.org/pypi/norfs/)
