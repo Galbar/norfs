@@ -23,6 +23,8 @@ from norfs.fs.memory import (
     MemoryFileSystem,
 )
 
+from tests.tools import randstr
+
 
 class TestNorfs(TestCase):
     initial_config: Dict[str, Any]
@@ -71,36 +73,36 @@ class TestNorfs(TestCase):
 
     def test_s3dir(self) -> None:
         s3_client: Any = mock.Mock()
-        norfs.configure(s3_client=s3_client)
+        norfs.configure(s3_client=s3_client, s3_separator=randstr(charset="!@#$%^&*()/"))
 
-        bucket: str = "myBucket"
-        path: str = "my/one/path"
+        bucket: str = randstr()
+        path: str = randstr()
         s3dir: Directory = norfs.s3dir(bucket, path)
 
         expected = f"Directory(fs={norfs.get_s3_fs()}, path={bucket}/{path}, copy_handler={norfs.get_copy_handler()})"
         assert str(s3dir) == expected
 
-        bucket = "myOtherBucket"
-        path = "my/two/path"
-        s3dir = norfs.s3dir(bucket, path)
+        bucket = randstr()
+        path = randstr()
+        s3dir = norfs.s3dir("/".join((bucket, path)))
 
         expected = f"Directory(fs={norfs.get_s3_fs()}, path={bucket}/{path}, copy_handler={norfs.get_copy_handler()})"
         assert str(s3dir) == expected
 
     def test_s3file(self) -> None:
         s3_client: Any = mock.Mock()
-        norfs.configure(s3_client=s3_client)
+        norfs.configure(s3_client=s3_client, s3_separator=randstr(charset="!@#$%^&*()/"))
 
-        bucket: str = "myBucket"
-        path: str = "my/one/path"
+        bucket: str = randstr()
+        path: str = randstr()
         s3file: File = norfs.s3file(bucket, path)
 
         expected = f"File(fs={norfs.get_s3_fs()}, path={bucket}/{path}, copy_handler={norfs.get_copy_handler()})"
         assert str(s3file) == expected
 
-        bucket = "myOtherBucket"
-        path = "my/two/path"
-        s3file = norfs.s3file(bucket, path)
+        bucket = randstr()
+        path = randstr()
+        s3file = norfs.s3file("/".join((bucket, path)))
 
         expected = f"File(fs={norfs.get_s3_fs()}, path={bucket}/{path}, copy_handler={norfs.get_copy_handler()})"
         assert str(s3file) == expected
@@ -111,26 +113,26 @@ class TestNorfs(TestCase):
         assert memfs is norfs.get_memory_fs()
 
     def test_memorydir(self) -> None:
-        path: str = "my/one/path"
+        path: str = randstr()
         memdir: Directory = norfs.memorydir(path)
 
         expected_str = f"Directory(fs={norfs.get_memory_fs()}, path={path}, copy_handler={norfs.get_copy_handler()})"
         assert str(memdir) == expected_str
 
-        path = "my/two/path"
+        path = randstr()
         memdir = norfs.memorydir(path)
 
         expected_str = f"Directory(fs={norfs.get_memory_fs()}, path={path}, copy_handler={norfs.get_copy_handler()})"
         assert str(memdir) == expected_str
 
     def test_memoryfile(self) -> None:
-        path: str = "my/one/path"
+        path: str = randstr()
         memfile: File = norfs.memoryfile(path)
 
         expected_str = f"File(fs={norfs.get_memory_fs()}, path={path}, copy_handler={norfs.get_copy_handler()})"
         assert str(memfile) == expected_str
 
-        path = "my/two/path"
+        path = randstr()
         memfile = norfs.memoryfile(path)
 
         expected_str = f"File(fs={norfs.get_memory_fs()}, path={path}, copy_handler={norfs.get_copy_handler()})"

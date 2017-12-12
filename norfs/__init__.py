@@ -106,14 +106,20 @@ def get_s3_fs() -> S3FileSystem:
     return _s3_fs
 
 
-def s3dir(bucket: str, prefix: str) -> Directory:
-    global _config
-    return Directory(get_s3_fs(), _config["s3_separator"].join((bucket, prefix)), get_copy_handler())
+def _get_s3_path(path_or_bucket: str, prefix: str=None) -> str:
+    if prefix is None:
+        return path_or_bucket
+    return "/".join((path_or_bucket, prefix))
 
 
-def s3file(bucket: str, prefix: str) -> File:
+def s3dir(path_or_bucket: str, prefix: str=None) -> Directory:
     global _config
-    return File(get_s3_fs(), _config["s3_separator"].join((bucket, prefix)), get_copy_handler())
+    return Directory(get_s3_fs(), _get_s3_path(path_or_bucket, prefix), get_copy_handler())
+
+
+def s3file(path_or_bucket: str, prefix: str=None) -> File:
+    global _config
+    return File(get_s3_fs(), _get_s3_path(path_or_bucket, prefix), get_copy_handler())
 
 
 def _init_memory_fs() -> None:
