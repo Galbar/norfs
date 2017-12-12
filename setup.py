@@ -31,4 +31,4 @@ setup(name="norfs",
           'Programming Language :: Python :: 3.6',
       ],
       python_requires='>=3.6',
-      packages=find_packages(exclude=["tests"]))
+      packages=find_packages(exclude=["tests*"]))
