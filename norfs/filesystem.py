@@ -167,7 +167,7 @@ class File(BaseFileSystemObject):
         return self._fs.file_read(self._path)
 
     def write(self, content: bytes) -> None:
-        """ Sets the contents of the File.
+        """ Sets the contents of the File. If the parent directory does not exist it is created.
 
         If it fails to read the file a FileSystemOperationError will be raised.
         """

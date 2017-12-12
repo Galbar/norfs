@@ -3,10 +3,6 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
 norfs
 =====
 
@@ -101,6 +97,13 @@ Extended Example
 
     In [21]: mem_file.read()
     Out[21]: b'contents'
+
+.. toctree::
+   :maxdepth: 1
+   :caption: References:
+
+   first_steps
+   modules
 
 Indices and tables
 ==================
