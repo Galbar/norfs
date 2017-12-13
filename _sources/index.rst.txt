@@ -3,6 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. _index:
+
 norfs
 =====
 
@@ -102,6 +104,7 @@ Extended Example
    :maxdepth: 1
    :caption: References:
 
+   self
    first_steps
    modules
 
