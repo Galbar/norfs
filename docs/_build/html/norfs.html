@@ -71,7 +71,7 @@
 <span id="norfs-filesystem-module"></span><h2>norfs.filesystem module<a class="headerlink" href="#module-norfs.filesystem" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="norfs.filesystem.BaseFileSystemObject">
-<em class="property">class </em><code class="descclassname">norfs.filesystem.</code><code class="descname">BaseFileSystemObject</code><span class="sig-paren">(</span><em>filesystem: norfs.fs.BaseFileSystem</em>, <em>path_str: str</em>, <em>copy_handler: norfs.copy.CopyHandler</em>, <em>*</em>, <em>_path: norfs.fs.Path = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/filesystem.html#BaseFileSystemObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.filesystem.BaseFileSystemObject" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">norfs.filesystem.</code><code class="descname">BaseFileSystemObject</code><span class="sig-paren">(</span><em>filesystem: norfs.fs.BaseFileSystem, path_str: typing.Union[str, NoneType], copy_handler: norfs.copy.CopyHandler, *, _path: typing.Union[norfs.fs.Path, NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/filesystem.html#BaseFileSystemObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.filesystem.BaseFileSystemObject" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <dl class="method">
 <dt id="norfs.filesystem.BaseFileSystemObject.as_dir">
@@ -144,7 +144,7 @@ On failure it raises a FileSystemOperationError</p>
 
 <dl class="class">
 <dt id="norfs.filesystem.Directory">
-<em class="property">class </em><code class="descclassname">norfs.filesystem.</code><code class="descname">Directory</code><span class="sig-paren">(</span><em>filesystem: norfs.fs.BaseFileSystem</em>, <em>path_str: str</em>, <em>copy_handler: norfs.copy.CopyHandler</em>, <em>*</em>, <em>_path: norfs.fs.Path = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/filesystem.html#Directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.filesystem.Directory" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">norfs.filesystem.</code><code class="descname">Directory</code><span class="sig-paren">(</span><em>filesystem: norfs.fs.BaseFileSystem, path_str: typing.Union[str, NoneType], copy_handler: norfs.copy.CopyHandler, *, _path: typing.Union[norfs.fs.Path, NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/filesystem.html#Directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.filesystem.Directory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#norfs.filesystem.BaseFileSystemObject" title="norfs.filesystem.BaseFileSystemObject"><code class="xref py py-class docutils literal"><span class="pre">norfs.filesystem.BaseFileSystemObject</span></code></a></p>
 <dl class="method">
 <dt id="norfs.filesystem.Directory.as_dir">
@@ -188,7 +188,7 @@ On failure it raises a FileSystemOperationError</p>
 
 <dl class="class">
 <dt id="norfs.filesystem.File">
-<em class="property">class </em><code class="descclassname">norfs.filesystem.</code><code class="descname">File</code><span class="sig-paren">(</span><em>filesystem: norfs.fs.BaseFileSystem</em>, <em>path_str: str</em>, <em>copy_handler: norfs.copy.CopyHandler</em>, <em>*</em>, <em>_path: norfs.fs.Path = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/filesystem.html#File"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.filesystem.File" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">norfs.filesystem.</code><code class="descname">File</code><span class="sig-paren">(</span><em>filesystem: norfs.fs.BaseFileSystem, path_str: typing.Union[str, NoneType], copy_handler: norfs.copy.CopyHandler, *, _path: typing.Union[norfs.fs.Path, NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/filesystem.html#File"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.filesystem.File" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#norfs.filesystem.BaseFileSystemObject" title="norfs.filesystem.BaseFileSystemObject"><code class="xref py py-class docutils literal"><span class="pre">norfs.filesystem.BaseFileSystemObject</span></code></a></p>
 <dl class="method">
 <dt id="norfs.filesystem.File.as_file">
@@ -291,14 +291,14 @@ Accepted keyword values:</p>
 
 <dl class="function">
 <dt id="norfs.s3dir">
-<code class="descclassname">norfs.</code><code class="descname">s3dir</code><span class="sig-paren">(</span><em>path_or_bucket: str</em>, <em>prefix: str = None</em><span class="sig-paren">)</span> &#x2192; norfs.filesystem.Directory<a class="reference internal" href="_modules/norfs.html#s3dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.s3dir" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">norfs.</code><code class="descname">s3dir</code><span class="sig-paren">(</span><em>path_or_bucket: str</em>, <em>prefix: typing.Union[str</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; norfs.filesystem.Directory<a class="reference internal" href="_modules/norfs.html#s3dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.s3dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Directory instance with the given bucket and path for the S3FileSystem.</p>
 <p>If only one parameter is given the bucket name will be everything up to the first “/”.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="norfs.s3file">
-<code class="descclassname">norfs.</code><code class="descname">s3file</code><span class="sig-paren">(</span><em>path_or_bucket: str</em>, <em>prefix: str = None</em><span class="sig-paren">)</span> &#x2192; norfs.filesystem.File<a class="reference internal" href="_modules/norfs.html#s3file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.s3file" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">norfs.</code><code class="descname">s3file</code><span class="sig-paren">(</span><em>path_or_bucket: str</em>, <em>prefix: typing.Union[str</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; norfs.filesystem.File<a class="reference internal" href="_modules/norfs.html#s3file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.s3file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a File instance with the given bucket and path for the S3FileSystem.</p>
 <p>If only one parameter is given the bucket name will be everything up to the first “/”.</p>
 </dd></dl>

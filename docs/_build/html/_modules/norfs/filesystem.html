@@ -42,6 +42,7 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">List</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
     <span class="n">cast</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -65,11 +66,14 @@
     <span class="n">_fs</span><span class="p">:</span> <span class="n">BaseFileSystem</span>
     <span class="n">_path</span><span class="p">:</span> <span class="n">Path</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filesystem</span><span class="p">:</span> <span class="n">BaseFileSystem</span><span class="p">,</span> <span class="n">path_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">copy_handler</span><span class="p">:</span> <span class="n">CopyHandler</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
-                 <span class="n">_path</span><span class="p">:</span> <span class="n">Path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filesystem</span><span class="p">:</span> <span class="n">BaseFileSystem</span><span class="p">,</span> <span class="n">path_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">copy_handler</span><span class="p">:</span> <span class="n">CopyHandler</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                 <span class="n">_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Constructor for BaseFileSystemObjects.</span>
+<span class="sd">        One of `path_str` and `_path` **MUST** be present.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_copy_handler</span> <span class="o">=</span> <span class="n">copy_handler</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span> <span class="o">=</span> <span class="n">filesystem</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">_path</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">parse_path</span><span class="p">(</span><span class="n">path_str</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">_path</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">parse_path</span><span class="p">(</span><span class="n">path_str</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
