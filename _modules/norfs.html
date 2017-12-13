@@ -42,6 +42,7 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.copy</span> <span class="k">import</span> <span class="p">(</span>
@@ -68,11 +69,11 @@
 <span class="p">)</span>
 
 
-<span class="n">_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">_copy_handler</span><span class="p">:</span> <span class="n">CopyHandler</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">_local_fs</span><span class="p">:</span> <span class="n">LocalFileSystem</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">_s3_fs</span><span class="p">:</span> <span class="n">S3FileSystem</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">_memory_fs</span><span class="p">:</span> <span class="n">MemoryFileSystem</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">_copy_handler</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CopyHandler</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">_local_fs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LocalFileSystem</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">_s3_fs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">S3FileSystem</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">_memory_fs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MemoryFileSystem</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
 
 <div class="viewcode-block" id="get_copy_handler"><a class="viewcode-back" href="../norfs.html#norfs.get_copy_handler">[docs]</a><span class="k">def</span> <span class="nf">get_copy_handler</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CopyHandler</span><span class="p">:</span>
@@ -111,22 +112,21 @@
     <span class="n">_get_config</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_init_local_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_init_local_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LocalFileSystem</span><span class="p">:</span>
     <span class="k">global</span> <span class="n">_local_fs</span>
 
     <span class="n">_local_fs</span> <span class="o">=</span> <span class="n">LocalFileSystem</span><span class="p">()</span>
 
     <span class="n">get_copy_handler</span><span class="p">()</span><span class="o">.</span><span class="n">set_copy_policy</span><span class="p">(</span><span class="n">_local_fs</span><span class="p">,</span> <span class="n">_local_fs</span><span class="p">,</span> <span class="n">LocalToLocalCopier</span><span class="p">())</span>
 
+    <span class="k">return</span> <span class="n">_local_fs</span>
+
 
 <div class="viewcode-block" id="get_local_fs"><a class="viewcode-back" href="../norfs.html#norfs.get_local_fs">[docs]</a><span class="k">def</span> <span class="nf">get_local_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LocalFileSystem</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Returns the global instance of LocalFileSystem. &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">_local_fs</span>
 
-    <span class="k">if</span> <span class="n">_local_fs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">_init_local_fs</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">_local_fs</span></div>
+    <span class="k">return</span> <span class="n">_local_fs</span> <span class="ow">or</span> <span class="n">_init_local_fs</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="localdir"><a class="viewcode-back" href="../norfs.html#norfs.localdir">[docs]</a><span class="k">def</span> <span class="nf">localdir</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Directory</span><span class="p">:</span>
@@ -139,73 +139,71 @@
     <span class="k">return</span> <span class="n">File</span><span class="p">(</span><span class="n">get_local_fs</span><span class="p">(),</span> <span class="n">path</span><span class="p">,</span> <span class="n">get_copy_handler</span><span class="p">())</span></div>
 
 
-<span class="k">def</span> <span class="nf">_init_s3_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">global</span> <span class="n">_config</span>
+<span class="k">def</span> <span class="nf">_init_s3_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">S3FileSystem</span><span class="p">:</span>
     <span class="k">global</span> <span class="n">_s3_fs</span>
 
-    <span class="k">if</span> <span class="n">_config</span><span class="p">[</span><span class="s2">&quot;s3_client&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_config</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;s3_client&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot initialize S3FileSystem if s3_client is not set.</span><span class="se">\n</span><span class="s2">&quot;</span>
                          <span class="s2">&quot;You can set it using `norfs.configure(s3_client=boto3.client(</span><span class="se">\&quot;</span><span class="s2">s3</span><span class="se">\&quot;</span><span class="s2">))`&quot;</span><span class="p">)</span>
 
-    <span class="n">s3_client</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">_config</span><span class="p">[</span><span class="s2">&quot;s3_client&quot;</span><span class="p">]</span>
+    <span class="n">s3_client</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;s3_client&quot;</span><span class="p">]</span>
 
-    <span class="n">_s3_fs</span> <span class="o">=</span> <span class="n">S3FileSystem</span><span class="p">(</span><span class="n">s3_client</span><span class="p">,</span> <span class="n">uri_protocol</span><span class="o">=</span><span class="n">_config</span><span class="p">[</span><span class="s2">&quot;s3_protocol&quot;</span><span class="p">],</span> <span class="n">separator</span><span class="o">=</span><span class="n">_config</span><span class="p">[</span><span class="s2">&quot;s3_separator&quot;</span><span class="p">])</span>
+    <span class="n">_s3_fs</span> <span class="o">=</span> <span class="n">S3FileSystem</span><span class="p">(</span><span class="n">s3_client</span><span class="p">,</span> <span class="n">uri_protocol</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;s3_protocol&quot;</span><span class="p">],</span> <span class="n">separator</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;s3_separator&quot;</span><span class="p">])</span>
 
     <span class="n">copy_handler</span><span class="p">:</span> <span class="n">CopyHandler</span> <span class="o">=</span> <span class="n">get_copy_handler</span><span class="p">()</span>
     <span class="n">copy_handler</span><span class="o">.</span><span class="n">set_copy_policy</span><span class="p">(</span><span class="n">get_local_fs</span><span class="p">(),</span> <span class="n">_s3_fs</span><span class="p">,</span> <span class="n">LocalToS3Copier</span><span class="p">(</span><span class="n">s3_client</span><span class="p">))</span>
     <span class="n">copy_handler</span><span class="o">.</span><span class="n">set_copy_policy</span><span class="p">(</span><span class="n">_s3_fs</span><span class="p">,</span> <span class="n">get_local_fs</span><span class="p">(),</span> <span class="n">S3ToLocalCopier</span><span class="p">(</span><span class="n">s3_client</span><span class="p">))</span>
     <span class="n">copy_handler</span><span class="o">.</span><span class="n">set_copy_policy</span><span class="p">(</span><span class="n">_s3_fs</span><span class="p">,</span> <span class="n">_s3_fs</span><span class="p">,</span> <span class="n">S3ToS3Copier</span><span class="p">(</span><span class="n">s3_client</span><span class="p">))</span>
 
+    <span class="k">return</span> <span class="n">_s3_fs</span>
+
 
 <div class="viewcode-block" id="get_s3_fs"><a class="viewcode-back" href="../norfs.html#norfs.get_s3_fs">[docs]</a><span class="k">def</span> <span class="nf">get_s3_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">S3FileSystem</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Returns the global instance of S3FileSystem. &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">_s3_fs</span>
 
-    <span class="k">if</span> <span class="n">_s3_fs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">_init_s3_fs</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">_s3_fs</span></div>
+    <span class="k">return</span> <span class="n">_s3_fs</span> <span class="ow">or</span> <span class="n">_init_s3_fs</span><span class="p">()</span></div>
 
 
-<span class="k">def</span> <span class="nf">_get_s3_path</span><span class="p">(</span><span class="n">path_or_bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_get_s3_path</span><span class="p">(</span><span class="n">path_or_bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">path_or_bucket</span>
     <span class="k">return</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">path_or_bucket</span><span class="p">,</span> <span class="n">prefix</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="s3dir"><a class="viewcode-back" href="../norfs.html#norfs.s3dir">[docs]</a><span class="k">def</span> <span class="nf">s3dir</span><span class="p">(</span><span class="n">path_or_bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Directory</span><span class="p">:</span>
+<div class="viewcode-block" id="s3dir"><a class="viewcode-back" href="../norfs.html#norfs.s3dir">[docs]</a><span class="k">def</span> <span class="nf">s3dir</span><span class="p">(</span><span class="n">path_or_bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Directory</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Return a Directory instance with the given bucket and path for the S3FileSystem.</span>
 
 <span class="sd">    If only one parameter is given the bucket name will be everything up to the first &quot;/&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">_config</span>
     <span class="k">return</span> <span class="n">Directory</span><span class="p">(</span><span class="n">get_s3_fs</span><span class="p">(),</span> <span class="n">_get_s3_path</span><span class="p">(</span><span class="n">path_or_bucket</span><span class="p">,</span> <span class="n">prefix</span><span class="p">),</span> <span class="n">get_copy_handler</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="s3file"><a class="viewcode-back" href="../norfs.html#norfs.s3file">[docs]</a><span class="k">def</span> <span class="nf">s3file</span><span class="p">(</span><span class="n">path_or_bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">File</span><span class="p">:</span>
+<div class="viewcode-block" id="s3file"><a class="viewcode-back" href="../norfs.html#norfs.s3file">[docs]</a><span class="k">def</span> <span class="nf">s3file</span><span class="p">(</span><span class="n">path_or_bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">File</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Return a File instance with the given bucket and path for the S3FileSystem.</span>
 
 <span class="sd">    If only one parameter is given the bucket name will be everything up to the first &quot;/&quot;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">_config</span>
     <span class="k">return</span> <span class="n">File</span><span class="p">(</span><span class="n">get_s3_fs</span><span class="p">(),</span> <span class="n">_get_s3_path</span><span class="p">(</span><span class="n">path_or_bucket</span><span class="p">,</span> <span class="n">prefix</span><span class="p">),</span> <span class="n">get_copy_handler</span><span class="p">())</span></div>
 
 
-<span class="k">def</span> <span class="nf">_init_memory_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">global</span> <span class="n">_config</span>
+<span class="k">def</span> <span class="nf">_init_memory_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">MemoryFileSystem</span><span class="p">:</span>
     <span class="k">global</span> <span class="n">_memory_fs</span>
 
-    <span class="n">_memory_fs</span> <span class="o">=</span> <span class="n">MemoryFileSystem</span><span class="p">(</span><span class="n">MemoryDirectory</span><span class="p">(),</span> <span class="n">separator</span><span class="o">=</span><span class="n">_config</span><span class="p">[</span><span class="s2">&quot;memory_separator&quot;</span><span class="p">])</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_config</span><span class="p">()</span>
+
+    <span class="n">_memory_fs</span> <span class="o">=</span> <span class="n">MemoryFileSystem</span><span class="p">(</span><span class="n">MemoryDirectory</span><span class="p">(),</span> <span class="n">separator</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;memory_separator&quot;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">_memory_fs</span>
 
 
 <div class="viewcode-block" id="get_memory_fs"><a class="viewcode-back" href="../norfs.html#norfs.get_memory_fs">[docs]</a><span class="k">def</span> <span class="nf">get_memory_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">MemoryFileSystem</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Returns the global instance of MemoryFileSystem. &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">_memory_fs</span>
 
-    <span class="k">if</span> <span class="n">_memory_fs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">_init_memory_fs</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">_memory_fs</span></div>
+    <span class="k">return</span> <span class="n">_memory_fs</span> <span class="ow">or</span> <span class="n">_init_memory_fs</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="memorydir"><a class="viewcode-back" href="../norfs.html#norfs.memorydir">[docs]</a><span class="k">def</span> <span class="nf">memorydir</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Directory</span><span class="p">:</span>
