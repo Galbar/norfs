@@ -1,8 +1,8 @@
 norfs
 =====
 
-|Build Status| |Coverage Status| |Documentation Status| |PyPI Status|
-|PyPI Version| |PyPI Python| |PyPI License| |PyPI Format|
+|Build Status| |Coverage Status| |PyPI Status| |PyPI Version| |PyPI Python| 
+|PyPI License| |PyPI Format|
 
 **Nor**\ malized **f**\ ile\ **s**\ ystem. This library offers a common
 interface to interact with multiple filesystems, local or remote.
