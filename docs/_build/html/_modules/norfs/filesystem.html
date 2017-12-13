@@ -1,0 +1,403 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>norfs.filesystem &mdash; norfs 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="norfs 1.2.0 documentation" href="../../index.html"/>
+        <link rel="up" title="norfs" href="../norfs.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> norfs
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../first_steps.html">First steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">norfs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">norfs</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../norfs.html">norfs</a> &raquo;</li>
+        
+      <li>norfs.filesystem</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for norfs.filesystem</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">cast</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.fs</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">BaseFileSystem</span><span class="p">,</span>
+    <span class="n">DirListResult</span><span class="p">,</span>
+    <span class="n">FileSystemOperationError</span><span class="p">,</span>
+    <span class="n">NotAFileError</span><span class="p">,</span>
+    <span class="n">Path</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.copy</span> <span class="k">import</span> <span class="n">CopyHandler</span>
+<span class="kn">from</span> <span class="nn">.copy</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">CopyDirectory</span><span class="p">,</span>
+    <span class="n">CopyFile</span><span class="p">,</span>
+    <span class="n">CopyFileSystemObject</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="BaseFileSystemObject"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject">[docs]</a><span class="k">class</span> <span class="nc">BaseFileSystemObject</span><span class="p">:</span>
+    <span class="n">_copy_handler</span><span class="p">:</span> <span class="n">CopyHandler</span>
+    <span class="n">_fs</span><span class="p">:</span> <span class="n">BaseFileSystem</span>
+    <span class="n">_path</span><span class="p">:</span> <span class="n">Path</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filesystem</span><span class="p">:</span> <span class="n">BaseFileSystem</span><span class="p">,</span> <span class="n">path_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">copy_handler</span><span class="p">:</span> <span class="n">CopyHandler</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                 <span class="n">_path</span><span class="p">:</span> <span class="n">Path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_copy_handler</span> <span class="o">=</span> <span class="n">copy_handler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span> <span class="o">=</span> <span class="n">filesystem</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">_path</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">parse_path</span><span class="p">(</span><span class="n">path_str</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; The full, absolute, path of self in the file system. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">path_to_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">uri</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; The URI that points to self in the file system. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">path_to_uri</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; The name of self. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">basename</span>
+
+<div class="viewcode-block" id="BaseFileSystemObject.is_file"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.is_file">[docs]</a>    <span class="k">def</span> <span class="nf">is_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Returns wether self is a File. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="BaseFileSystemObject.is_dir"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.is_dir">[docs]</a>    <span class="k">def</span> <span class="nf">is_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Returns wether self is a Directory. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="BaseFileSystemObject.as_file"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.as_file">[docs]</a>    <span class="k">def</span> <span class="nf">as_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;File&#39;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Returns itself as a File instance or raises a NotAFileError. &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">NotAFileError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseFileSystemObject.as_dir"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.as_dir">[docs]</a>    <span class="k">def</span> <span class="nf">as_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Directory&#39;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Returns itself as a Directory instance or raises a NotADirectoryError. &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseFileSystemObject.exists"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.exists">[docs]</a>    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Returns whether self exists in the file system. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">path_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseFileSystemObject.remove"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Tries to remove self from the file system.</span>
+<span class="sd">        On failure it raises a FileSystemOperationError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">FileSystemOperationError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Cannot remove {str(self)}&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseFileSystemObject.parent"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.parent">[docs]</a>    <span class="k">def</span> <span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Directory&#39;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Return parent Directory of self. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Directory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_handler</span><span class="p">,</span> <span class="n">_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseFileSystemObject.copy"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="s1">&#39;BaseFileSystemObject&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Copy this to `destination`. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_copy_handler</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_copy_object</span><span class="p">(),</span> <span class="n">destination</span><span class="o">.</span><span class="n">_copy_object</span><span class="p">())</span></div>
+
+    <span class="k">def</span> <span class="nf">_copy_object</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CopyFileSystemObject</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CopyFileSystemObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(fs=</span><span class="si">{self._fs}</span><span class="s2">, path=</span><span class="si">{self.path}</span><span class="s2">, copy_handler=</span><span class="si">{self._copy_handler}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="n">other_casted</span><span class="p">:</span> <span class="s1">&#39;BaseFileSystemObject&#39;</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">BaseFileSystemObject</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">==</span> <span class="n">other_casted</span><span class="o">.</span><span class="n">_path</span> <span class="ow">and</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span> <span class="o">==</span> <span class="n">other_casted</span><span class="o">.</span><span class="n">_fs</span> <span class="ow">and</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_copy_handler</span> <span class="o">==</span> <span class="n">other_casted</span><span class="o">.</span><span class="n">_copy_handler</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Directory"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory">[docs]</a><span class="k">class</span> <span class="nc">Directory</span><span class="p">(</span><span class="n">BaseFileSystemObject</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Directory.is_dir"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory.is_dir">[docs]</a>    <span class="k">def</span> <span class="nf">is_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Returns wether self is a Directory. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Directory.as_dir"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory.as_dir">[docs]</a>    <span class="k">def</span> <span class="nf">as_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Directory&#39;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Returns itself as a Directory instance or raises a NotADirectoryError. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Directory.list"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">BaseFileSystemObject</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot; Returns the contents of the Directory in the file system as a list of BaseFileSystemObjects.</span>
+
+<span class="sd">        If the Directory does not exist the list will be empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">contents</span><span class="p">:</span> <span class="n">DirListResult</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">dir_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BaseFileSystemObject</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dir_path</span> <span class="ow">in</span> <span class="n">contents</span><span class="o">.</span><span class="n">dirs</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Directory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_handler</span><span class="p">,</span> <span class="n">_path</span><span class="o">=</span><span class="n">dir_path</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">contents</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_handler</span><span class="p">,</span> <span class="n">_path</span><span class="o">=</span><span class="n">file_path</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">other_path</span> <span class="ow">in</span> <span class="n">contents</span><span class="o">.</span><span class="n">others</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BaseFileSystemObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_handler</span><span class="p">,</span> <span class="n">_path</span><span class="o">=</span><span class="n">other_path</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="Directory.remove"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Tries to remove self from the file system.</span>
+
+<span class="sd">        On failure it raises a FileSystemOperationError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">dir_remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Directory.subdir"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory.subdir">[docs]</a>    <span class="k">def</span> <span class="nf">subdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Directory&#39;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Returns a Directory with its path as being the given path relative to the current Directory. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Directory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_handler</span><span class="p">,</span> <span class="n">_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Directory.file"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory.file">[docs]</a>    <span class="k">def</span> <span class="nf">file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;File&#39;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Returns a File with its path as being the given `path` relative to the current Directory. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_handler</span><span class="p">,</span> <span class="n">_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">_copy_object</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CopyFileSystemObject</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CopyDirectory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="File"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.File">[docs]</a><span class="k">class</span> <span class="nc">File</span><span class="p">(</span><span class="n">BaseFileSystemObject</span><span class="p">):</span>
+
+<div class="viewcode-block" id="File.is_file"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.File.is_file">[docs]</a>    <span class="k">def</span> <span class="nf">is_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Returns wether self is a File. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="File.as_file"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.File.as_file">[docs]</a>    <span class="k">def</span> <span class="nf">as_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;File&#39;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Returns itself as a File instance or raises a NotAFileError. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="File.remove"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.File.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Tries to remove self from the file system.</span>
+
+<span class="sd">        On failure it raises a FileSystemOperationError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">file_remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="File.read"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.File.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Returns the contents of the File.</span>
+
+<span class="sd">        If it fails to read the file a FileSystemOperationError will be raised.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">file_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="File.write"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.File.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Sets the contents of the File. If the parent directory does not exist it is created.</span>
+
+<span class="sd">        If it fails to read the file a FileSystemOperationError will be raised.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">file_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_copy_object</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CopyFileSystemObject</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CopyFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alessio Linares.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

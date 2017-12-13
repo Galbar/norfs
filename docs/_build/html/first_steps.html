@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>First steps &mdash; norfs 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="norfs 1.2.0 documentation" href="index.html"/>
+        <link rel="next" title="norfs" href="modules.html"/>
+        <link rel="prev" title="norfs" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> norfs
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">References:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">First steps</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#file">File</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#read-and-write">Read and write</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#directory">Directory</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#list-directory">List directory</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">norfs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">norfs</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>First steps</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/first_steps.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="first-steps">
+<span id="id1"></span><h1>First steps<a class="headerlink" href="#first-steps" title="Permalink to this headline">¶</a></h1>
+<p><cite>norfs</cite> knows of two types of file system objects: <cite>File</cite> and <cite>Directory</cite>.</p>
+<div class="section" id="file">
+<h2>File<a class="headerlink" href="#file" title="Permalink to this headline">¶</a></h2>
+<p><cite>norfs</cite> offers some handy shortcuts to create a File instance of the supported filesystems:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">norfs</span><span class="o">.</span><span class="n">localfile</span><span class="p">(</span><span class="s2">&quot;path/to/file&quot;</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">File</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="n">LocalFileSystem</span><span class="p">(),</span> <span class="n">path</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span><span class="p">,</span> <span class="n">copy_handler</span><span class="o">=&lt;</span><span class="n">norfs</span><span class="o">.</span><span class="n">copy</span><span class="o">.</span><span class="n">CopyHandler</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x107cf1908</span><span class="o">&gt;</span><span class="p">)</span>
+
+<span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">norfs</span><span class="o">.</span><span class="n">s3file</span><span class="p">(</span><span class="s2">&quot;my_bucket/path/to/file&quot;</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="n">File</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="n">S3FileSystem</span><span class="p">(</span><span class="n">s3_client</span><span class="o">=&lt;</span><span class="n">botocore</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">S3</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x108d8d5f8</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">uri_protocol</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span> <span class="n">separator</span><span class="o">=/</span><span class="p">),</span> <span class="n">path</span><span class="o">=</span><span class="n">my_bucket</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span><span class="p">,</span> <span class="n">copy_handler</span><span class="o">=&lt;</span><span class="n">norfs</span><span class="o">.</span><span class="n">copy</span><span class="o">.</span><span class="n">CopyHandler</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x107cf1908</span><span class="o">&gt;</span><span class="p">)</span>
+
+<span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">norfs</span><span class="o">.</span><span class="n">memoryfile</span><span class="p">(</span><span class="s2">&quot;path/to/file&quot;</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span><span class="n">File</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="n">MemoryFileSystem</span><span class="p">(</span><span class="n">root</span><span class="o">=&lt;</span><span class="n">norfs</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">MemoryDirectory</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x107dc42b0</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span><span class="p">,</span> <span class="n">copy_handler</span><span class="o">=&lt;</span><span class="n">norfs</span><span class="o">.</span><span class="n">copy</span><span class="o">.</span><span class="n">CopyHandler</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x107cf1908</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="read-and-write">
+<h3>Read and write<a class="headerlink" href="#read-and-write" title="Permalink to this headline">¶</a></h3>
+<p>Files can be read from and written into:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">In</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span><span class="sa">b</span><span class="s2">&quot;contents inside file&quot;</span>
+
+<span class="n">In</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;new contents&quot;</span><span class="p">)</span>
+
+<span class="n">In</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span><span class="sa">b</span><span class="s2">&quot;new contents&quot;</span>
+</pre></div>
+</div>
+<p>For more documentation see <a class="reference internal" href="norfs.html#norfs.filesystem.File" title="norfs.filesystem.File"><code class="xref py py-class docutils literal"><span class="pre">norfs.filesystem.File</span></code></a>.</p>
+</div>
+</div>
+<div class="section" id="directory">
+<h2>Directory<a class="headerlink" href="#directory" title="Permalink to this headline">¶</a></h2>
+<p><cite>norfs</cite> also offers handy shortcuts to create a Directory instance:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">In</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="n">norfs</span><span class="o">.</span><span class="n">localdir</span><span class="p">(</span><span class="s2">&quot;some/dir&quot;</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span><span class="n">Directory</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="n">LocalFileSystem</span><span class="p">(),</span> <span class="n">path</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">some</span><span class="o">/</span><span class="nb">dir</span><span class="p">,</span> <span class="n">copy_handler</span><span class="o">=&lt;</span><span class="n">norfs</span><span class="o">.</span><span class="n">copy</span><span class="o">.</span><span class="n">CopyHandler</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x107cf1908</span><span class="o">&gt;</span><span class="p">)</span>
+
+<span class="n">In</span><span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">norfs</span><span class="o">.</span><span class="n">s3dir</span><span class="p">(</span><span class="s2">&quot;some/dir&quot;</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">9</span><span class="p">]:</span><span class="n">Directory</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="n">S3FileSystem</span><span class="p">(</span><span class="n">s3_client</span><span class="o">=&lt;</span><span class="n">botocore</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">S3</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x108d8d5f8</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">uri_protocol</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span> <span class="n">separator</span><span class="o">=/</span><span class="p">),</span> <span class="n">path</span><span class="o">=</span><span class="n">some</span><span class="o">/</span><span class="nb">dir</span><span class="p">,</span> <span class="n">copy_handler</span><span class="o">=&lt;</span><span class="n">norfs</span><span class="o">.</span><span class="n">copy</span><span class="o">.</span><span class="n">CopyHandler</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x107cf1908</span><span class="o">&gt;</span><span class="p">)</span>
+
+<span class="n">In</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">norfs</span><span class="o">.</span><span class="n">memorydir</span><span class="p">(</span><span class="s2">&quot;some/dir&quot;</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span><span class="n">Directory</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="n">MemoryFileSystem</span><span class="p">(</span><span class="n">root</span><span class="o">=&lt;</span><span class="n">norfs</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">MemoryDirectory</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x107dc42b0</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">path</span><span class="o">=</span><span class="n">some</span><span class="o">/</span><span class="nb">dir</span><span class="p">,</span> <span class="n">copy_handler</span><span class="o">=&lt;</span><span class="n">norfs</span><span class="o">.</span><span class="n">copy</span><span class="o">.</span><span class="n">CopyHandler</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x107cf1908</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="list-directory">
+<h3>List directory<a class="headerlink" href="#list-directory" title="Permalink to this headline">¶</a></h3>
+<p>A Directory can be listed to retrieve its contents:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">In</span><span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="nb">dir</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">12</span><span class="p">]:[</span><span class="n">File</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="n">LocalFileSystem</span><span class="p">(),</span> <span class="n">path</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">some</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span><span class="n">file</span><span class="p">,</span> <span class="n">copy_handler</span><span class="o">=&lt;</span><span class="n">norfs</span><span class="o">.</span><span class="n">copy</span><span class="o">.</span><span class="n">CopyHandler</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x107cf1908</span><span class="o">&gt;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>For more documentation see <a class="reference internal" href="norfs.html#norfs.filesystem.Directory" title="norfs.filesystem.Directory"><code class="xref py py-class docutils literal"><span class="pre">norfs.filesystem.Directory</span></code></a>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="modules.html" class="btn btn-neutral float-right" title="norfs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="norfs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alessio Linares.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

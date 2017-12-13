@@ -1,0 +1,431 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>norfs.copy package &mdash; norfs 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="norfs 1.2.0 documentation" href="index.html"/>
+        <link rel="up" title="norfs package" href="norfs.html"/>
+        <link rel="next" title="norfs.fs package" href="norfs.fs.html"/>
+        <link rel="prev" title="norfs package" href="norfs.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> norfs
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">References:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="first_steps.html">First steps</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">norfs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="norfs.html">norfs package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="norfs.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">norfs.copy package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="norfs.fs.html">norfs.fs package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="norfs.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="norfs.html#module-norfs.filesystem">norfs.filesystem module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="norfs.html#module-norfs">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">norfs</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">norfs</a> &raquo;</li>
+        
+          <li><a href="norfs.html">norfs package</a> &raquo;</li>
+        
+      <li>norfs.copy package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/norfs.copy.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="norfs-copy-package">
+<h1>norfs.copy package<a class="headerlink" href="#norfs-copy-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-norfs.copy.local">
+<span id="norfs-copy-local-module"></span><h2>norfs.copy.local module<a class="headerlink" href="#module-norfs.copy.local" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="norfs.copy.local.LocalToLocalCopier">
+<em class="property">class </em><code class="descclassname">norfs.copy.local.</code><code class="descname">LocalToLocalCopier</code><a class="reference internal" href="_modules/norfs/copy/local.html#LocalToLocalCopier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.local.LocalToLocalCopier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#norfs.copy.GenericCopier" title="norfs.copy.GenericCopier"><code class="xref py py-class docutils literal"><span class="pre">norfs.copy.GenericCopier</span></code></a></p>
+<dl class="method">
+<dt id="norfs.copy.local.LocalToLocalCopier.copy_file_to_file">
+<code class="descname">copy_file_to_file</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyFile</em>, <em>dst: norfs.copy.CopyFile</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy/local.html#LocalToLocalCopier.copy_file_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.local.LocalToLocalCopier.copy_file_to_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="norfs.copy.local.LocalToS3Copier">
+<em class="property">class </em><code class="descclassname">norfs.copy.local.</code><code class="descname">LocalToS3Copier</code><span class="sig-paren">(</span><em>s3_client: typing.Any</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy/local.html#LocalToS3Copier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.local.LocalToS3Copier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#norfs.copy.GenericCopier" title="norfs.copy.GenericCopier"><code class="xref py py-class docutils literal"><span class="pre">norfs.copy.GenericCopier</span></code></a></p>
+<dl class="method">
+<dt id="norfs.copy.local.LocalToS3Copier.copy_file_to_file">
+<code class="descname">copy_file_to_file</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyFile</em>, <em>dst: norfs.copy.CopyFile</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy/local.html#LocalToS3Copier.copy_file_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.local.LocalToS3Copier.copy_file_to_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-norfs.copy.s3">
+<span id="norfs-copy-s3-module"></span><h2>norfs.copy.s3 module<a class="headerlink" href="#module-norfs.copy.s3" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="norfs.copy.s3.S3ToLocalCopier">
+<em class="property">class </em><code class="descclassname">norfs.copy.s3.</code><code class="descname">S3ToLocalCopier</code><span class="sig-paren">(</span><em>s3_client: typing.Any</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy/s3.html#S3ToLocalCopier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.s3.S3ToLocalCopier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#norfs.copy.GenericCopier" title="norfs.copy.GenericCopier"><code class="xref py py-class docutils literal"><span class="pre">norfs.copy.GenericCopier</span></code></a></p>
+<dl class="method">
+<dt id="norfs.copy.s3.S3ToLocalCopier.copy_file_to_file">
+<code class="descname">copy_file_to_file</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyFile</em>, <em>dst: norfs.copy.CopyFile</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy/s3.html#S3ToLocalCopier.copy_file_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.s3.S3ToLocalCopier.copy_file_to_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="norfs.copy.s3.S3ToS3Copier">
+<em class="property">class </em><code class="descclassname">norfs.copy.s3.</code><code class="descname">S3ToS3Copier</code><span class="sig-paren">(</span><em>s3_client: typing.Any</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy/s3.html#S3ToS3Copier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.s3.S3ToS3Copier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#norfs.copy.GenericCopier" title="norfs.copy.GenericCopier"><code class="xref py py-class docutils literal"><span class="pre">norfs.copy.GenericCopier</span></code></a></p>
+<dl class="method">
+<dt id="norfs.copy.s3.S3ToS3Copier.copy_file_to_file">
+<code class="descname">copy_file_to_file</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyFile</em>, <em>dst: norfs.copy.CopyFile</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy/s3.html#S3ToS3Copier.copy_file_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.s3.S3ToS3Copier.copy_file_to_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-norfs.copy">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-norfs.copy" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="norfs.copy.CopyDirectory">
+<em class="property">class </em><code class="descclassname">norfs.copy.</code><code class="descname">CopyDirectory</code><span class="sig-paren">(</span><em>fs: norfs.fs.BaseFileSystem</em>, <em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyDirectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyDirectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#norfs.copy.CopyFileSystemObject" title="norfs.copy.CopyFileSystemObject"><code class="xref py py-class docutils literal"><span class="pre">norfs.copy.CopyFileSystemObject</span></code></a></p>
+<dl class="method">
+<dt id="norfs.copy.CopyDirectory.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><em>dst: norfs.copy.CopyFileSystemObject</em>, <em>copier: norfs.copy.GenericCopier</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyDirectory.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyDirectory.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.copy.CopyDirectory.copy_from_dir">
+<code class="descname">copy_from_dir</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyDirectory</em>, <em>copier: norfs.copy.GenericCopier</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyDirectory.copy_from_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyDirectory.copy_from_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.copy.CopyDirectory.copy_from_file">
+<code class="descname">copy_from_file</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyFile</em>, <em>copier: norfs.copy.GenericCopier</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyDirectory.copy_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyDirectory.copy_from_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.copy.CopyDirectory.file">
+<code class="descname">file</code><span class="sig-paren">(</span><em>suffix: str</em><span class="sig-paren">)</span> &#x2192; norfs.copy.CopyFile<a class="reference internal" href="_modules/norfs/copy.html#CopyDirectory.file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyDirectory.file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.copy.CopyDirectory.subdir">
+<code class="descname">subdir</code><span class="sig-paren">(</span><em>suffix: str</em><span class="sig-paren">)</span> &#x2192; norfs.copy.CopyDirectory<a class="reference internal" href="_modules/norfs/copy.html#CopyDirectory.subdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyDirectory.subdir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="norfs.copy.CopyError">
+<em class="property">exception </em><code class="descclassname">norfs.copy.</code><code class="descname">CopyError</code><a class="reference internal" href="_modules/norfs/copy.html#CopyError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="norfs.copy.CopyFile">
+<em class="property">class </em><code class="descclassname">norfs.copy.</code><code class="descname">CopyFile</code><span class="sig-paren">(</span><em>fs: norfs.fs.BaseFileSystem</em>, <em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#norfs.copy.CopyFileSystemObject" title="norfs.copy.CopyFileSystemObject"><code class="xref py py-class docutils literal"><span class="pre">norfs.copy.CopyFileSystemObject</span></code></a></p>
+<dl class="method">
+<dt id="norfs.copy.CopyFile.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><em>dst: norfs.copy.CopyFileSystemObject</em>, <em>copier: norfs.copy.GenericCopier</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyFile.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyFile.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.copy.CopyFile.copy_from_dir">
+<code class="descname">copy_from_dir</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyDirectory</em>, <em>copier: norfs.copy.GenericCopier</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyFile.copy_from_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyFile.copy_from_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.copy.CopyFile.copy_from_file">
+<code class="descname">copy_from_file</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyFile</em>, <em>copier: norfs.copy.GenericCopier</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyFile.copy_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyFile.copy_from_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="norfs.copy.CopyFileSystemObject">
+<em class="property">class </em><code class="descclassname">norfs.copy.</code><code class="descname">CopyFileSystemObject</code><span class="sig-paren">(</span><em>fs: norfs.fs.BaseFileSystem</em>, <em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyFileSystemObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyFileSystemObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="norfs.copy.CopyFileSystemObject.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><em>dst: norfs.copy.CopyFileSystemObject</em>, <em>copier: norfs.copy.GenericCopier</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyFileSystemObject.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyFileSystemObject.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.copy.CopyFileSystemObject.copy_from_dir">
+<code class="descname">copy_from_dir</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyDirectory</em>, <em>copier: norfs.copy.GenericCopier</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyFileSystemObject.copy_from_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyFileSystemObject.copy_from_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.copy.CopyFileSystemObject.copy_from_file">
+<code class="descname">copy_from_file</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyFile</em>, <em>copier: norfs.copy.GenericCopier</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyFileSystemObject.copy_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyFileSystemObject.copy_from_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="norfs.copy.CopyFileSystemObject.fs">
+<code class="descname">fs</code><a class="headerlink" href="#norfs.copy.CopyFileSystemObject.fs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="norfs.copy.CopyFileSystemObject.path">
+<code class="descname">path</code><a class="headerlink" href="#norfs.copy.CopyFileSystemObject.path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="norfs.copy.CopyHandler">
+<em class="property">class </em><code class="descclassname">norfs.copy.</code><code class="descname">CopyHandler</code><span class="sig-paren">(</span><em>default_copier: norfs.copy.GenericCopier</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="norfs.copy.CopyHandler.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyFileSystemObject</em>, <em>dst: norfs.copy.CopyFileSystemObject</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyHandler.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyHandler.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.copy.CopyHandler.set_copy_policy">
+<code class="descname">set_copy_policy</code><span class="sig-paren">(</span><em>src_fs: norfs.fs.BaseFileSystem</em>, <em>dst_fs: norfs.fs.BaseFileSystem</em>, <em>copier: norfs.copy.GenericCopier</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#CopyHandler.set_copy_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.CopyHandler.set_copy_policy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="norfs.copy.GenericCopier">
+<em class="property">class </em><code class="descclassname">norfs.copy.</code><code class="descname">GenericCopier</code><a class="reference internal" href="_modules/norfs/copy.html#GenericCopier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.GenericCopier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="norfs.copy.GenericCopier.copy_dir_to_dir">
+<code class="descname">copy_dir_to_dir</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyDirectory</em>, <em>dst: norfs.copy.CopyDirectory</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#GenericCopier.copy_dir_to_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.GenericCopier.copy_dir_to_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.copy.GenericCopier.copy_file_to_file">
+<code class="descname">copy_file_to_file</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyFile</em>, <em>dst: norfs.copy.CopyFile</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy.html#GenericCopier.copy_file_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.GenericCopier.copy_file_to_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="norfs.fs.html" class="btn btn-neutral float-right" title="norfs.fs package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="norfs.html" class="btn btn-neutral" title="norfs package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alessio Linares.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

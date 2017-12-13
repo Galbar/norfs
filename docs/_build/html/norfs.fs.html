@@ -1,0 +1,596 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>norfs.fs package &mdash; norfs 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="norfs 1.2.0 documentation" href="index.html"/>
+        <link rel="up" title="norfs package" href="norfs.html"/>
+        <link rel="prev" title="norfs.copy package" href="norfs.copy.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> norfs
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">References:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="first_steps.html">First steps</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">norfs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="norfs.html">norfs package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="norfs.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="norfs.copy.html">norfs.copy package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">norfs.fs package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="norfs.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="norfs.html#module-norfs.filesystem">norfs.filesystem module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="norfs.html#module-norfs">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">norfs</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">norfs</a> &raquo;</li>
+        
+          <li><a href="norfs.html">norfs package</a> &raquo;</li>
+        
+      <li>norfs.fs package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/norfs.fs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="norfs-fs-package">
+<h1>norfs.fs package<a class="headerlink" href="#norfs-fs-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-norfs.fs.local">
+<span id="norfs-fs-local-module"></span><h2>norfs.fs.local module<a class="headerlink" href="#module-norfs.fs.local" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="norfs.fs.local.LocalFileSystem">
+<em class="property">class </em><code class="descclassname">norfs.fs.local.</code><code class="descname">LocalFileSystem</code><a class="reference internal" href="_modules/norfs/fs/local.html#LocalFileSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.local.LocalFileSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#norfs.fs.BaseFileSystem" title="norfs.fs.BaseFileSystem"><code class="xref py py-class docutils literal"><span class="pre">norfs.fs.BaseFileSystem</span></code></a></p>
+<dl class="method">
+<dt id="norfs.fs.local.LocalFileSystem.dir_list">
+<code class="descname">dir_list</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; norfs.fs.DirListResult<a class="reference internal" href="_modules/norfs/fs/local.html#LocalFileSystem.dir_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.local.LocalFileSystem.dir_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.local.LocalFileSystem.dir_remove">
+<code class="descname">dir_remove</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/local.html#LocalFileSystem.dir_remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.local.LocalFileSystem.dir_remove" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.local.LocalFileSystem.file_read">
+<code class="descname">file_read</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; bytes<a class="reference internal" href="_modules/norfs/fs/local.html#LocalFileSystem.file_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.local.LocalFileSystem.file_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.local.LocalFileSystem.file_remove">
+<code class="descname">file_remove</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/local.html#LocalFileSystem.file_remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.local.LocalFileSystem.file_remove" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.local.LocalFileSystem.file_write">
+<code class="descname">file_write</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em>, <em>content: bytes</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/local.html#LocalFileSystem.file_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.local.LocalFileSystem.file_write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.local.LocalFileSystem.parse_path">
+<code class="descname">parse_path</code><span class="sig-paren">(</span><em>path: str</em><span class="sig-paren">)</span> &#x2192; norfs.fs.Path<a class="reference internal" href="_modules/norfs/fs/local.html#LocalFileSystem.parse_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.local.LocalFileSystem.parse_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.local.LocalFileSystem.path_exists">
+<code class="descname">path_exists</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/norfs/fs/local.html#LocalFileSystem.path_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.local.LocalFileSystem.path_exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.local.LocalFileSystem.path_to_string">
+<code class="descname">path_to_string</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/norfs/fs/local.html#LocalFileSystem.path_to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.local.LocalFileSystem.path_to_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.local.LocalFileSystem.path_to_uri">
+<code class="descname">path_to_uri</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/norfs/fs/local.html#LocalFileSystem.path_to_uri"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.local.LocalFileSystem.path_to_uri" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-norfs.fs.memory">
+<span id="norfs-fs-memory-module"></span><h2>norfs.fs.memory module<a class="headerlink" href="#module-norfs.fs.memory" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="norfs.fs.memory.MemoryDirectory">
+<em class="property">class </em><code class="descclassname">norfs.fs.memory.</code><code class="descname">MemoryDirectory</code> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryDirectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryDirectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryDirectory.get_dir">
+<code class="descname">get_dir</code><span class="sig-paren">(</span><em>name: str</em><span class="sig-paren">)</span> &#x2192; norfs.fs.memory.MemoryDirectory<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryDirectory.get_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryDirectory.get_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryDirectory.get_file">
+<code class="descname">get_file</code><span class="sig-paren">(</span><em>name: str</em><span class="sig-paren">)</span> &#x2192; norfs.fs.memory.MemoryFile<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryDirectory.get_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryDirectory.get_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryDirectory.list_dirs">
+<code class="descname">list_dirs</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; typing.List[str]<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryDirectory.list_dirs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryDirectory.list_dirs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryDirectory.list_files">
+<code class="descname">list_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; typing.List[str]<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryDirectory.list_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryDirectory.list_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryDirectory.put_dir">
+<code class="descname">put_dir</code><span class="sig-paren">(</span><em>name: str</em>, <em>dir_: norfs.fs.memory.MemoryDirectory</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryDirectory.put_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryDirectory.put_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryDirectory.put_file">
+<code class="descname">put_file</code><span class="sig-paren">(</span><em>name: str</em>, <em>file_: norfs.fs.memory.MemoryFile</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryDirectory.put_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryDirectory.put_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryDirectory.remove_dir">
+<code class="descname">remove_dir</code><span class="sig-paren">(</span><em>name: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryDirectory.remove_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryDirectory.remove_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryDirectory.remove_file">
+<code class="descname">remove_file</code><span class="sig-paren">(</span><em>name: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryDirectory.remove_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryDirectory.remove_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="norfs.fs.memory.MemoryFile">
+<em class="property">class </em><code class="descclassname">norfs.fs.memory.</code><code class="descname">MemoryFile</code><span class="sig-paren">(</span><em>contents: bytes</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="norfs.fs.memory.MemoryFile.contents">
+<code class="descname">contents</code><a class="headerlink" href="#norfs.fs.memory.MemoryFile.contents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="norfs.fs.memory.MemoryFileSystem">
+<em class="property">class </em><code class="descclassname">norfs.fs.memory.</code><code class="descname">MemoryFileSystem</code><span class="sig-paren">(</span><em>root: norfs.fs.memory.MemoryDirectory</em>, <em>*</em>, <em>separator: str = '/'</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryFileSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryFileSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#norfs.fs.BaseFileSystem" title="norfs.fs.BaseFileSystem"><code class="xref py py-class docutils literal"><span class="pre">norfs.fs.BaseFileSystem</span></code></a></p>
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryFileSystem.dir_list">
+<code class="descname">dir_list</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; norfs.fs.DirListResult<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryFileSystem.dir_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryFileSystem.dir_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryFileSystem.dir_remove">
+<code class="descname">dir_remove</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryFileSystem.dir_remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryFileSystem.dir_remove" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryFileSystem.file_read">
+<code class="descname">file_read</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; bytes<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryFileSystem.file_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryFileSystem.file_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryFileSystem.file_remove">
+<code class="descname">file_remove</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryFileSystem.file_remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryFileSystem.file_remove" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryFileSystem.file_write">
+<code class="descname">file_write</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em>, <em>content: bytes</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryFileSystem.file_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryFileSystem.file_write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryFileSystem.parse_path">
+<code class="descname">parse_path</code><span class="sig-paren">(</span><em>path: str</em><span class="sig-paren">)</span> &#x2192; norfs.fs.Path<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryFileSystem.parse_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryFileSystem.parse_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryFileSystem.path_exists">
+<code class="descname">path_exists</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryFileSystem.path_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryFileSystem.path_exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryFileSystem.path_to_string">
+<code class="descname">path_to_string</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryFileSystem.path_to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryFileSystem.path_to_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.memory.MemoryFileSystem.path_to_uri">
+<code class="descname">path_to_uri</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/norfs/fs/memory.html#MemoryFileSystem.path_to_uri"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.memory.MemoryFileSystem.path_to_uri" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-norfs.fs.s3">
+<span id="norfs-fs-s3-module"></span><h2>norfs.fs.s3 module<a class="headerlink" href="#module-norfs.fs.s3" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="norfs.fs.s3.S3FileSystem">
+<em class="property">class </em><code class="descclassname">norfs.fs.s3.</code><code class="descname">S3FileSystem</code><span class="sig-paren">(</span><em>s3_client: typing.Any</em>, <em>*</em>, <em>uri_protocol: str = 's3'</em>, <em>separator: str = '/'</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/s3.html#S3FileSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.s3.S3FileSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#norfs.fs.BaseFileSystem" title="norfs.fs.BaseFileSystem"><code class="xref py py-class docutils literal"><span class="pre">norfs.fs.BaseFileSystem</span></code></a></p>
+<dl class="method">
+<dt id="norfs.fs.s3.S3FileSystem.dir_list">
+<code class="descname">dir_list</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; norfs.fs.DirListResult<a class="reference internal" href="_modules/norfs/fs/s3.html#S3FileSystem.dir_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.s3.S3FileSystem.dir_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.s3.S3FileSystem.dir_remove">
+<code class="descname">dir_remove</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/s3.html#S3FileSystem.dir_remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.s3.S3FileSystem.dir_remove" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.s3.S3FileSystem.file_read">
+<code class="descname">file_read</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; bytes<a class="reference internal" href="_modules/norfs/fs/s3.html#S3FileSystem.file_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.s3.S3FileSystem.file_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.s3.S3FileSystem.file_remove">
+<code class="descname">file_remove</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/s3.html#S3FileSystem.file_remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.s3.S3FileSystem.file_remove" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.s3.S3FileSystem.file_write">
+<code class="descname">file_write</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em>, <em>content: bytes</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs/s3.html#S3FileSystem.file_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.s3.S3FileSystem.file_write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.s3.S3FileSystem.parse_path">
+<code class="descname">parse_path</code><span class="sig-paren">(</span><em>path: str</em><span class="sig-paren">)</span> &#x2192; norfs.fs.Path<a class="reference internal" href="_modules/norfs/fs/s3.html#S3FileSystem.parse_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.s3.S3FileSystem.parse_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.s3.S3FileSystem.path_exists">
+<code class="descname">path_exists</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/norfs/fs/s3.html#S3FileSystem.path_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.s3.S3FileSystem.path_exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.s3.S3FileSystem.path_to_string">
+<code class="descname">path_to_string</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/norfs/fs/s3.html#S3FileSystem.path_to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.s3.S3FileSystem.path_to_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.s3.S3FileSystem.path_to_uri">
+<code class="descname">path_to_uri</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/norfs/fs/s3.html#S3FileSystem.path_to_uri"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.s3.S3FileSystem.path_to_uri" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-norfs.fs">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-norfs.fs" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="norfs.fs.BaseFileSystem">
+<em class="property">class </em><code class="descclassname">norfs.fs.</code><code class="descname">BaseFileSystem</code><a class="reference internal" href="_modules/norfs/fs.html#BaseFileSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.BaseFileSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="norfs.fs.BaseFileSystem.ERROR_MESSAGE">
+<code class="descname">ERROR_MESSAGE</code><em class="property"> = 'BaseFileSystem: operation not implemented'</em><a class="headerlink" href="#norfs.fs.BaseFileSystem.ERROR_MESSAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.BaseFileSystem.dir_list">
+<code class="descname">dir_list</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; norfs.fs.DirListResult<a class="reference internal" href="_modules/norfs/fs.html#BaseFileSystem.dir_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.BaseFileSystem.dir_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.BaseFileSystem.dir_remove">
+<code class="descname">dir_remove</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs.html#BaseFileSystem.dir_remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.BaseFileSystem.dir_remove" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.BaseFileSystem.file_read">
+<code class="descname">file_read</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; bytes<a class="reference internal" href="_modules/norfs/fs.html#BaseFileSystem.file_read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.BaseFileSystem.file_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.BaseFileSystem.file_remove">
+<code class="descname">file_remove</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs.html#BaseFileSystem.file_remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.BaseFileSystem.file_remove" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.BaseFileSystem.file_write">
+<code class="descname">file_write</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em>, <em>content: bytes</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs.html#BaseFileSystem.file_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.BaseFileSystem.file_write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.BaseFileSystem.parse_path">
+<code class="descname">parse_path</code><span class="sig-paren">(</span><em>path: str</em><span class="sig-paren">)</span> &#x2192; norfs.fs.Path<a class="reference internal" href="_modules/norfs/fs.html#BaseFileSystem.parse_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.BaseFileSystem.parse_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.BaseFileSystem.path_exists">
+<code class="descname">path_exists</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/norfs/fs.html#BaseFileSystem.path_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.BaseFileSystem.path_exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.BaseFileSystem.path_to_string">
+<code class="descname">path_to_string</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/norfs/fs.html#BaseFileSystem.path_to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.BaseFileSystem.path_to_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.BaseFileSystem.path_to_uri">
+<code class="descname">path_to_uri</code><span class="sig-paren">(</span><em>path: norfs.fs.Path</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/norfs/fs.html#BaseFileSystem.path_to_uri"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.BaseFileSystem.path_to_uri" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="norfs.fs.DirListResult">
+<em class="property">class </em><code class="descclassname">norfs.fs.</code><code class="descname">DirListResult</code><span class="sig-paren">(</span><em>files: typing.List[norfs.fs.Path], dirs: typing.List[norfs.fs.Path], others: typing.List[norfs.fs.Path]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs.html#DirListResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.DirListResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="norfs.fs.DirListResult.dirs">
+<code class="descname">dirs</code><a class="headerlink" href="#norfs.fs.DirListResult.dirs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="norfs.fs.DirListResult.files">
+<code class="descname">files</code><a class="headerlink" href="#norfs.fs.DirListResult.files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="norfs.fs.DirListResult.others">
+<code class="descname">others</code><a class="headerlink" href="#norfs.fs.DirListResult.others" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="norfs.fs.FileSystemOperationError">
+<em class="property">exception </em><code class="descclassname">norfs.fs.</code><code class="descname">FileSystemOperationError</code><a class="reference internal" href="_modules/norfs/fs.html#FileSystemOperationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.FileSystemOperationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="norfs.fs.NotAFileError">
+<em class="property">exception </em><code class="descclassname">norfs.fs.</code><code class="descname">NotAFileError</code><a class="reference internal" href="_modules/norfs/fs.html#NotAFileError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.NotAFileError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="norfs.fs.Path">
+<em class="property">class </em><code class="descclassname">norfs.fs.</code><code class="descname">Path</code><span class="sig-paren">(</span><em>drive: str</em>, <em>*tail: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/fs.html#Path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.Path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="norfs.fs.Path.basename">
+<code class="descname">basename</code><a class="headerlink" href="#norfs.fs.Path.basename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="norfs.fs.Path.child">
+<code class="descname">child</code><span class="sig-paren">(</span><em>name: str</em><span class="sig-paren">)</span> &#x2192; norfs.fs.Path<a class="reference internal" href="_modules/norfs/fs.html#Path.child"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.fs.Path.child" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="norfs.fs.Path.drive">
+<code class="descname">drive</code><a class="headerlink" href="#norfs.fs.Path.drive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="norfs.fs.Path.parent">
+<code class="descname">parent</code><a class="headerlink" href="#norfs.fs.Path.parent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="norfs.fs.Path.tail">
+<code class="descname">tail</code><a class="headerlink" href="#norfs.fs.Path.tail" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="norfs.copy.html" class="btn btn-neutral" title="norfs.copy package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alessio Linares.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
