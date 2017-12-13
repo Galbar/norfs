@@ -1,6 +1,7 @@
 from typing import (
     Any,
     List,
+    Optional,
     cast,
 )
 
@@ -24,11 +25,14 @@ class BaseFileSystemObject:
     _fs: BaseFileSystem
     _path: Path
 
-    def __init__(self, filesystem: BaseFileSystem, path_str: str, copy_handler: CopyHandler, *,
-                 _path: Path=None) -> None:
+    def __init__(self, filesystem: BaseFileSystem, path_str: Optional[str], copy_handler: CopyHandler, *,
+                 _path: Optional[Path]=None) -> None:
+        """ Constructor for BaseFileSystemObjects.
+        One of `path_str` and `_path` **MUST** be present.
+        """
         self._copy_handler = copy_handler
         self._fs = filesystem
-        self._path = _path or self._fs.parse_path(path_str)
+        self._path = _path or self._fs.parse_path(path_str or "")
 
     @property
     def path(self) -> str:

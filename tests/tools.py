@@ -4,6 +4,7 @@ import string
 
 from typing import (
     List,
+    Optional,
     Tuple,
 )
 
@@ -14,14 +15,14 @@ def randstr(length: int=10, charset: str=string.ascii_letters) -> str:
     return "".join(random.choice(charset) for _ in range(length))
 
 
-def random_path(drive: str=None, prefix: List[str]=[]) -> Path:
+def random_path(drive: Optional[str]=None, prefix: List[str]=[]) -> Path:
     if drive is None:
         drive = randstr()
     tail: List[str] = prefix + [randstr() for _ in range(random.randint(1, 5))]
     return Path(drive, *tail)
 
 
-def random_local_path(*, root: str=None) -> Tuple[Path, str]:
+def random_local_path(*, root: Optional[str]=None) -> Tuple[Path, str]:
     root = root or os.getcwd()
     path_str: str = os.path.join(root, *[randstr() for _ in range(random.randint(1, 5))])
     abs_path_str: str = os.path.abspath(path_str)

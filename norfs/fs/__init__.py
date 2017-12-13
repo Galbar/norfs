@@ -2,7 +2,6 @@ from typing import (
     Any,
     List,
     Tuple,
-    cast,
 )
 
 
@@ -49,8 +48,7 @@ class Path:
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Path):
-            other_casted: Path = cast(Path, other)
-            return self._drive == other_casted.drive and self._tail == other_casted.tail
+            return self._drive == other.drive and self._tail == other.tail
         return False
 
 

@@ -9,7 +9,7 @@ flake:
 	python -m flake8 .
 
 mypy:
-	mypy --ignore-missing-imports norfs tests
+	mypy --strict --ignore-missing-imports norfs tests
 
 tests:
 	PYTHONPATH=. pytest tests/ --cov=norfs --cov-report=term-missing

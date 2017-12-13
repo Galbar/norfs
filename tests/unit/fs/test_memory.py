@@ -119,7 +119,7 @@ class TestMemoryFileSystem(TestCase):
 
     def setUp(self) -> None:
         self.separator = randstr(3)
-        self.fs = MemoryFileSystem(None, separator=self.separator)
+        self.fs = MemoryFileSystem(mock.Mock(spec=MemoryDirectory), separator=self.separator)
 
     def test_parse_path(self) -> None:
         expected_path: Path = random_path("")
