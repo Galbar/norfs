@@ -1,0 +1,399 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>norfs.fs.memory &mdash; norfs 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="norfs 1.2.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="norfs.fs" href="../fs.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> norfs
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../first_steps.html">First steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">norfs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">norfs</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../norfs.html">norfs</a> &raquo;</li>
+        
+          <li><a href="../fs.html">norfs.fs</a> &raquo;</li>
+        
+      <li>norfs.fs.memory</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for norfs.fs.memory</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">traceback</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">BaseFileSystem</span><span class="p">,</span>
+    <span class="n">DirListResult</span><span class="p">,</span>
+    <span class="n">FileSystemOperationError</span><span class="p">,</span>
+    <span class="n">NotAFileError</span><span class="p">,</span>
+    <span class="n">Path</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="MemoryDirectory"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryDirectory">[docs]</a><span class="k">class</span> <span class="nc">MemoryDirectory</span><span class="p">:</span>
+    <span class="n">_subdirs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;MemoryDirectory&#39;</span><span class="p">]</span>
+    <span class="n">_files</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;MemoryFile&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subdirs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_files</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="MemoryDirectory.list_dirs"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryDirectory.list_dirs">[docs]</a>    <span class="k">def</span> <span class="nf">list_dirs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subdirs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="MemoryDirectory.list_files"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryDirectory.list_files">[docs]</a>    <span class="k">def</span> <span class="nf">list_files</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="MemoryDirectory.put_dir"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryDirectory.put_dir">[docs]</a>    <span class="k">def</span> <span class="nf">put_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dir_</span><span class="p">:</span> <span class="s1">&#39;MemoryDirectory&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subdirs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">dir_</span></div>
+
+<div class="viewcode-block" id="MemoryDirectory.put_file"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryDirectory.put_file">[docs]</a>    <span class="k">def</span> <span class="nf">put_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file_</span><span class="p">:</span> <span class="s1">&#39;MemoryFile&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">file_</span></div>
+
+<div class="viewcode-block" id="MemoryDirectory.get_dir"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryDirectory.get_dir">[docs]</a>    <span class="k">def</span> <span class="nf">get_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;MemoryDirectory&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subdirs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MemoryDirectory.get_file"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryDirectory.get_file">[docs]</a>    <span class="k">def</span> <span class="nf">get_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;MemoryFile&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotAFileError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MemoryDirectory.remove_dir"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryDirectory.remove_dir">[docs]</a>    <span class="k">def</span> <span class="nf">remove_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subdirs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MemoryDirectory.remove_file"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryDirectory.remove_file">[docs]</a>    <span class="k">def</span> <span class="nf">remove_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_files</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="MemoryFile"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryFile">[docs]</a><span class="k">class</span> <span class="nc">MemoryFile</span><span class="p">:</span>
+    <span class="n">_contents</span><span class="p">:</span> <span class="nb">bytes</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contents</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_contents</span> <span class="o">=</span> <span class="n">contents</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">contents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_contents</span></div>
+
+
+<div class="viewcode-block" id="MemoryFileSystem"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryFileSystem">[docs]</a><span class="k">class</span> <span class="nc">MemoryFileSystem</span><span class="p">(</span><span class="n">BaseFileSystem</span><span class="p">):</span>
+    <span class="n">_root</span><span class="p">:</span> <span class="n">MemoryDirectory</span>
+    <span class="n">_separator</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">MemoryDirectory</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_separator</span> <span class="o">=</span> <span class="n">separator</span>
+
+    <span class="k">def</span> <span class="nf">_get_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemoryDirectory</span><span class="p">:</span>
+        <span class="n">current_dir</span><span class="p">:</span> <span class="n">MemoryDirectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span>
+        <span class="k">for</span> <span class="n">dir_name</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">tail</span><span class="p">:</span>
+            <span class="n">current_dir</span> <span class="o">=</span> <span class="n">current_dir</span><span class="o">.</span><span class="n">get_dir</span><span class="p">(</span><span class="n">dir_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">current_dir</span>
+
+    <span class="c1"># General operations</span>
+<div class="viewcode-block" id="MemoryFileSystem.parse_path"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryFileSystem.parse_path">[docs]</a>    <span class="k">def</span> <span class="nf">parse_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+        <span class="n">tail</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_separator</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">tail</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MemoryFileSystem.path_exists"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryFileSystem.path_exists">[docs]</a>    <span class="k">def</span> <span class="nf">path_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parent_dir</span><span class="p">:</span> <span class="n">MemoryDirectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dir</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">NotADirectoryError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">path</span><span class="o">.</span><span class="n">basename</span> <span class="ow">in</span> <span class="p">(</span><span class="n">parent_dir</span><span class="o">.</span><span class="n">list_dirs</span><span class="p">()</span> <span class="o">+</span> <span class="n">parent_dir</span><span class="o">.</span><span class="n">list_files</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="MemoryFileSystem.path_to_string"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryFileSystem.path_to_string">[docs]</a>    <span class="k">def</span> <span class="nf">path_to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_separator</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">tail</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MemoryFileSystem.path_to_uri"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryFileSystem.path_to_uri">[docs]</a>    <span class="k">def</span> <span class="nf">path_to_uri</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;memory://{self.path_to_string(path)}&quot;</span></div>
+
+    <span class="c1"># File operations</span>
+<div class="viewcode-block" id="MemoryFileSystem.file_read"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryFileSystem.file_read">[docs]</a>    <span class="k">def</span> <span class="nf">file_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="n">parent_dir</span><span class="p">:</span> <span class="n">MemoryDirectory</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parent_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dir</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">parent_dir</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">)</span><span class="o">.</span><span class="n">contents</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">NotADirectoryError</span><span class="p">,</span> <span class="n">NotAFileError</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">FileSystemOperationError</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="MemoryFileSystem.file_write"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryFileSystem.file_write">[docs]</a>    <span class="k">def</span> <span class="nf">file_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">parent_dir</span><span class="p">:</span> <span class="n">MemoryDirectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span>
+        <span class="n">dir_name</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="n">new_dir</span><span class="p">:</span> <span class="n">MemoryDirectory</span>
+
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">tail</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
+            <span class="n">dir_name</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">parent_dir</span> <span class="o">=</span> <span class="n">parent_dir</span><span class="o">.</span><span class="n">get_dir</span><span class="p">(</span><span class="n">dir_name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">NotADirectoryError</span><span class="p">:</span>
+                <span class="n">new_dir</span> <span class="o">=</span> <span class="n">MemoryDirectory</span><span class="p">()</span>
+                <span class="n">parent_dir</span><span class="o">.</span><span class="n">put_dir</span><span class="p">(</span><span class="n">dir_name</span><span class="p">,</span> <span class="n">new_dir</span><span class="p">)</span>
+                <span class="n">parent_dir</span> <span class="o">=</span> <span class="n">new_dir</span>
+                <span class="k">break</span>
+
+        <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
+            <span class="n">dir_name</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="n">new_dir</span> <span class="o">=</span> <span class="n">MemoryDirectory</span><span class="p">()</span>
+            <span class="n">parent_dir</span><span class="o">.</span><span class="n">put_dir</span><span class="p">(</span><span class="n">dir_name</span><span class="p">,</span> <span class="n">new_dir</span><span class="p">)</span>
+            <span class="n">parent_dir</span> <span class="o">=</span> <span class="n">new_dir</span>
+
+        <span class="n">parent_dir</span><span class="o">.</span><span class="n">put_file</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">,</span> <span class="n">MemoryFile</span><span class="p">(</span><span class="n">content</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MemoryFileSystem.file_remove"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryFileSystem.file_remove">[docs]</a>    <span class="k">def</span> <span class="nf">file_remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parent_dir</span><span class="p">:</span> <span class="n">MemoryDirectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dir</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+            <span class="n">parent_dir</span><span class="o">.</span><span class="n">remove_file</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">NotADirectoryError</span><span class="p">,</span> <span class="n">NotAFileError</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">FileSystemOperationError</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span></div>
+
+    <span class="c1"># Directory operations</span>
+<div class="viewcode-block" id="MemoryFileSystem.dir_list"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryFileSystem.dir_list">[docs]</a>    <span class="k">def</span> <span class="nf">dir_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DirListResult</span><span class="p">:</span>
+        <span class="n">files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span>
+        <span class="n">dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span>
+        <span class="n">current_dir</span><span class="p">:</span> <span class="n">MemoryDirectory</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">current_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">NotADirectoryError</span><span class="p">:</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">dirs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">file_</span><span class="p">)</span> <span class="k">for</span> <span class="n">file_</span> <span class="ow">in</span> <span class="n">current_dir</span><span class="o">.</span><span class="n">list_files</span><span class="p">()]</span>
+            <span class="n">dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">dir_</span><span class="p">)</span> <span class="k">for</span> <span class="n">dir_</span> <span class="ow">in</span> <span class="n">current_dir</span><span class="o">.</span><span class="n">list_dirs</span><span class="p">()]</span>
+
+        <span class="k">return</span> <span class="n">DirListResult</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="p">[])</span></div>
+
+<div class="viewcode-block" id="MemoryFileSystem.dir_remove"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.memory.MemoryFileSystem.dir_remove">[docs]</a>    <span class="k">def</span> <span class="nf">dir_remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">current_dir</span><span class="p">:</span> <span class="n">MemoryDirectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dir</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+            <span class="n">current_dir</span><span class="o">.</span><span class="n">remove_dir</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">NotADirectoryError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FileSystemOperationError</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(root=</span><span class="si">{self._root}</span><span class="s2">)&quot;</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alessio Linares.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

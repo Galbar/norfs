@@ -1,0 +1,401 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>norfs &mdash; norfs 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="norfs 1.2.0 documentation" href="../index.html"/>
+        <link rel="up" title="Module code" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> norfs
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../first_steps.html">First steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">norfs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">norfs</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>norfs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for norfs</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.copy</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">CopyHandler</span><span class="p">,</span>
+    <span class="n">GenericCopier</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.copy.local</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">LocalToLocalCopier</span><span class="p">,</span>
+    <span class="n">LocalToS3Copier</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.copy.s3</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">S3ToS3Copier</span><span class="p">,</span>
+    <span class="n">S3ToLocalCopier</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.filesystem</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">Directory</span><span class="p">,</span>
+    <span class="n">File</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.fs.local</span> <span class="k">import</span> <span class="n">LocalFileSystem</span>
+<span class="kn">from</span> <span class="nn">.fs.s3</span> <span class="k">import</span> <span class="n">S3FileSystem</span>
+<span class="kn">from</span> <span class="nn">.fs.memory</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">MemoryFileSystem</span><span class="p">,</span>
+    <span class="n">MemoryDirectory</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="n">_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">_copy_handler</span><span class="p">:</span> <span class="n">CopyHandler</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">_local_fs</span><span class="p">:</span> <span class="n">LocalFileSystem</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">_s3_fs</span><span class="p">:</span> <span class="n">S3FileSystem</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">_memory_fs</span><span class="p">:</span> <span class="n">MemoryFileSystem</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="get_copy_handler"><a class="viewcode-back" href="../norfs.html#norfs.get_copy_handler">[docs]</a><span class="k">def</span> <span class="nf">get_copy_handler</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CopyHandler</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Returns the global instance of CopyHandler. &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_copy_handler</span>
+
+    <span class="k">if</span> <span class="n">_copy_handler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_copy_handler</span> <span class="o">=</span> <span class="n">CopyHandler</span><span class="p">(</span><span class="n">GenericCopier</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">_copy_handler</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">global</span> <span class="n">_config</span>
+
+    <span class="k">if</span> <span class="n">_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_config</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;s3_client&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;s3_protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;s3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;s3_separator&quot;</span><span class="p">:</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;memory_separator&quot;</span><span class="p">:</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">_config</span>
+
+
+<div class="viewcode-block" id="configure"><a class="viewcode-back" href="../norfs.html#norfs.configure">[docs]</a><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Set the configuration for the library.</span>
+<span class="sd">    Accepted keyword values:</span>
+
+<span class="sd">    *  `s3_client`: boto3 S3 client instance for S3FileSystem.</span>
+<span class="sd">    *  `s3_protocol`: protocol to use for S3FileSystem uri. Defaults to &quot;s3&quot;.</span>
+<span class="sd">    *  `s3_separator`: directory separator to use for S3FileSystem. Defaults to &quot;/&quot;.</span>
+<span class="sd">    *  `memory_separator`: directory separator to use for MemoryFileSystem. Defaults to &quot;/&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_get_config</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_init_local_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">global</span> <span class="n">_local_fs</span>
+
+    <span class="n">_local_fs</span> <span class="o">=</span> <span class="n">LocalFileSystem</span><span class="p">()</span>
+
+    <span class="n">get_copy_handler</span><span class="p">()</span><span class="o">.</span><span class="n">set_copy_policy</span><span class="p">(</span><span class="n">_local_fs</span><span class="p">,</span> <span class="n">_local_fs</span><span class="p">,</span> <span class="n">LocalToLocalCopier</span><span class="p">())</span>
+
+
+<div class="viewcode-block" id="get_local_fs"><a class="viewcode-back" href="../norfs.html#norfs.get_local_fs">[docs]</a><span class="k">def</span> <span class="nf">get_local_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LocalFileSystem</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Returns the global instance of LocalFileSystem. &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_local_fs</span>
+
+    <span class="k">if</span> <span class="n">_local_fs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_init_local_fs</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">_local_fs</span></div>
+
+
+<div class="viewcode-block" id="localdir"><a class="viewcode-back" href="../norfs.html#norfs.localdir">[docs]</a><span class="k">def</span> <span class="nf">localdir</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Directory</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Return a Directory instance with the given `path` for the LocalFileSystem. &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Directory</span><span class="p">(</span><span class="n">get_local_fs</span><span class="p">(),</span> <span class="n">path</span><span class="p">,</span> <span class="n">get_copy_handler</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="localfile"><a class="viewcode-back" href="../norfs.html#norfs.localfile">[docs]</a><span class="k">def</span> <span class="nf">localfile</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">File</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Return a File instance with the given `path` for the LocalFileSystem. &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">File</span><span class="p">(</span><span class="n">get_local_fs</span><span class="p">(),</span> <span class="n">path</span><span class="p">,</span> <span class="n">get_copy_handler</span><span class="p">())</span></div>
+
+
+<span class="k">def</span> <span class="nf">_init_s3_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">global</span> <span class="n">_config</span>
+    <span class="k">global</span> <span class="n">_s3_fs</span>
+
+    <span class="k">if</span> <span class="n">_config</span><span class="p">[</span><span class="s2">&quot;s3_client&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot initialize S3FileSystem if s3_client is not set.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                         <span class="s2">&quot;You can set it using `norfs.configure(s3_client=boto3.client(</span><span class="se">\&quot;</span><span class="s2">s3</span><span class="se">\&quot;</span><span class="s2">))`&quot;</span><span class="p">)</span>
+
+    <span class="n">s3_client</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">_config</span><span class="p">[</span><span class="s2">&quot;s3_client&quot;</span><span class="p">]</span>
+
+    <span class="n">_s3_fs</span> <span class="o">=</span> <span class="n">S3FileSystem</span><span class="p">(</span><span class="n">s3_client</span><span class="p">,</span> <span class="n">uri_protocol</span><span class="o">=</span><span class="n">_config</span><span class="p">[</span><span class="s2">&quot;s3_protocol&quot;</span><span class="p">],</span> <span class="n">separator</span><span class="o">=</span><span class="n">_config</span><span class="p">[</span><span class="s2">&quot;s3_separator&quot;</span><span class="p">])</span>
+
+    <span class="n">copy_handler</span><span class="p">:</span> <span class="n">CopyHandler</span> <span class="o">=</span> <span class="n">get_copy_handler</span><span class="p">()</span>
+    <span class="n">copy_handler</span><span class="o">.</span><span class="n">set_copy_policy</span><span class="p">(</span><span class="n">get_local_fs</span><span class="p">(),</span> <span class="n">_s3_fs</span><span class="p">,</span> <span class="n">LocalToS3Copier</span><span class="p">(</span><span class="n">s3_client</span><span class="p">))</span>
+    <span class="n">copy_handler</span><span class="o">.</span><span class="n">set_copy_policy</span><span class="p">(</span><span class="n">_s3_fs</span><span class="p">,</span> <span class="n">get_local_fs</span><span class="p">(),</span> <span class="n">S3ToLocalCopier</span><span class="p">(</span><span class="n">s3_client</span><span class="p">))</span>
+    <span class="n">copy_handler</span><span class="o">.</span><span class="n">set_copy_policy</span><span class="p">(</span><span class="n">_s3_fs</span><span class="p">,</span> <span class="n">_s3_fs</span><span class="p">,</span> <span class="n">S3ToS3Copier</span><span class="p">(</span><span class="n">s3_client</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="get_s3_fs"><a class="viewcode-back" href="../norfs.html#norfs.get_s3_fs">[docs]</a><span class="k">def</span> <span class="nf">get_s3_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">S3FileSystem</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Returns the global instance of S3FileSystem. &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_s3_fs</span>
+
+    <span class="k">if</span> <span class="n">_s3_fs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_init_s3_fs</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">_s3_fs</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_s3_path</span><span class="p">(</span><span class="n">path_or_bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">path_or_bucket</span>
+    <span class="k">return</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">path_or_bucket</span><span class="p">,</span> <span class="n">prefix</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="s3dir"><a class="viewcode-back" href="../norfs.html#norfs.s3dir">[docs]</a><span class="k">def</span> <span class="nf">s3dir</span><span class="p">(</span><span class="n">path_or_bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Directory</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Return a Directory instance with the given bucket and path for the S3FileSystem.</span>
+
+<span class="sd">    If only one parameter is given the bucket name will be everything up to the first &quot;/&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_config</span>
+    <span class="k">return</span> <span class="n">Directory</span><span class="p">(</span><span class="n">get_s3_fs</span><span class="p">(),</span> <span class="n">_get_s3_path</span><span class="p">(</span><span class="n">path_or_bucket</span><span class="p">,</span> <span class="n">prefix</span><span class="p">),</span> <span class="n">get_copy_handler</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="s3file"><a class="viewcode-back" href="../norfs.html#norfs.s3file">[docs]</a><span class="k">def</span> <span class="nf">s3file</span><span class="p">(</span><span class="n">path_or_bucket</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">File</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Return a File instance with the given bucket and path for the S3FileSystem.</span>
+
+<span class="sd">    If only one parameter is given the bucket name will be everything up to the first &quot;/&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_config</span>
+    <span class="k">return</span> <span class="n">File</span><span class="p">(</span><span class="n">get_s3_fs</span><span class="p">(),</span> <span class="n">_get_s3_path</span><span class="p">(</span><span class="n">path_or_bucket</span><span class="p">,</span> <span class="n">prefix</span><span class="p">),</span> <span class="n">get_copy_handler</span><span class="p">())</span></div>
+
+
+<span class="k">def</span> <span class="nf">_init_memory_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">global</span> <span class="n">_config</span>
+    <span class="k">global</span> <span class="n">_memory_fs</span>
+
+    <span class="n">_memory_fs</span> <span class="o">=</span> <span class="n">MemoryFileSystem</span><span class="p">(</span><span class="n">MemoryDirectory</span><span class="p">(),</span> <span class="n">separator</span><span class="o">=</span><span class="n">_config</span><span class="p">[</span><span class="s2">&quot;memory_separator&quot;</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="get_memory_fs"><a class="viewcode-back" href="../norfs.html#norfs.get_memory_fs">[docs]</a><span class="k">def</span> <span class="nf">get_memory_fs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">MemoryFileSystem</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Returns the global instance of MemoryFileSystem. &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_memory_fs</span>
+
+    <span class="k">if</span> <span class="n">_memory_fs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_init_memory_fs</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">_memory_fs</span></div>
+
+
+<div class="viewcode-block" id="memorydir"><a class="viewcode-back" href="../norfs.html#norfs.memorydir">[docs]</a><span class="k">def</span> <span class="nf">memorydir</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Directory</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Return a Directory instance with the given `path` for the MemoryFileSystem. &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Directory</span><span class="p">(</span><span class="n">get_memory_fs</span><span class="p">(),</span> <span class="n">path</span><span class="p">,</span> <span class="n">get_copy_handler</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="memoryfile"><a class="viewcode-back" href="../norfs.html#norfs.memoryfile">[docs]</a><span class="k">def</span> <span class="nf">memoryfile</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">File</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Return a File instance with the given `path` for the MemoryFileSystem. &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">File</span><span class="p">(</span><span class="n">get_memory_fs</span><span class="p">(),</span> <span class="n">path</span><span class="p">,</span> <span class="n">get_copy_handler</span><span class="p">())</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alessio Linares.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

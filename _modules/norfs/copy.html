@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>norfs.copy &mdash; norfs 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="norfs 1.2.0 documentation" href="../../index.html"/>
+        <link rel="up" title="norfs" href="../norfs.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> norfs
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../first_steps.html">First steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">norfs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">norfs</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../norfs.html">norfs</a> &raquo;</li>
+        
+      <li>norfs.copy</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for norfs.copy</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">traceback</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">cast</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">..fs</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">BaseFileSystem</span><span class="p">,</span>
+    <span class="n">DirListResult</span><span class="p">,</span>
+    <span class="n">Path</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="CopyError"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyError">[docs]</a><span class="k">class</span> <span class="nc">CopyError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="CopyFileSystemObject"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyFileSystemObject">[docs]</a><span class="k">class</span> <span class="nc">CopyFileSystemObject</span><span class="p">:</span>
+    <span class="n">_fs</span><span class="p">:</span> <span class="n">BaseFileSystem</span>
+    <span class="n">_path</span><span class="p">:</span> <span class="n">Path</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fs</span><span class="p">:</span> <span class="n">BaseFileSystem</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span> <span class="o">=</span> <span class="n">fs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">=</span> <span class="n">path</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseFileSystem</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span>
+
+<div class="viewcode-block" id="CopyFileSystemObject.copy"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyFileSystemObject.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="s1">&#39;CopyFileSystemObject&#39;</span><span class="p">,</span> <span class="n">copier</span><span class="p">:</span> <span class="s1">&#39;GenericCopier&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot copy from filesystem object that is not file or directory&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CopyFileSystemObject.copy_from_file"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyFileSystemObject.copy_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">copy_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="s1">&#39;CopyFile&#39;</span><span class="p">,</span> <span class="n">copier</span><span class="p">:</span> <span class="s1">&#39;GenericCopier&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot copy to filesystem object that is not file or directory&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CopyFileSystemObject.copy_from_dir"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyFileSystemObject.copy_from_dir">[docs]</a>    <span class="k">def</span> <span class="nf">copy_from_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="s1">&#39;CopyDirectory&#39;</span><span class="p">,</span> <span class="n">copier</span><span class="p">:</span> <span class="s1">&#39;GenericCopier&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot copy to filesystem object that is not file or directory&quot;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="n">other_casted</span><span class="p">:</span> <span class="s1">&#39;CopyFileSystemObject&#39;</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">CopyFileSystemObject</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span> <span class="o">==</span> <span class="n">other_casted</span><span class="o">.</span><span class="n">_fs</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span> <span class="o">==</span> <span class="n">other_casted</span><span class="o">.</span><span class="n">_path</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(fs=</span><span class="si">{self._fs}</span><span class="s2">, path=</span><span class="si">{self._path}</span><span class="s2">)&quot;</span></div>
+
+
+<div class="viewcode-block" id="CopyFile"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyFile">[docs]</a><span class="k">class</span> <span class="nc">CopyFile</span><span class="p">(</span><span class="n">CopyFileSystemObject</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CopyFile.copy"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyFile.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="s1">&#39;CopyFileSystemObject&#39;</span><span class="p">,</span> <span class="n">copier</span><span class="p">:</span> <span class="s1">&#39;GenericCopier&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dst</span><span class="o">.</span><span class="n">copy_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copier</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CopyFile.copy_from_file"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyFile.copy_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">copy_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="s1">&#39;CopyFile&#39;</span><span class="p">,</span> <span class="n">copier</span><span class="p">:</span> <span class="s1">&#39;GenericCopier&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">copier</span><span class="o">.</span><span class="n">copy_file_to_file</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CopyFile.copy_from_dir"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyFile.copy_from_dir">[docs]</a>    <span class="k">def</span> <span class="nf">copy_from_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="s1">&#39;CopyDirectory&#39;</span><span class="p">,</span> <span class="n">copier</span><span class="p">:</span> <span class="s1">&#39;GenericCopier&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot copy Directory into a File.&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CopyDirectory"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyDirectory">[docs]</a><span class="k">class</span> <span class="nc">CopyDirectory</span><span class="p">(</span><span class="n">CopyFileSystemObject</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CopyDirectory.file"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyDirectory.file">[docs]</a>    <span class="k">def</span> <span class="nf">file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;CopyFile&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CopyFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CopyDirectory.subdir"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyDirectory.subdir">[docs]</a>    <span class="k">def</span> <span class="nf">subdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;CopyDirectory&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CopyDirectory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CopyDirectory.copy"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyDirectory.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="s1">&#39;CopyFileSystemObject&#39;</span><span class="p">,</span> <span class="n">copier</span><span class="p">:</span> <span class="s1">&#39;GenericCopier&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dst</span><span class="o">.</span><span class="n">copy_from_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copier</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CopyDirectory.copy_from_file"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyDirectory.copy_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">copy_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="s1">&#39;CopyFile&#39;</span><span class="p">,</span> <span class="n">copier</span><span class="p">:</span> <span class="s1">&#39;GenericCopier&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">copier</span><span class="o">.</span><span class="n">copy_file_to_file</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CopyDirectory.copy_from_dir"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyDirectory.copy_from_dir">[docs]</a>    <span class="k">def</span> <span class="nf">copy_from_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="s1">&#39;CopyDirectory&#39;</span><span class="p">,</span> <span class="n">copier</span><span class="p">:</span> <span class="s1">&#39;GenericCopier&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">copier</span><span class="o">.</span><span class="n">copy_dir_to_dir</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="GenericCopier"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.GenericCopier">[docs]</a><span class="k">class</span> <span class="nc">GenericCopier</span><span class="p">:</span>
+
+<div class="viewcode-block" id="GenericCopier.copy_dir_to_dir"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.GenericCopier.copy_dir_to_dir">[docs]</a>    <span class="k">def</span> <span class="nf">copy_dir_to_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="n">CopyDirectory</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">CopyDirectory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">contents</span><span class="p">:</span> <span class="n">DirListResult</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">dir_list</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">file_</span> <span class="ow">in</span> <span class="n">contents</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+            <span class="n">src_child_file</span><span class="p">:</span> <span class="n">CopyFile</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="n">file_</span><span class="o">.</span><span class="n">basename</span><span class="p">)</span>
+            <span class="n">dst_child_file</span><span class="p">:</span> <span class="n">CopyFile</span> <span class="o">=</span> <span class="n">dst</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="n">file_</span><span class="o">.</span><span class="n">basename</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">copy_file_to_file</span><span class="p">(</span><span class="n">src_child_file</span><span class="p">,</span> <span class="n">dst_child_file</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">dir_</span> <span class="ow">in</span> <span class="n">contents</span><span class="o">.</span><span class="n">dirs</span><span class="p">:</span>
+            <span class="n">src_child_dir</span><span class="p">:</span> <span class="n">CopyDirectory</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">subdir</span><span class="p">(</span><span class="n">dir_</span><span class="o">.</span><span class="n">basename</span><span class="p">)</span>
+            <span class="n">dst_child_dir</span><span class="p">:</span> <span class="n">CopyDirectory</span> <span class="o">=</span> <span class="n">dst</span><span class="o">.</span><span class="n">subdir</span><span class="p">(</span><span class="n">dir_</span><span class="o">.</span><span class="n">basename</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">copy_dir_to_dir</span><span class="p">(</span><span class="n">src_child_dir</span><span class="p">,</span> <span class="n">dst_child_dir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GenericCopier.copy_file_to_file"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.GenericCopier.copy_file_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">copy_file_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="n">CopyFile</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">CopyFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dst</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">file_write</span><span class="p">(</span><span class="n">dst</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">src</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">file_read</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">path</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="CopyHandler"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyHandler">[docs]</a><span class="k">class</span> <span class="nc">CopyHandler</span><span class="p">:</span>
+    <span class="n">_copiers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">BaseFileSystem</span><span class="p">,</span> <span class="n">BaseFileSystem</span><span class="p">],</span> <span class="n">GenericCopier</span><span class="p">]</span>
+    <span class="n">_default</span><span class="p">:</span> <span class="n">GenericCopier</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_copier</span><span class="p">:</span> <span class="n">GenericCopier</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_copiers</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default</span> <span class="o">=</span> <span class="n">default_copier</span>
+
+<div class="viewcode-block" id="CopyHandler.set_copy_policy"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyHandler.set_copy_policy">[docs]</a>    <span class="k">def</span> <span class="nf">set_copy_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_fs</span><span class="p">:</span> <span class="n">BaseFileSystem</span><span class="p">,</span> <span class="n">dst_fs</span><span class="p">:</span> <span class="n">BaseFileSystem</span><span class="p">,</span> <span class="n">copier</span><span class="p">:</span> <span class="n">GenericCopier</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_copiers</span><span class="p">[(</span><span class="n">src_fs</span><span class="p">,</span> <span class="n">dst_fs</span><span class="p">)]</span> <span class="o">=</span> <span class="n">copier</span></div>
+
+<div class="viewcode-block" id="CopyHandler.copy"><a class="viewcode-back" href="../../norfs.copy.html#norfs.copy.CopyHandler.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="n">CopyFileSystemObject</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">CopyFileSystemObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">copier</span><span class="p">:</span> <span class="n">GenericCopier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copiers</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">src</span><span class="o">.</span><span class="n">fs</span><span class="p">,</span> <span class="n">dst</span><span class="o">.</span><span class="n">fs</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">src</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">copier</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CopyError</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span></div></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alessio Linares.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

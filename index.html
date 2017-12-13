@@ -1,0 +1,332 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>norfs &mdash; norfs 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="norfs 1.2.0 documentation" href="#"/>
+        <link rel="next" title="First steps" href="first_steps.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> norfs
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="first_steps.html">First steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">norfs</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">norfs</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>norfs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="norfs">
+<h1>norfs<a class="headerlink" href="#norfs" title="Permalink to this headline">¶</a></h1>
+<p><strong>Nor</strong>malized <strong>f</strong>ile<strong>s</strong>ystem. This library offers a common interface to interact with multiple filesystems,
+local or remote.</p>
+</div>
+<div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>Install with <code class="docutils literal"><span class="pre">pip</span></code>: <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">norfs</span></code>.</p>
+<p>You can also download the source code from the <a class="reference external" href="https://github.com/Galbar/norfs">git repository</a>.</p>
+</div>
+<div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<p>Once the <cite>norfs</cite> is installed you can start using it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">norfs</span>
+
+<span class="n">my_dir</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">localdir</span><span class="p">(</span><span class="s2">&quot;path/to/dir&quot;</span><span class="p">)</span>
+<span class="n">my_dir</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s2">&quot;file.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;so easy!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For more information see <a class="reference internal" href="first_steps.html"><span class="doc">First steps</span></a>.</p>
+</div>
+<div class="section" id="supported-filesystems">
+<h1>Supported Filesystems<a class="headerlink" href="#supported-filesystems" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li>Local filesystem</li>
+<li>S3</li>
+<li>In-memory</li>
+</ul>
+<p>The library is easily extensible! If you want a new filesystem supported implement it yourself or <a class="reference external" href="https://github.com/Galbar/norfs/issues">create an issue</a>.</p>
+</div>
+<div class="section" id="extended-example">
+<h1>Extended Example<a class="headerlink" href="#extended-example" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">norfs</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">local_file</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">localfile</span><span class="p">(</span><span class="s2">&quot;some/file.txt&quot;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">local_dir</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">localdir</span><span class="p">(</span><span class="s2">&quot;some&quot;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">local_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="kc">False</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">local_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;contents&quot;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">local_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="kc">True</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">local_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="sa">b</span><span class="s1">&#39;contents&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">boto3</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">norfs</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">s3_client</span><span class="o">=</span><span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">))</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">s3_dir</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">s3dir</span><span class="p">(</span><span class="s2">&quot;myBucket/some&quot;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="n">s3_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">11</span><span class="p">]:</span> <span class="kc">False</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">12</span><span class="p">]:</span> <span class="n">local_dir</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">s3_dir</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="n">s3_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">13</span><span class="p">]:</span> <span class="kc">True</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="n">s3_dir</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s2">&quot;file.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">14</span><span class="p">]:</span> <span class="sa">b</span><span class="s1">&#39;contents&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">15</span><span class="p">]:</span> <span class="n">mem_file</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">memoryfile</span><span class="p">(</span><span class="s2">&quot;file/in/memory.txt&quot;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="n">mem_file</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="kc">False</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">17</span><span class="p">]:</span> <span class="n">mem_file</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span><span class="o">.</span><span class="n">path</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">17</span><span class="p">]:</span> <span class="s1">&#39;file/in&#39;</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">18</span><span class="p">]:</span> <span class="n">mem_file</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">18</span><span class="p">]:</span> <span class="kc">False</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">19</span><span class="p">]:</span> <span class="n">mem_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">s3_dir</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s2">&quot;file.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">20</span><span class="p">]:</span> <span class="n">mem_file</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">20</span><span class="p">]:</span> <span class="p">[</span><span class="n">File</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="n">MemoryFileSystem</span><span class="p">(</span><span class="n">root</span><span class="o">=&lt;</span><span class="n">norfs</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">MemoryDirectory</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x10f62e8d0</span><span class="o">&gt;</span><span class="p">),</span> <span class="n">path</span><span class="o">=</span><span class="n">file</span><span class="o">/</span><span class="ow">in</span><span class="o">/</span><span class="n">memory</span><span class="o">.</span><span class="n">txt</span><span class="p">,</span> <span class="n">copy_handler</span><span class="o">=&lt;</span><span class="n">norfs</span><span class="o">.</span><span class="n">copy</span><span class="o">.</span><span class="n">CopyHandler</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x10eba79e8</span><span class="o">&gt;</span><span class="p">)]</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">21</span><span class="p">]:</span> <span class="n">mem_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">21</span><span class="p">]:</span> <span class="sa">b</span><span class="s1">&#39;contents&#39;</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="first_steps.html">First steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">norfs</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="first_steps.html" class="btn btn-neutral float-right" title="First steps" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Alessio Linares.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
