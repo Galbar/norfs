@@ -36,7 +36,7 @@ Directory
 `norfs` also offers handy shortcuts to create a Directory instance::
 
     In[8]: norfs.localdir("some/dir")
-    Out[8]:Directory(fs=LocalFileSystem(), path=/Users/alessiolinares/Programs/norfs/some/dir, copy_handler=<norfs.copy.CopyHandler object at 0x107cf1908>)
+    Out[8]:Directory(fs=LocalFileSystem(), path=/home/user/some/dir, copy_handler=<norfs.copy.CopyHandler object at 0x107cf1908>)
 
     In[9]: norfs.s3dir("some/dir")
     Out[9]:Directory(fs=S3FileSystem(s3_client=<botocore.client.S3 object at 0x108d8d5f8>, uri_protocol=s3, separator=/), path=some/dir, copy_handler=<norfs.copy.CopyHandler object at 0x107cf1908>)
