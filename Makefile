@@ -1,4 +1,4 @@
-all: clean flake mypy tests
+all: clean flake mypy tests docs
 
 clean:
 	find . -regex ".*\.pyc" -delete
@@ -14,4 +14,7 @@ mypy:
 tests:
 	PYTHONPATH=. pytest tests/ --cov=norfs --cov-report=term-missing
 
-.PHONY: clean flake mypy tests
+docs:
+	@$(MAKE) -C docs html;
+
+.PHONY: clean flake mypy tests docs

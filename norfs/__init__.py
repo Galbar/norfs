@@ -35,6 +35,15 @@ _s3_fs: Optional[S3FileSystem] = None
 _memory_fs: Optional[MemoryFileSystem] = None
 
 
+class Version:
+    MAJOR: str = "1"
+    MINOR: str = "2"
+    PATCH: str = "1"
+
+    VERSION: str = ".".join((MAJOR, MINOR))
+    RELEASE: str = ".".join((MAJOR, MINOR, PATCH))
+
+
 def get_copy_handler() -> CopyHandler:
     """ Returns the global instance of CopyHandler. """
     global _copy_handler

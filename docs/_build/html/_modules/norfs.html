@@ -76,6 +76,15 @@
 <span class="n">_memory_fs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MemoryFileSystem</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
 
+<div class="viewcode-block" id="Version"><a class="viewcode-back" href="../norfs.html#norfs.Version">[docs]</a><span class="k">class</span> <span class="nc">Version</span><span class="p">:</span>
+    <span class="n">MAJOR</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+    <span class="n">MINOR</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span>
+    <span class="n">PATCH</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+
+    <span class="n">VERSION</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">MAJOR</span><span class="p">,</span> <span class="n">MINOR</span><span class="p">))</span>
+    <span class="n">RELEASE</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">MAJOR</span><span class="p">,</span> <span class="n">MINOR</span><span class="p">,</span> <span class="n">PATCH</span><span class="p">))</span></div>
+
+
 <div class="viewcode-block" id="get_copy_handler"><a class="viewcode-back" href="../norfs.html#norfs.get_copy_handler">[docs]</a><span class="k">def</span> <span class="nf">get_copy_handler</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CopyHandler</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Returns the global instance of CopyHandler. &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">_copy_handler</span>
