@@ -1,4 +1,4 @@
-all: clean flake mypy tests docs
+all: clean flake mypy tests
 
 clean:
 	find . -regex ".*\.pyc" -delete
