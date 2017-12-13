@@ -9,6 +9,10 @@ interface to interact with multiple filesystems, local or remote.
 
 Install with ``pip``: ``pip install norfs``
 
+Find more information in the `documentation`_
+
+.. _documentation: https://galbar.github.io/norfs
+
 Features
 ========
 
