@@ -1,15 +1,25 @@
 from setuptools import setup, find_packages
 from norfs import Version
 
-setup(name="norfs",
+
+with open('README.rst', 'r') as f:
+    long_description = f.read()
+
+setup(name='norfs',
       version=Version.RELEASE,
-      author="Alessio Linares",
-      author_email="alessio@alessio.cc",
-      description=("Normalized filesystem. This library offers a common interface to interact with multiple "
-                   "filesystems, local or remote."),
-      keywords=["filesystem", "boto", "s3", "file", "directory", "norfs"],
-      url="https://github.com/Galbar/norfs",
-      download_url="https://github.com/Galbar/norfs/archive/{}.tar.gz".format(Version.RELEASE),
+      author='Alessio Linares',
+      author_email='alessio@alessio.cc',
+      description=('Normalized filesystem. This library offers a common interface to interact with multiple '
+                   'filesystems, local or remote.'),
+      long_description=long_description,
+      long_description_content_type='text/x-rst',
+      keywords='filesystem boto s3 file directory norfs',
+      url='https://github.com/Galbar/norfs',
+      project_urls={
+          'Documentation': 'https://galbar.github.io/norfs',
+          'Source': 'https://github.com/Galbar/norfs',
+      },
+      download_url='https://github.com/Galbar/norfs/archive/{}.tar.gz'.format(Version.RELEASE),
       license='MIT',
       classifiers=[
           # How mature is this project? Common values are
@@ -31,4 +41,4 @@ setup(name="norfs",
           'Programming Language :: Python :: 3.6',
       ],
       python_requires='>=3.6',
-      packages=find_packages(exclude=["tests*"]))
+      packages=find_packages(exclude=['tests*', 'docs']))
