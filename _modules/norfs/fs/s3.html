@@ -150,34 +150,36 @@
     <span class="c1"># Directory operations</span>
 <div class="viewcode-block" id="S3FileSystem.dir_list"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.s3.S3FileSystem.dir_list">[docs]</a>    <span class="k">def</span> <span class="nf">dir_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DirListResult</span><span class="p">:</span>
         <span class="n">tail_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_separator</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">tail</span><span class="p">)</span>
-        <span class="n">delimiter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_separator</span>
         <span class="k">if</span> <span class="n">tail_str</span><span class="p">:</span>
             <span class="n">tail_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_separator</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">response</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s3_client</span><span class="o">.</span><span class="n">list_objects_v2</span><span class="p">(</span>
-                <span class="n">Bucket</span><span class="o">=</span><span class="n">path</span><span class="o">.</span><span class="n">drive</span><span class="p">,</span>
-                <span class="n">Prefix</span><span class="o">=</span><span class="n">tail_str</span><span class="p">,</span>
-                <span class="n">Delimiter</span><span class="o">=</span><span class="n">delimiter</span>
-            <span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">FileSystemOperationError</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
 
         <span class="n">files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">contents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Contents&#39;</span><span class="p">,</span> <span class="p">[])</span>
-        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
-            <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;Key&#39;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">file_name</span> <span class="o">!=</span> <span class="n">tail_str</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">file_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_separator</span><span class="p">):</span>
-                    <span class="n">dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">drive</span><span class="p">,</span> <span class="o">*</span><span class="p">(</span><span class="n">file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_separator</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">drive</span><span class="p">,</span> <span class="o">*</span><span class="n">file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_separator</span><span class="p">)))</span>
+        <span class="n">response</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s3_client</span><span class="o">.</span><span class="n">list_objects_v2</span><span class="p">(</span>
+                <span class="n">Bucket</span><span class="o">=</span><span class="n">path</span><span class="o">.</span><span class="n">drive</span><span class="p">,</span>
+                <span class="n">Prefix</span><span class="o">=</span><span class="n">tail_str</span><span class="p">,</span>
+                <span class="n">Delimiter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_separator</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FileSystemOperationError</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
 
-        <span class="n">prefixes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;CommonPrefixes&#39;</span><span class="p">,</span> <span class="p">[])</span>
-        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">prefixes</span><span class="p">:</span>
-            <span class="n">dir_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;Prefix&#39;</span><span class="p">]</span>
-            <span class="n">dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">drive</span><span class="p">,</span> <span class="o">*</span><span class="p">(</span><span class="n">dir_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_separator</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
+        <span class="n">files</span><span class="p">,</span> <span class="n">dirs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extend_files_and_dirs_with_response</span><span class="p">(</span><span class="n">tail_str</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IsTruncated&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s3_client</span><span class="o">.</span><span class="n">list_objects_v2</span><span class="p">(</span>
+                    <span class="n">Bucket</span><span class="o">=</span><span class="n">path</span><span class="o">.</span><span class="n">drive</span><span class="p">,</span>
+                    <span class="n">Prefix</span><span class="o">=</span><span class="n">tail_str</span><span class="p">,</span>
+                    <span class="n">Delimiter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_separator</span><span class="p">,</span>
+                    <span class="n">ContinuationToken</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NextContinuationToken&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FileSystemOperationError</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+
+            <span class="n">files</span><span class="p">,</span> <span class="n">dirs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extend_files_and_dirs_with_response</span><span class="p">(</span><span class="n">tail_str</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">DirListResult</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="p">[])</span></div>
 
@@ -200,7 +202,26 @@
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{self.__class__.__name__}</span><span class="s2">(s3_client=</span><span class="si">{self._s3_client}</span><span class="s2">, uri_protocol=</span><span class="si">{self._protocol}</span><span class="s2">, &quot;</span>
-                <span class="n">f</span><span class="s2">&quot;separator=</span><span class="si">{self._separator}</span><span class="s2">)&quot;</span><span class="p">)</span></div>
+                <span class="n">f</span><span class="s2">&quot;separator=</span><span class="si">{self._separator}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_extend_files_and_dirs_with_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tail_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span> <span class="n">dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span>
+                                             <span class="n">response</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span>
+                                             <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]]:</span>
+        <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Contents&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;Key&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">file_name</span> <span class="o">!=</span> <span class="n">tail_str</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">file_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_separator</span><span class="p">):</span>
+                    <span class="n">dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">drive</span><span class="p">,</span> <span class="o">*</span><span class="p">(</span><span class="n">file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_separator</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">drive</span><span class="p">,</span> <span class="o">*</span><span class="n">file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_separator</span><span class="p">)))</span>
+
+        <span class="n">dir_name</span><span class="p">:</span> <span class="nb">str</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;CommonPrefixes&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="n">dir_name</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;Prefix&quot;</span><span class="p">]</span>
+            <span class="n">dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">drive</span><span class="p">,</span> <span class="o">*</span><span class="p">(</span><span class="n">dir_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_separator</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
+
+        <span class="k">return</span> <span class="n">files</span><span class="p">,</span> <span class="n">dirs</span></div>
 </pre></div>
 
           </div>
@@ -209,11 +230,14 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <p class="caption"><span class="caption-text">References:</span></p>
-<ul>
+  <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">norfs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../first_steps.html">First steps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">norfs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html#supported-filesystems">Supported Filesystems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html#the-norfs-interface">The norfs interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html#indices-and-tables">Indices and tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../norfs.html">norfs package</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
