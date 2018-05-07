@@ -6,13 +6,14 @@ from typing import (
 from norfs.fs import (
     BaseFileSystem,
     DirListResult,
+    FileSystemOperationError,
     Path,
 )
 
 from tests.tools import randstr
 
 
-# TODO: change `dict` by `'Scenario'` when https://github.com/python/mypy/issues/4200 is closed
+# TODO: change `dict` by `'Scenario'` when https://github.com/python/mypy/issues/731 is closed
 Scenario = Dict[str, Union[bytes, dict]]
 
 
@@ -52,6 +53,25 @@ class BaseTestFileSystem:
         self.setup_scenario(scenario)
 
         assert self.fs.file_read(self.make_path("dira", "fileaa")) == file_contents
+
+    def test_file_read_on_a_dir_fails(self) -> None:
+        file_contents: bytes = randstr().encode()
+        scenario: Scenario = {
+            'dira': {
+                'fileaa': file_contents,
+            },
+        }
+        self.setup_scenario(scenario)
+
+        error_happened: bool
+        try:
+            self.fs.file_read(self.make_path("dira"))
+        except FileSystemOperationError:
+            error_happened = True
+        else:
+            error_happened = False
+
+        assert error_happened
 
     def test_file_write(self) -> None:
         scenario: Scenario = {

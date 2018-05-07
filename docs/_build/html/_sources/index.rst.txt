@@ -5,6 +5,7 @@
 
 .. _index:
 
+
 norfs
 =====
 
@@ -21,92 +22,154 @@ You can also download the source code from the `git repository`_.
 .. _git repository: https://github.com/Galbar/norfs
 
 
-Quickstart
-==========
-Once the `norfs` is installed you can start using it::
-
-    import norfs
-
-    my_dir = norfs.localdir("path/to/dir")
-    my_dir.file("file.txt").write(b"so easy!")
-
-For more information see :doc:`first_steps`.
-
-
 Supported Filesystems
 =====================
-* Local filesystem
-* S3
-* In-memory
+* `Local filesystem`_
+* S3_
+* In-memory_
 
 The library is easily extensible! If you want a new filesystem supported implement it yourself or `create an issue`_.
 
 .. _create an issue: https://github.com/Galbar/norfs/issues
 
-Extended Example
-================
-::
+Local filesystem
+----------------
 
-    In [1]: import norfs
+Implements the norfs contract to work with files and directories in the local filesystem::
 
-    In [2]: local_file = norfs.localfile("some/file.txt")
+    import norfs
 
-    In [3]: local_dir = norfs.localdir("some")
+    my_directory = norfs.localdir("/my/local/directory")
+    my_file = norfs.localfile("/my/local/file.txt")
 
-    In [4]: local_dir.exists()
-    Out[4]: False
+S3
+--
 
-    In [5]: local_file.write(b"contents")
+Implements the norfs contract to work with files and directories in an S3 compatible store::
 
-    In [6]: local_dir.exists()
-    Out[6]: True
+    import norfs
+    import boto3
 
-    In [7]: local_file.read()
-    Out[7]: b'contents'
+    norfs.configure(s3_client=boto3.client("s3"))
 
-    In [8]: import boto3
+    my_directory = norfs.s3dir("myBucket/my/s3/directory")
+    my_file = norfs.s3file("myBucket/my/s3/file.txt")
+    # or
+    my_directory = norfs.s3dir("myBucket", "my/s3/directory")
+    my_file = norfs.s3file("myBucket", "my/s3/file.txt")
 
-    In [9]: norfs.configure(s3_client=boto3.client("s3"))
+In-memory
+---------
 
-    In [10]: s3_dir = norfs.s3dir("myBucket/some")
+Implements the norfs contract to work with files and directories in a very simple in-memory filesystem::
 
-    In [11]: s3_dir.exists()
-    Out[11]: False
+    import norfs
 
-    In [12]: local_dir.copy(s3_dir)
+    my_directory = norfs.memorydir("/my/memory/directory")
+    my_file = norfs.memoryfile("/my/memory/file.txt")
 
-    In [13]: s3_dir.exists()
-    Out[13]: True
 
-    In [14]: s3_dir.file("file.txt").read()
-    Out[14]: b'contents'
 
-    In [15]: mem_file = norfs.memoryfile("file/in/memory.txt")
+The norfs interface
+===================
 
-    In [16]: mem_file.exists()
-    Out[16]: False
+The most public interface norfs exposes is the BaseFileSystemObject_ and its subclasses Directory_ an File_.
 
-    In [17]: mem_file.parent().path
-    Out[17]: 'file/in'
+BaseFileSystemObject
+--------------------
 
-    In [18]: mem_file.parent().exists()
-    Out[18]: False
+``BaseFileSystemObject`` represents any object in the filesystem. It is the most abstract representation.
 
-    In [19]: mem_file.write(s3_dir.file("file.txt").read())
+A ``BaseFileSystemObject`` exposes the following interface:
 
-    In [20]: mem_file.parent().list()
-    Out[20]: [File(fs=MemoryFileSystem(root=<norfs.fs.memory.MemoryDirectory object at 0x10f62e8d0>), path=file/in/memory.txt, copy_handler=<norfs.copy.CopyHandler object at 0x10eba79e8>)]
+``.as_dir()`` -> Directory_
+~~~~~~~~~~~~
+Returns itself as a Directory instance or raises a ``NotADirectoryError``.
 
-    In [21]: mem_file.read()
-    Out[21]: b'contents'
+``.as_file()`` -> File_
+~~~~~~~~~~~~
+Returns itself as a File instance or raises a ``NotAFileError``.
 
-.. toctree::
-   :maxdepth: 1
-   :caption: References:
+``.copy(`` destination: BaseFileSystemObject_ ``)`` -> None
+~~~~~~~~~~~~
+Copy this to destination.
 
-   self
-   first_steps
-   modules
+If source is a Directory_ and destination is a File_ it raises a ``TypeError``.
+
+On copy failure it raises a ``FileSystemOperationError``.
+
+``.exists()`` -> bool
+~~~~~~~~~~~~
+Returns whether self exists in the file system.
+
+``.is_dir()`` -> bool
+~~~~~~~~~~~~
+Returns whether self is a Directory_.
+
+``.is_file()`` -> bool
+~~~~~~~~~~~~
+Returns whether self is a File_.
+
+``.name``: str
+~~~~~~~~~~~~
+The name of self.
+
+``.parent()`` -> Directory_
+~~~~~~~~~~~~
+Return parent Directory_ of self.
+
+``.path``: str
+~~~~~~~~~~~~
+The full, absolute, path of self in the file system.
+
+``.remove()`` -> None
+~~~~~~~~~~~~
+Tries to remove self from the file system. On failure it raises a ``FileSystemOperationError``.
+
+``.uri``: str
+~~~~~~~~~~~~
+The URI that points to self in the file system.
+
+Directory
+---------
+
+``Directory`` extends BaseFileSystemObject_ and specializes to represent directories in the filesystem.
+
+A ``Directory`` extends the BaseFileSystemObject_ interface with:
+
+``.file(`` path: str ``)`` -> File_
+~~~~~~~~~~~~
+Returns a File_ with its absolute path being the given path relative to self.
+
+``.list()`` -> List[BaseFileSystemObject_]
+~~~~~~~~~~~~
+Returns the contents of the Directory_ in the file system as a list of BaseFileSystemObject_.
+
+If the Directory_ does not exist the list will be empty.
+
+``.subdir(`` path: str ``)`` -> Directory_
+~~~~~~~~~~~~
+Returns a Directory_ with its absolute path being the given path relative to self.
+
+File
+----
+
+``File`` extends BaseFileSystemObject_ and specializes to represent files in the filesystem.
+
+A ``File`` extends the BaseFileSystemObject_ interface with:
+
+``.read()`` -> bytes
+~~~~~~~~~~~~
+Returns the contents of the File_.
+
+If it fails to read the file a ``FileSystemOperationError`` will be raised.
+
+``.write(`` content: bytes ``)`` -> None
+~~~~~~~~~~~~
+Sets the contents of the File_. If the parent Directory_ does not exist it is created.
+
+If it fails to read the file a ``FileSystemOperationError`` will be raised.
+
 
 Indices and tables
 ==================
@@ -114,3 +177,11 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+.. toctree::
+   :hidden:
+
+   index
+   examples
+   norfs

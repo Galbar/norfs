@@ -1,7 +1,13 @@
 import boto3
+import random
 
 from tempfile import TemporaryDirectory
-from typing import Any
+from typing import (
+    Any,
+    List,
+    Tuple,
+)
+
 from unittest import TestCase
 
 from moto import mock_s3
@@ -9,7 +15,10 @@ from moto import mock_s3
 from norfs.fs import Path
 from norfs.fs.local import LocalFileSystem
 from norfs.fs.s3 import S3FileSystem
-from norfs.copy import CopyFile
+from norfs.copy import (
+    CopyDirectory,
+    CopyFile,
+)
 from norfs.copy.s3 import (
     S3ToLocalCopier,
     S3ToS3Copier,
@@ -44,6 +53,21 @@ class TestS3ToS3Copier(TestCase):
         self.client.delete_bucket(Bucket=self.src_bucket_name)
         boto3.resource("s3").Bucket(self.dst_bucket_name).objects.all().delete()
         self.client.delete_bucket(Bucket=self.dst_bucket_name)
+
+    def test_copy_dir_to_dir(self) -> None:
+        src_path: Path = random_path(self.src_bucket_name)
+        dst_path: Path = random_path(self.dst_bucket_name)
+        content: bytes = randstr().encode()
+
+        scenario: List[Tuple[Path, bytes]] = [(random_path(), randstr().encode()) for _ in range(random.randint(3, 10))]
+
+        for path, content in scenario:
+            self.fs.file_write(Path(src_path.drive, *src_path.tail, *path.tail), content)
+
+        self.sut.copy_dir_to_dir(CopyDirectory(self.fs, src_path), CopyDirectory(self.fs, dst_path))
+
+        for path, content in scenario:
+            assert self.fs.file_read(Path(dst_path.drive, *dst_path.tail, *path.tail)) == content
 
     def test_copy_file_to_file(self) -> None:
         src_path: Path = random_path(self.src_bucket_name)

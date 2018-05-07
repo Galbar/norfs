@@ -88,6 +88,11 @@
 <em class="property">class </em><code class="descclassname">norfs.copy.s3.</code><code class="descname">S3ToS3Copier</code><span class="sig-paren">(</span><em>s3_client: typing.Any</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy/s3.html#S3ToS3Copier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.s3.S3ToS3Copier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#norfs.copy.GenericCopier" title="norfs.copy.GenericCopier"><code class="xref py py-class docutils literal"><span class="pre">norfs.copy.GenericCopier</span></code></a></p>
 <dl class="method">
+<dt id="norfs.copy.s3.S3ToS3Copier.copy_dir_to_dir">
+<code class="descname">copy_dir_to_dir</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyDirectory</em>, <em>dst: norfs.copy.CopyDirectory</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy/s3.html#S3ToS3Copier.copy_dir_to_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.s3.S3ToS3Copier.copy_dir_to_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="norfs.copy.s3.S3ToS3Copier.copy_file_to_file">
 <code class="descname">copy_file_to_file</code><span class="sig-paren">(</span><em>src: norfs.copy.CopyFile</em>, <em>dst: norfs.copy.CopyFile</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy/s3.html#S3ToS3Copier.copy_file_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.s3.S3ToS3Copier.copy_file_to_file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -228,11 +233,13 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
-  <p class="caption"><span class="caption-text">References:</span></p>
-<ul class="current">
+  <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">norfs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="first_steps.html">First steps</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">norfs</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#supported-filesystems">Supported Filesystems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#the-norfs-interface">The norfs interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="norfs.html">norfs package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="norfs.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">norfs.copy package</a><ul>
@@ -252,16 +259,32 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="norfs.html">norfs package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="norfs.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">norfs.copy package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-norfs.copy.local">norfs.copy.local module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-norfs.copy.s3">norfs.copy.s3 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-norfs.copy">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="norfs.fs.html">norfs.fs package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="norfs.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="norfs.html#module-norfs.filesystem">norfs.filesystem module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="norfs.html#module-norfs">Module contents</a></li>
+</ul>
+</li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-  <li><a href="modules.html">norfs</a><ul>
   <li><a href="norfs.html">norfs package</a><ul>
       <li>Previous: <a href="norfs.html" title="previous chapter">norfs package</a></li>
       <li>Next: <a href="norfs.fs.html" title="next chapter">norfs.fs package</a></li>
-  </ul></li>
   </ul></li>
   </ul></li>
 </ul>

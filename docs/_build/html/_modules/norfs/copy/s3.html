@@ -40,20 +40,70 @@
             
   <h1>Source code for norfs.copy.s3</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">GenericCopier</span><span class="p">,</span>
+    <span class="n">CopyDirectory</span><span class="p">,</span>
     <span class="n">CopyFile</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..fs</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">..fs</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">FileSystemOperationError</span><span class="p">,</span>
+    <span class="n">Path</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="S3ToS3Copier"><a class="viewcode-back" href="../../../norfs.copy.html#norfs.copy.s3.S3ToS3Copier">[docs]</a><span class="k">class</span> <span class="nc">S3ToS3Copier</span><span class="p">(</span><span class="n">GenericCopier</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s3_client</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_s3_client</span> <span class="o">=</span> <span class="n">s3_client</span>
+
+    <span class="k">def</span> <span class="nf">_list_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dir_drive</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dir_tail</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">response</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s3_client</span><span class="o">.</span><span class="n">list_objects_v2</span><span class="p">(</span>
+                <span class="n">Bucket</span><span class="o">=</span><span class="n">dir_drive</span><span class="p">,</span>
+                <span class="n">Prefix</span><span class="o">=</span><span class="n">dir_tail</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FileSystemOperationError</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+
+        <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Contents&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;Key&quot;</span><span class="p">])</span>
+
+        <span class="k">while</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IsTruncated&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s3_client</span><span class="o">.</span><span class="n">list_objects_v2</span><span class="p">(</span>
+                    <span class="n">Bucket</span><span class="o">=</span><span class="n">dir_drive</span><span class="p">,</span>
+                    <span class="n">Prefix</span><span class="o">=</span><span class="n">dir_tail</span><span class="p">,</span>
+                    <span class="n">ContinuationToken</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NextContinuationToken&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FileSystemOperationError</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Contents&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;Key&quot;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">items</span>
+
+<div class="viewcode-block" id="S3ToS3Copier.copy_dir_to_dir"><a class="viewcode-back" href="../../../norfs.copy.html#norfs.copy.s3.S3ToS3Copier.copy_dir_to_dir">[docs]</a>    <span class="k">def</span> <span class="nf">copy_dir_to_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="n">CopyDirectory</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">CopyDirectory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dir_path_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">path_to_string</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">src_dir_tail</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dir_path_str</span><span class="p">[</span><span class="n">dir_path_str</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="n">dir_path_str</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">path_to_string</span><span class="p">(</span><span class="n">dst</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">dst_dir_tail</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dir_path_str</span><span class="p">[</span><span class="n">dir_path_str</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+
+        <span class="k">for</span> <span class="n">src_obj_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_dir</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">drive</span><span class="p">,</span> <span class="n">src_dir_tail</span><span class="p">):</span>
+            <span class="n">dst_obj_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">src_obj_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">src_dir_tail</span><span class="p">,</span> <span class="n">dst_dir_tail</span><span class="p">)</span>
+            <span class="n">src_file</span><span class="p">:</span> <span class="n">CopyFile</span> <span class="o">=</span> <span class="n">CopyFile</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">fs</span><span class="p">,</span> <span class="n">src</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">parse_path</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{src.path.drive}</span><span class="s2">/</span><span class="si">{src_obj_path}</span><span class="s2">&quot;</span><span class="p">))</span>
+            <span class="n">dst_file</span><span class="p">:</span> <span class="n">CopyFile</span> <span class="o">=</span> <span class="n">CopyFile</span><span class="p">(</span><span class="n">dst</span><span class="o">.</span><span class="n">fs</span><span class="p">,</span> <span class="n">dst</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">parse_path</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{dst.path.drive}</span><span class="s2">/</span><span class="si">{dst_obj_path}</span><span class="s2">&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">copy_file_to_file</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">dst_file</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="S3ToS3Copier.copy_file_to_file"><a class="viewcode-back" href="../../../norfs.copy.html#norfs.copy.s3.S3ToS3Copier.copy_file_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">copy_file_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="n">CopyFile</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">CopyFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">src_path_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">path_to_string</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
@@ -87,11 +137,14 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../../index.html">Table Of Contents</a></h3>
-  <p class="caption"><span class="caption-text">References:</span></p>
-<ul>
+  <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">norfs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../first_steps.html">First steps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">norfs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html#supported-filesystems">Supported Filesystems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html#the-norfs-interface">The norfs interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html#indices-and-tables">Indices and tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../norfs.html">norfs package</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>

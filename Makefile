@@ -15,6 +15,7 @@ tests:
 	PYTHONPATH=. pytest tests/ --cov=norfs --cov-report=term-missing
 
 docs:
+	rm -rf docs/_build
 	@$(MAKE) -C docs html;
 
 .PHONY: clean flake mypy tests docs

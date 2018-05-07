@@ -109,34 +109,36 @@ class S3FileSystem(BaseFileSystem):
     # Directory operations
     def dir_list(self, path: Path) -> DirListResult:
         tail_str: str = self._separator.join(path.tail)
-        delimiter: str = self._separator
         if tail_str:
             tail_str += self._separator
-        try:
-            response: Dict[str, List[Dict[str, str]]] = self._s3_client.list_objects_v2(
-                Bucket=path.drive,
-                Prefix=tail_str,
-                Delimiter=delimiter
-            )
-        except Exception:
-            raise FileSystemOperationError(traceback.format_exc())
 
         files: List[Path] = []
         dirs: List[Path] = []
 
-        contents: List[Dict[str, str]] = response.get('Contents', [])
-        for item in contents:
-            file_name: str = item['Key']
-            if file_name != tail_str:
-                if file_name.endswith(self._separator):
-                    dirs.append(Path(path.drive, *(file_name.split(self._separator)[:-1])))
-                else:
-                    files.append(Path(path.drive, *file_name.split(self._separator)))
+        response: Dict[str, List[Dict[str, str]]]
+        try:
+            response = self._s3_client.list_objects_v2(
+                Bucket=path.drive,
+                Prefix=tail_str,
+                Delimiter=self._separator
+            )
+        except Exception:
+            raise FileSystemOperationError(traceback.format_exc())
 
-        prefixes: List[Dict[str, str]] = response.get('CommonPrefixes', [])
-        for item in prefixes:
-            dir_name: str = item['Prefix']
-            dirs.append(Path(path.drive, *(dir_name.split(self._separator)[:-1])))
+        files, dirs = self._extend_files_and_dirs_with_response(tail_str, path, files, dirs, response)
+
+        while response.get("IsTruncated", False):
+            try:
+                response = self._s3_client.list_objects_v2(
+                    Bucket=path.drive,
+                    Prefix=tail_str,
+                    Delimiter=self._separator,
+                    ContinuationToken=response.get("NextContinuationToken", "")
+                )
+            except Exception:
+                raise FileSystemOperationError(traceback.format_exc())
+
+            files, dirs = self._extend_files_and_dirs_with_response(tail_str, path, files, dirs, response)
 
         return DirListResult(files, dirs, [])
 
@@ -160,3 +162,22 @@ class S3FileSystem(BaseFileSystem):
     def __repr__(self) -> str:
         return (f"{self.__class__.__name__}(s3_client={self._s3_client}, uri_protocol={self._protocol}, "
                 f"separator={self._separator})")
+
+    def _extend_files_and_dirs_with_response(self, tail_str: str, path: Path, files: List[Path], dirs: List[Path],
+                                             response: Dict[str, List[Dict[str, str]]]
+                                             ) -> Tuple[List[Path], List[Path]]:
+        file_name: str
+        for item in response.get("Contents", []):
+            file_name = item["Key"]
+            if file_name != tail_str:
+                if file_name.endswith(self._separator):
+                    dirs.append(Path(path.drive, *(file_name.split(self._separator)[:-1])))
+                else:
+                    files.append(Path(path.drive, *file_name.split(self._separator)))
+
+        dir_name: str
+        for item in response.get("CommonPrefixes", []):
+            dir_name = item["Prefix"]
+            dirs.append(Path(path.drive, *(dir_name.split(self._separator)[:-1])))
+
+        return files, dirs
