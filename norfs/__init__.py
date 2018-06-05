@@ -38,7 +38,7 @@ _memory_fs: Optional[MemoryFileSystem] = None
 class Version:
     MAJOR: str = "1"
     MINOR: str = "3"
-    PATCH: str = "0"
+    PATCH: str = "1"
 
     VERSION: str = ".".join((MAJOR, MINOR))
     RELEASE: str = ".".join((MAJOR, MINOR, PATCH))
