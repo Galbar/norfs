@@ -78,7 +78,7 @@ class CopyDirectory(CopyFileSystemObject):
         dst.copy_from_dir(self, copier)
 
     def copy_from_file(self, src: 'CopyFile', copier: 'GenericCopier') -> None:
-        copier.copy_file_to_file(src, self.file(self.path.basename))
+        copier.copy_file_to_file(src, self.file(src.path.basename))
 
     def copy_from_dir(self, src: 'CopyDirectory', copier: 'GenericCopier') -> None:
         copier.copy_dir_to_dir(src, self)

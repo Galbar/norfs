@@ -130,7 +130,7 @@ class TestCopyDirectory(BaseTestCopyFileSystemObject[CopyDirectory], TestCase):
         copier: Any = mock.Mock(spec=GenericCopier)
         self.sut.copy_from_file(src, copier)
 
-        copier.copy_file_to_file.assert_called_once_with(src, self.sut.file(self.path.basename))
+        copier.copy_file_to_file.assert_called_once_with(src, self.sut.file(src.path.basename))
 
     def test_copy_from_dir(self) -> None:
         src: CopyDirectory = mock.Mock(spec=CopyFile)
