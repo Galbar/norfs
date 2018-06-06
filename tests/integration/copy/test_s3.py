@@ -1,5 +1,4 @@
 import boto3
-import random
 
 from tempfile import TemporaryDirectory
 from typing import (
@@ -59,7 +58,7 @@ class TestS3ToS3Copier(TestCase):
         dst_path: Path = random_path(self.dst_bucket_name)
         content: bytes = randstr().encode()
 
-        scenario: List[Tuple[Path, bytes]] = [(random_path(), randstr().encode()) for _ in range(random.randint(3, 10))]
+        scenario: List[Tuple[Path, bytes]] = [(random_path(), randstr().encode()) for _ in range(1500)]
 
         for path, content in scenario:
             self.fs.file_write(Path(src_path.drive, *src_path.tail, *path.tail), content)

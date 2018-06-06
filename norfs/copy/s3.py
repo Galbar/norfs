@@ -47,8 +47,8 @@ class S3ToS3Copier(GenericCopier):
             except Exception:
                 raise FileSystemOperationError(traceback.format_exc())
 
-        for item in response.get("Contents", []):
-            items.append(item["Key"])
+            for item in response.get("Contents", []):
+                items.append(item["Key"])
 
         return items
 
