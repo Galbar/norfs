@@ -10,7 +10,14 @@ norfs
 =====
 
 **Nor**\ malized **f**\ ile\ **s**\ ystem. This library offers a common interface to interact with multiple filesystems,
-local or remote.
+local or remote::
+
+    import norfs.helpers
+
+    local = norfs.helpers.local()
+    demo_file = local.file('demo.txt')
+    demo_file.write(b'Hello World')
+    print(demo_file.read())
 
 
 Installation
@@ -37,43 +44,116 @@ Local filesystem
 
 Implements the norfs contract to work with files and directories in the local filesystem::
 
-    import norfs
+    import norfs.helpers
 
-    my_directory = norfs.localdir("/my/local/directory")
-    my_file = norfs.localfile("/my/local/file.txt")
+    local = norfs.helpers.local()
+
+    my_directory = local.dir("/my/local/directory")
+    my_file = local.file("/my/local/file.txt")
 
 S3
 --
 
 Implements the norfs contract to work with files and directories in an S3 compatible store::
 
-    import norfs
+    import norfs.helpers
     import boto3
 
-    norfs.configure(s3_client=boto3.client("s3"))
+    s3 = norfs.helpers.s3(s3_client=boto3.client("s3"))
 
-    my_directory = norfs.s3dir("myBucket/my/s3/directory")
-    my_file = norfs.s3file("myBucket/my/s3/file.txt")
-    # or
-    my_directory = norfs.s3dir("myBucket", "my/s3/directory")
-    my_file = norfs.s3file("myBucket", "my/s3/file.txt")
+    my_directory = s3.dir("myBucket/my/s3/directory")
+    my_file = s3.file("myBucket/my/s3/file.txt")
 
 In-memory
 ---------
 
 Implements the norfs contract to work with files and directories in a very simple in-memory filesystem::
 
-    import norfs
+    import norfs.helpers
 
-    my_directory = norfs.memorydir("/my/memory/directory")
-    my_file = norfs.memoryfile("/my/memory/file.txt")
+    memory = norfs.helpers.memory()
 
+    my_directory = memory.dir("/my/memory/directory")
+    my_file = memory.file("/my/memory/file.txt")
 
 
 The norfs interface
 ===================
 
-The most public interface norfs exposes is the BaseFileSystemObject_ and its subclasses Directory_ an File_.
+The most public interface norfs exposes is composed of the FileSystemClient_, the CopyClient_ and the BaseFileSystemObject_ with its subclasses Directory_ an File_.
+
+FileSystemClient
+----------------
+
+``FileSystemClient`` provides a way to access the file system objects of a given file system. It is a handy class that 
+provides easy access to File_ and Directory_ instances. It is usually obtained using the ``norfs.helpers``::
+
+    import norfs.helpers
+
+    local_fs_client = norfs.helpers.local()
+
+    memory_fs_client = norfs.helpers.memory()
+
+    import boto3
+    s3_fs_client = norfs.helpers.s3(s3_client=boto3.client('s3'))
+
+A ``FileSystemClient`` exposes the following interface:
+
+``.dir(`` path: str ``)`` -> Directory_
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Returns a Directory_ instance for the given path.
+
+``.file(`` path: str ``)`` -> File_
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Returns a File_ instance for the given path.
+
+``.fs`` -> norfs.fs.base.BaseFileSystem
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Returns a the BaseFileSystemObject_ of the client.
+
+
+CopyClient
+----------
+
+``CopyClient`` provides a unified simple copy API for any File_ or Directory_ from any file system. It is usually 
+accessed by using ``norfs.helpers.get_copy_client()``::
+
+    import norfs.helpers
+
+    local = norfs.helpers.local()
+    cp_local_only = norfs.helpers.get_copy_client(local)
+
+    cp_local_only.copy(local.file('source_file.txt'), local.file('target_file.txt'))
+
+
+    memory = norfs.helpers.memory()
+    import boto3
+    s3 = norfs.helpers.s3(s3_client=boto3.client('s3'))
+
+    cp_for_all = norfs.helpers.get_copy_client(local, s3, memory)
+
+    cp_for_all.copy(s3.file('myBucket/source_file.txt'), local.file('target_file.txt'))
+
+``norfs.helpers.get_copy_client()`` returns a CopyClient_ instance configured with copy strategies for each of the 
+file system clients passed. A ``norfs.copy.base.Copier`` can have copy policies set for a pair of source and 
+destination file systems to implement a better strategy of copying between them than read source and write 
+destination. ``norfs.helpers.get_copy_client()`` helps you by setting these for you.
+
+A ``CopyClient`` exposes the following interface:
+
+``.copy(`` src: BaseFileSystemObject_, dst: BaseFileSystemObject_ ``)`` -> None
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Copies ``src`` to ``dst``, no mater the file systems they are on. ``src`` and ``dst`` can by both File_ or Directory_. 
+The only operation not supported is copying from a Directory_ into a File_ as it does not make sense.
+
+If source is a Directory_ and destination is a File_ it raises a ``TypeError``.
+
+On copy failure it raises a ``FileSystemOperationError``.
+
+``.copier`` -> norfs.copy.base.Copier
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Returns the ``Copier`` instance that the client manages.
+
 
 BaseFileSystemObject
 --------------------
@@ -89,14 +169,6 @@ Returns itself as a Directory instance or raises a ``NotADirectoryError``.
 ``.as_file()`` -> File_
 ~~~~~~~~~~~~~~~~~~~~~~~
 Returns itself as a File instance or raises a ``NotAFileError``.
-
-``.copy(`` destination: BaseFileSystemObject_ ``)`` -> None
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Copy this to destination.
-
-If source is a Directory_ and destination is a File_ it raises a ``TypeError``.
-
-On copy failure it raises a ``FileSystemOperationError``.
 
 ``.exists()`` -> bool
 ~~~~~~~~~~~~~~~~~~~~~
