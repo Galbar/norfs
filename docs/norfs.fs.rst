@@ -4,6 +4,14 @@ norfs\.fs package
 Submodules
 ----------
 
+norfs\.fs\.base module
+-----------------------
+
+.. automodule:: norfs.fs.base
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 norfs\.fs\.local module
 -----------------------
 

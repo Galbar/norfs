@@ -6,8 +6,10 @@ from unittest import (
     mock,
 )
 
-from norfs.fs import Path
-from norfs.fs import NotAFileError
+from norfs.fs.base import (
+    Path,
+    NotAFileError,
+)
 from norfs.fs.memory import (
     MemoryDirectory,
     MemoryFile,

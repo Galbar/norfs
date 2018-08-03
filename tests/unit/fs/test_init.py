@@ -6,7 +6,7 @@ from unittest import (
 )
 from typing import List
 
-from norfs.fs import (
+from norfs.fs.base import (
     BaseFileSystem,
     DirListResult,
     FileSystemOperationError,

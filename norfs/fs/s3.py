@@ -7,7 +7,7 @@ from typing import (
     Tuple,
 )
 
-from . import (
+from norfs.fs.base import (
     BaseFileSystem,
     DirListResult,
     FileSystemOperationError,

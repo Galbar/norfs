@@ -12,7 +12,7 @@ from unittest import TestCase
 
 from moto import mock_s3
 
-from norfs.fs import Path
+from norfs.fs.base import Path
 from norfs.fs.s3 import S3FileSystem
 
 from .base_fs_test import (

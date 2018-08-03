@@ -17,14 +17,13 @@ from norfs.filesystem import (
     Directory,
     File,
 )
-from norfs.fs import (
+from norfs.fs.base import (
     BaseFileSystem,
     DirListResult,
     FileSystemOperationError,
     NotAFileError,
     Path,
 )
-from norfs.copy import CopyHandler
 
 from tests.tools import (
     random_path,
@@ -40,20 +39,17 @@ class FileSystemObjectTestCase(Generic[T], TestCase):
 
     filesystem: Any
     path: Any
-    copy_handler: Any
     sut: T
 
     def setUp(self) -> None:
         self.filesystem = mock.Mock(spec=BaseFileSystem)
         self.path = mock.Mock(spec=Path)
-        self.copy_handler = mock.Mock(spec=CopyHandler)
-        self.sut = self.CLASS_UNDER_TEST(self.filesystem, None, self.copy_handler, _path=self.path)
+        self.sut = self.CLASS_UNDER_TEST(self.filesystem, None, _path=self.path)
 
     def test_public_constructor_and_internal_constructor_build_the_same_object(self) -> None:
         path_str: str = mock.Mock(spec=str)
-        public: T = self.CLASS_UNDER_TEST(self.filesystem, path_str, self.copy_handler)
-        internal: T = self.CLASS_UNDER_TEST(self.filesystem, None, self.copy_handler,
-                                            _path=self.filesystem.parse_path.return_value)
+        public: T = self.CLASS_UNDER_TEST(self.filesystem, path_str)
+        internal: T = self.CLASS_UNDER_TEST(self.filesystem, None, _path=self.filesystem.parse_path.return_value)
         assert public == internal
         self.filesystem.parse_path.assert_called_once_with(path_str)
 
@@ -91,32 +87,25 @@ class FileSystemObjectTestCase(Generic[T], TestCase):
             self.sut.remove()
 
     def test_parent(self) -> None:
-        assert self.sut.parent() == Directory(self.filesystem, None, self.copy_handler, _path=self.path.parent)
-
-    def test_copy(self) -> None:
-        dst: BaseFileSystemObject = mock.Mock(spec=BaseFileSystemObject)
-        self.sut.copy(dst)
-        self.copy_handler.copy.assert_called_once_with(self.sut._copy_object(), dst._copy_object())
+        assert self.sut.parent() == Directory(self.filesystem, None, _path=self.path.parent)
 
     def test_repr(self) -> None:
         assert self.sut.__repr__() == (f"{self.CLASS_UNDER_TEST.__name__}(fs={self.filesystem}, "
-                                       f"path={self.sut.path}, copy_handler={self.copy_handler})")
+                                       f"path={self.sut.path})")
 
     def test_eq(self) -> None:
         other_filesystem: BaseFileSystem = mock.Mock(spec=BaseFileSystem)
         other_path: Path = mock.Mock(spec=Path)
-        other_copy_handler: CopyHandler = mock.Mock(spec=CopyHandler)
 
         assert mock.Mock() != self.sut
         assert self.sut == self.sut
-        assert self.sut == self.CLASS_UNDER_TEST(self.filesystem, None, self.copy_handler, _path=self.path)
-        assert self.sut != self.CLASS_UNDER_TEST(other_filesystem, None, self.copy_handler, _path=self.path)
-        assert self.sut != self.CLASS_UNDER_TEST(self.filesystem, None, other_copy_handler, _path=self.path)
-        assert self.sut != self.CLASS_UNDER_TEST(self.filesystem, None, self.copy_handler, _path=other_path)
+        assert self.sut == self.CLASS_UNDER_TEST(self.filesystem, None, _path=self.path)
+        assert self.sut != self.CLASS_UNDER_TEST(other_filesystem, None, _path=self.path)
+        assert self.sut != self.CLASS_UNDER_TEST(self.filesystem, None, _path=other_path)
 
-        other: BaseFileSystemObject = BaseFileSystemObject(other_filesystem, None, other_copy_handler, _path=self.path)
-        file_: File = File(other_filesystem, None, other_copy_handler, _path=self.path)
-        dir_: Directory = Directory(other_filesystem, None, other_copy_handler, _path=self.path)
+        other: BaseFileSystemObject = BaseFileSystemObject(other_filesystem, None, _path=self.path)
+        file_: File = File(other_filesystem, None, _path=self.path)
+        dir_: Directory = Directory(other_filesystem, None, _path=self.path)
 
         assert other != file_
         assert other != dir_
@@ -149,22 +138,20 @@ class TestDirectory(FileSystemObjectTestCase[Directory]):
 
         actual: List[BaseFileSystemObject] = self.sut.list()
         expected: List[BaseFileSystemObject] = (
-            [BaseFileSystemObject(self.filesystem, None, self.copy_handler, _path=path) for path in others] +
-            [File(self.filesystem, None, self.copy_handler, _path=path) for path in files] +
-            [Directory(self.filesystem, None, self.copy_handler, _path=path) for path in dirs]
+            [BaseFileSystemObject(self.filesystem, None, _path=path) for path in others] +
+            [File(self.filesystem, None, _path=path) for path in files] +
+            [Directory(self.filesystem, None, _path=path) for path in dirs]
         )
         assert set(actual) == set(expected)
 
     def test_subdir(self) -> None:
         child_name: str = randstr()
-        assert self.sut.subdir(child_name) == Directory(self.filesystem, None, self.copy_handler,
-                                                        _path=self.path.child.return_value)
+        assert self.sut.subdir(child_name) == Directory(self.filesystem, None, _path=self.path.child.return_value)
         self.path.child.assert_called_once_with(child_name)
 
     def test_file(self) -> None:
         child_name: str = randstr()
-        assert self.sut.file(child_name) == File(self.filesystem, None, self.copy_handler,
-                                                 _path=self.path.child.return_value)
+        assert self.sut.file(child_name) == File(self.filesystem, None, _path=self.path.child.return_value)
         self.path.child.assert_called_once_with(child_name)
 
 

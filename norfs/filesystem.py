@@ -5,15 +5,14 @@ from typing import (
     cast,
 )
 
-from .fs import (
+from norfs.fs.base import (
     BaseFileSystem,
     DirListResult,
     FileSystemOperationError,
     NotAFileError,
     Path,
 )
-from .copy import CopyHandler
-from .copy import (
+from norfs.copy.base import (
     CopyDirectory,
     CopyFile,
     CopyFileSystemObject,
@@ -21,16 +20,13 @@ from .copy import (
 
 
 class BaseFileSystemObject:
-    _copy_handler: CopyHandler
     _fs: BaseFileSystem
     _path: Path
 
-    def __init__(self, filesystem: BaseFileSystem, path_str: Optional[str], copy_handler: CopyHandler, *,
-                 _path: Optional[Path]=None) -> None:
+    def __init__(self, filesystem: BaseFileSystem, path_str: Optional[str], *, _path: Optional[Path]=None) -> None:
         """ Constructor for BaseFileSystemObjects.
         One of `path_str` and `_path` **MUST** be present.
         """
-        self._copy_handler = copy_handler
         self._fs = filesystem
         self._path = _path or self._fs.parse_path(path_str or "")
 
@@ -77,17 +73,13 @@ class BaseFileSystemObject:
 
     def parent(self) -> 'Directory':
         """ Return parent Directory of self. """
-        return Directory(self._fs, None, self._copy_handler, _path=self._path.parent)
+        return Directory(self._fs, None, _path=self._path.parent)
 
-    def copy(self, destination: 'BaseFileSystemObject') -> None:
-        """ Copy this to `destination`. """
-        self._copy_handler.copy(self._copy_object(), destination._copy_object())
-
-    def _copy_object(self) -> CopyFileSystemObject:
+    def copy_object(self) -> CopyFileSystemObject:
         return CopyFileSystemObject(self._fs, self._path)
 
     def __repr__(self) -> str:
-        return (f"{self.__class__.__name__}(fs={self._fs}, path={self.path}, copy_handler={self._copy_handler})")
+        return (f"{self.__class__.__name__}(fs={self._fs}, path={self.path})")
 
     def __hash__(self) -> int:
         return hash(self.__repr__())
@@ -96,8 +88,7 @@ class BaseFileSystemObject:
         if isinstance(other, self.__class__):
             other_casted: 'BaseFileSystemObject' = cast(BaseFileSystemObject, other)
             return (self._path == other_casted._path and
-                    self._fs == other_casted._fs and
-                    self._copy_handler == other_casted._copy_handler)
+                    self._fs == other_casted._fs)
         return False
 
 
@@ -119,11 +110,11 @@ class Directory(BaseFileSystemObject):
         contents: DirListResult = self._fs.dir_list(self._path)
         result: List[BaseFileSystemObject] = []
         for dir_path in contents.dirs:
-            result.append(Directory(self._fs, None, self._copy_handler, _path=dir_path))
+            result.append(Directory(self._fs, None, _path=dir_path))
         for file_path in contents.files:
-            result.append(File(self._fs, None, self._copy_handler, _path=file_path))
+            result.append(File(self._fs, None, _path=file_path))
         for other_path in contents.others:
-            result.append(BaseFileSystemObject(self._fs, None, self._copy_handler, _path=other_path))
+            result.append(BaseFileSystemObject(self._fs, None, _path=other_path))
 
         return result
 
@@ -136,13 +127,13 @@ class Directory(BaseFileSystemObject):
 
     def subdir(self, path: str) -> 'Directory':
         """ Returns a Directory with its path as being the given path relative to the current Directory. """
-        return Directory(self._fs, None, self._copy_handler, _path=self._path.child(path))
+        return Directory(self._fs, None, _path=self._path.child(path))
 
     def file(self, path: str) -> 'File':
         """ Returns a File with its path as being the given `path` relative to the current Directory. """
-        return File(self._fs, None, self._copy_handler, _path=self._path.child(path))
+        return File(self._fs, None, _path=self._path.child(path))
 
-    def _copy_object(self) -> CopyFileSystemObject:
+    def copy_object(self) -> CopyFileSystemObject:
         return CopyDirectory(self._fs, self._path)
 
 
@@ -177,5 +168,5 @@ class File(BaseFileSystemObject):
         """
         self._fs.file_write(self._path, content)
 
-    def _copy_object(self) -> CopyFileSystemObject:
+    def copy_object(self) -> CopyFileSystemObject:
         return CopyFile(self._fs, self._path)

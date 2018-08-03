@@ -3,14 +3,14 @@ import shutil
 
 from typing import Any
 
-from . import (
-    GenericCopier,
+from norfs.copy.base import (
+    CopyStrategy,
     CopyFile,
 )
-from ..fs import Path
+from norfs.fs.base import Path
 
 
-class LocalToLocalCopier(GenericCopier):
+class LocalToLocalCopyStrategy(CopyStrategy):
 
     def copy_file_to_file(self, src: CopyFile, dst: CopyFile) -> None:
         parent_dir: Path = dst.path.parent
@@ -19,7 +19,7 @@ class LocalToLocalCopier(GenericCopier):
         shutil.copyfile(src.fs.path_to_string(src.path), dst.fs.path_to_string(dst.path))
 
 
-class LocalToS3Copier(GenericCopier):
+class LocalToS3CopyStrategy(CopyStrategy):
 
     def __init__(self, s3_client: Any) -> None:
         self._s3_client = s3_client

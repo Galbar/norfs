@@ -4,20 +4,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>norfs &#8212; norfs 1.3.0 documentation</title>
+    <title>norfs &#8212; norfs 1.3.2 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -30,23 +22,32 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="norfs">
 <span id="index"></span><h1>norfs<a class="headerlink" href="#norfs" title="Permalink to this headline">¶</a></h1>
 <p><strong>Nor</strong>malized <strong>f</strong>ile<strong>s</strong>ystem. This library offers a common interface to interact with multiple filesystems,
-local or remote.</p>
+local or remote:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">norfs.helpers</span>
+
+<span class="n">local</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">local</span><span class="p">()</span>
+<span class="n">demo_file</span> <span class="o">=</span> <span class="n">local</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s1">&#39;demo.txt&#39;</span><span class="p">)</span>
+<span class="n">demo_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;Hello World&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">demo_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>Install with <code class="docutils literal"><span class="pre">pip</span></code>: <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">norfs</span></code>.</p>
+<p>Install with <code class="docutils literal notranslate"><span class="pre">pip</span></code>: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">norfs</span></code>.</p>
 <p>You can also download the source code from the <a class="reference external" href="https://github.com/Galbar/norfs">git repository</a>.</p>
 </div>
 <div class="section" id="supported-filesystems">
@@ -60,125 +61,186 @@ local or remote.</p>
 <div class="section" id="local-filesystem">
 <h2>Local filesystem<a class="headerlink" href="#local-filesystem" title="Permalink to this headline">¶</a></h2>
 <p>Implements the norfs contract to work with files and directories in the local filesystem:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">norfs</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">norfs.helpers</span>
 
-<span class="n">my_directory</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">localdir</span><span class="p">(</span><span class="s2">&quot;/my/local/directory&quot;</span><span class="p">)</span>
-<span class="n">my_file</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">localfile</span><span class="p">(</span><span class="s2">&quot;/my/local/file.txt&quot;</span><span class="p">)</span>
+<span class="n">local</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">local</span><span class="p">()</span>
+
+<span class="n">my_directory</span> <span class="o">=</span> <span class="n">local</span><span class="o">.</span><span class="n">dir</span><span class="p">(</span><span class="s2">&quot;/my/local/directory&quot;</span><span class="p">)</span>
+<span class="n">my_file</span> <span class="o">=</span> <span class="n">local</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s2">&quot;/my/local/file.txt&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="s3">
 <h2>S3<a class="headerlink" href="#s3" title="Permalink to this headline">¶</a></h2>
 <p>Implements the norfs contract to work with files and directories in an S3 compatible store:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">norfs</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">norfs.helpers</span>
 <span class="kn">import</span> <span class="nn">boto3</span>
 
-<span class="n">norfs</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">s3_client</span><span class="o">=</span><span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">))</span>
+<span class="n">s3</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">s3</span><span class="p">(</span><span class="n">s3_client</span><span class="o">=</span><span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">))</span>
 
-<span class="n">my_directory</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">s3dir</span><span class="p">(</span><span class="s2">&quot;myBucket/my/s3/directory&quot;</span><span class="p">)</span>
-<span class="n">my_file</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">s3file</span><span class="p">(</span><span class="s2">&quot;myBucket/my/s3/file.txt&quot;</span><span class="p">)</span>
-<span class="c1"># or</span>
-<span class="n">my_directory</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">s3dir</span><span class="p">(</span><span class="s2">&quot;myBucket&quot;</span><span class="p">,</span> <span class="s2">&quot;my/s3/directory&quot;</span><span class="p">)</span>
-<span class="n">my_file</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">s3file</span><span class="p">(</span><span class="s2">&quot;myBucket&quot;</span><span class="p">,</span> <span class="s2">&quot;my/s3/file.txt&quot;</span><span class="p">)</span>
+<span class="n">my_directory</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">dir</span><span class="p">(</span><span class="s2">&quot;myBucket/my/s3/directory&quot;</span><span class="p">)</span>
+<span class="n">my_file</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s2">&quot;myBucket/my/s3/file.txt&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="in-memory">
 <h2>In-memory<a class="headerlink" href="#in-memory" title="Permalink to this headline">¶</a></h2>
 <p>Implements the norfs contract to work with files and directories in a very simple in-memory filesystem:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">norfs</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">norfs.helpers</span>
 
-<span class="n">my_directory</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">memorydir</span><span class="p">(</span><span class="s2">&quot;/my/memory/directory&quot;</span><span class="p">)</span>
-<span class="n">my_file</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">memoryfile</span><span class="p">(</span><span class="s2">&quot;/my/memory/file.txt&quot;</span><span class="p">)</span>
+<span class="n">memory</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">memory</span><span class="p">()</span>
+
+<span class="n">my_directory</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">dir</span><span class="p">(</span><span class="s2">&quot;/my/memory/directory&quot;</span><span class="p">)</span>
+<span class="n">my_file</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s2">&quot;/my/memory/file.txt&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="the-norfs-interface">
 <h1>The norfs interface<a class="headerlink" href="#the-norfs-interface" title="Permalink to this headline">¶</a></h1>
-<p>The most public interface norfs exposes is the <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a> and its subclasses <a class="reference internal" href="#directory">Directory</a> an <a class="reference internal" href="#file">File</a>.</p>
+<p>The most public interface norfs exposes is composed of the <a class="reference internal" href="#filesystemclient">FileSystemClient</a>, the <a class="reference internal" href="#copyclient">CopyClient</a> and the <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a> with its subclasses <a class="reference internal" href="#directory">Directory</a> an <a class="reference internal" href="#file">File</a>.</p>
+<div class="section" id="filesystemclient">
+<h2>FileSystemClient<a class="headerlink" href="#filesystemclient" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">FileSystemClient</span></code> provides a way to access the file system objects of a given file system. It is a handy class that
+provides easy access to <a class="reference internal" href="#file">File</a> and <a class="reference internal" href="#directory">Directory</a> instances. It is usually obtained using the <code class="docutils literal notranslate"><span class="pre">norfs.helpers</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">norfs.helpers</span>
+
+<span class="n">local_fs_client</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">local</span><span class="p">()</span>
+
+<span class="n">memory_fs_client</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">memory</span><span class="p">()</span>
+
+<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="n">s3_fs_client</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">s3</span><span class="p">(</span><span class="n">s3_client</span><span class="o">=</span><span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>A <code class="docutils literal notranslate"><span class="pre">FileSystemClient</span></code> exposes the following interface:</p>
+<div class="section" id="dir-path-str-directory">
+<h3><code class="docutils literal notranslate"><span class="pre">.dir(</span></code> path: str <code class="docutils literal notranslate"><span class="pre">)</span></code> -&gt; <a class="reference internal" href="#directory">Directory</a><a class="headerlink" href="#dir-path-str-directory" title="Permalink to this headline">¶</a></h3>
+<p>Returns a <a class="reference internal" href="#directory">Directory</a> instance for the given path.</p>
+</div>
+<div class="section" id="file-path-str-file">
+<h3><code class="docutils literal notranslate"><span class="pre">.file(</span></code> path: str <code class="docutils literal notranslate"><span class="pre">)</span></code> -&gt; <a class="reference internal" href="#file">File</a><a class="headerlink" href="#file-path-str-file" title="Permalink to this headline">¶</a></h3>
+<p>Returns a <a class="reference internal" href="#file">File</a> instance for the given path.</p>
+</div>
+<div class="section" id="fs-norfs-fs-base-basefilesystem">
+<h3><code class="docutils literal notranslate"><span class="pre">.fs</span></code> -&gt; norfs.fs.base.BaseFileSystem<a class="headerlink" href="#fs-norfs-fs-base-basefilesystem" title="Permalink to this headline">¶</a></h3>
+<p>Returns a the <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a> of the client.</p>
+</div>
+</div>
+<div class="section" id="copyclient">
+<h2>CopyClient<a class="headerlink" href="#copyclient" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">CopyClient</span></code> provides a unified simple copy API for any <a class="reference internal" href="#file">File</a> or <a class="reference internal" href="#directory">Directory</a> from any file system. It is usually
+accessed by using <code class="docutils literal notranslate"><span class="pre">norfs.helpers.get_copy_client()</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">norfs.helpers</span>
+
+<span class="n">local</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">local</span><span class="p">()</span>
+<span class="n">cp_local_only</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">get_copy_client</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
+
+<span class="n">cp_local_only</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">local</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s1">&#39;source_file.txt&#39;</span><span class="p">),</span> <span class="n">local</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s1">&#39;target_file.txt&#39;</span><span class="p">))</span>
+
+
+<span class="n">memory</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">memory</span><span class="p">()</span>
+<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="n">s3</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">s3</span><span class="p">(</span><span class="n">s3_client</span><span class="o">=</span><span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">))</span>
+
+<span class="n">cp_for_all</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">get_copy_client</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">s3</span><span class="p">,</span> <span class="n">memory</span><span class="p">)</span>
+
+<span class="n">cp_for_all</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">s3</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s1">&#39;myBucket/source_file.txt&#39;</span><span class="p">),</span> <span class="n">local</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s1">&#39;target_file.txt&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">norfs.helpers.get_copy_client()</span></code> returns a <a class="reference internal" href="#copyclient">CopyClient</a> instance configured with copy strategies for each of the
+file system clients passed. A <code class="docutils literal notranslate"><span class="pre">norfs.copy.base.Copier</span></code> can have copy policies set for a pair of source and
+destination file systems to implement a better strategy of copying between them than read source and write
+destination. <code class="docutils literal notranslate"><span class="pre">norfs.helpers.get_copy_client()</span></code> helps you by setting these for you.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">CopyClient</span></code> exposes the following interface:</p>
+<div class="section" id="copy-src-basefilesystemobject-dst-basefilesystemobject-none">
+<h3><code class="docutils literal notranslate"><span class="pre">.copy(</span></code> src: <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a>, dst: <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a> <code class="docutils literal notranslate"><span class="pre">)</span></code> -&gt; None<a class="headerlink" href="#copy-src-basefilesystemobject-dst-basefilesystemobject-none" title="Permalink to this headline">¶</a></h3>
+<p>Copies <code class="docutils literal notranslate"><span class="pre">src</span></code> to <code class="docutils literal notranslate"><span class="pre">dst</span></code>, no mater the file systems they are on. <code class="docutils literal notranslate"><span class="pre">src</span></code> and <code class="docutils literal notranslate"><span class="pre">dst</span></code> can by both <a class="reference internal" href="#file">File</a> or <a class="reference internal" href="#directory">Directory</a>.
+The only operation not supported is copying from a <a class="reference internal" href="#directory">Directory</a> into a <a class="reference internal" href="#file">File</a> as it does not make sense.</p>
+<p>If source is a <a class="reference internal" href="#directory">Directory</a> and destination is a <a class="reference internal" href="#file">File</a> it raises a <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>.</p>
+<p>On copy failure it raises a <code class="docutils literal notranslate"><span class="pre">FileSystemOperationError</span></code>.</p>
+</div>
+<div class="section" id="copier-norfs-copy-base-copier">
+<h3><code class="docutils literal notranslate"><span class="pre">.copier</span></code> -&gt; norfs.copy.base.Copier<a class="headerlink" href="#copier-norfs-copy-base-copier" title="Permalink to this headline">¶</a></h3>
+<p>Returns the <code class="docutils literal notranslate"><span class="pre">Copier</span></code> instance that the client manages.</p>
+</div>
+</div>
 <div class="section" id="basefilesystemobject">
 <h2>BaseFileSystemObject<a class="headerlink" href="#basefilesystemobject" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal"><span class="pre">BaseFileSystemObject</span></code> represents any object in the filesystem. It is the most abstract representation.</p>
-<p>A <code class="docutils literal"><span class="pre">BaseFileSystemObject</span></code> exposes the following interface:</p>
+<p><code class="docutils literal notranslate"><span class="pre">BaseFileSystemObject</span></code> represents any object in the filesystem. It is the most abstract representation.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">BaseFileSystemObject</span></code> exposes the following interface:</p>
 <div class="section" id="as-dir-directory">
-<h3><code class="docutils literal"><span class="pre">.as_dir()</span></code> -&gt; <a class="reference internal" href="#directory">Directory</a><a class="headerlink" href="#as-dir-directory" title="Permalink to this headline">¶</a></h3>
-<p>Returns itself as a Directory instance or raises a <code class="docutils literal"><span class="pre">NotADirectoryError</span></code>.</p>
+<h3><code class="docutils literal notranslate"><span class="pre">.as_dir()</span></code> -&gt; <a class="reference internal" href="#directory">Directory</a><a class="headerlink" href="#as-dir-directory" title="Permalink to this headline">¶</a></h3>
+<p>Returns itself as a Directory instance or raises a <code class="docutils literal notranslate"><span class="pre">NotADirectoryError</span></code>.</p>
 </div>
 <div class="section" id="as-file-file">
-<h3><code class="docutils literal"><span class="pre">.as_file()</span></code> -&gt; <a class="reference internal" href="#file">File</a><a class="headerlink" href="#as-file-file" title="Permalink to this headline">¶</a></h3>
-<p>Returns itself as a File instance or raises a <code class="docutils literal"><span class="pre">NotAFileError</span></code>.</p>
-</div>
-<div class="section" id="copy-destination-basefilesystemobject-none">
-<h3><code class="docutils literal"><span class="pre">.copy(</span></code> destination: <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a> <code class="docutils literal"><span class="pre">)</span></code> -&gt; None<a class="headerlink" href="#copy-destination-basefilesystemobject-none" title="Permalink to this headline">¶</a></h3>
-<p>Copy this to destination.</p>
-<p>If source is a <a class="reference internal" href="#directory">Directory</a> and destination is a <a class="reference internal" href="#file">File</a> it raises a <code class="docutils literal"><span class="pre">TypeError</span></code>.</p>
-<p>On copy failure it raises a <code class="docutils literal"><span class="pre">FileSystemOperationError</span></code>.</p>
+<h3><code class="docutils literal notranslate"><span class="pre">.as_file()</span></code> -&gt; <a class="reference internal" href="#file">File</a><a class="headerlink" href="#as-file-file" title="Permalink to this headline">¶</a></h3>
+<p>Returns itself as a File instance or raises a <code class="docutils literal notranslate"><span class="pre">NotAFileError</span></code>.</p>
 </div>
 <div class="section" id="exists-bool">
-<h3><code class="docutils literal"><span class="pre">.exists()</span></code> -&gt; bool<a class="headerlink" href="#exists-bool" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">.exists()</span></code> -&gt; bool<a class="headerlink" href="#exists-bool" title="Permalink to this headline">¶</a></h3>
 <p>Returns whether self exists in the file system.</p>
 </div>
 <div class="section" id="is-dir-bool">
-<h3><code class="docutils literal"><span class="pre">.is_dir()</span></code> -&gt; bool<a class="headerlink" href="#is-dir-bool" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">.is_dir()</span></code> -&gt; bool<a class="headerlink" href="#is-dir-bool" title="Permalink to this headline">¶</a></h3>
 <p>Returns whether self is a <a class="reference internal" href="#directory">Directory</a>.</p>
 </div>
 <div class="section" id="is-file-bool">
-<h3><code class="docutils literal"><span class="pre">.is_file()</span></code> -&gt; bool<a class="headerlink" href="#is-file-bool" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">.is_file()</span></code> -&gt; bool<a class="headerlink" href="#is-file-bool" title="Permalink to this headline">¶</a></h3>
 <p>Returns whether self is a <a class="reference internal" href="#file">File</a>.</p>
 </div>
 <div class="section" id="name-str">
-<h3><code class="docutils literal"><span class="pre">.name</span></code>: str<a class="headerlink" href="#name-str" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">.name</span></code>: str<a class="headerlink" href="#name-str" title="Permalink to this headline">¶</a></h3>
 <p>The name of self.</p>
 </div>
 <div class="section" id="parent-directory">
-<h3><code class="docutils literal"><span class="pre">.parent()</span></code> -&gt; <a class="reference internal" href="#directory">Directory</a><a class="headerlink" href="#parent-directory" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">.parent()</span></code> -&gt; <a class="reference internal" href="#directory">Directory</a><a class="headerlink" href="#parent-directory" title="Permalink to this headline">¶</a></h3>
 <p>Return parent <a class="reference internal" href="#directory">Directory</a> of self.</p>
 </div>
 <div class="section" id="path-str">
-<h3><code class="docutils literal"><span class="pre">.path</span></code>: str<a class="headerlink" href="#path-str" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">.path</span></code>: str<a class="headerlink" href="#path-str" title="Permalink to this headline">¶</a></h3>
 <p>The full, absolute, path of self in the file system.</p>
 </div>
 <div class="section" id="remove-none">
-<h3><code class="docutils literal"><span class="pre">.remove()</span></code> -&gt; None<a class="headerlink" href="#remove-none" title="Permalink to this headline">¶</a></h3>
-<p>Tries to remove self from the file system. On failure it raises a <code class="docutils literal"><span class="pre">FileSystemOperationError</span></code>.</p>
+<h3><code class="docutils literal notranslate"><span class="pre">.remove()</span></code> -&gt; None<a class="headerlink" href="#remove-none" title="Permalink to this headline">¶</a></h3>
+<p>Tries to remove self from the file system. On failure it raises a <code class="docutils literal notranslate"><span class="pre">FileSystemOperationError</span></code>.</p>
 </div>
 <div class="section" id="uri-str">
-<h3><code class="docutils literal"><span class="pre">.uri</span></code>: str<a class="headerlink" href="#uri-str" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">.uri</span></code>: str<a class="headerlink" href="#uri-str" title="Permalink to this headline">¶</a></h3>
 <p>The URI that points to self in the file system.</p>
 </div>
 </div>
 <div class="section" id="directory">
 <h2>Directory<a class="headerlink" href="#directory" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal"><span class="pre">Directory</span></code> extends <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a> and specializes to represent directories in the filesystem.</p>
-<p>A <code class="docutils literal"><span class="pre">Directory</span></code> extends the <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a> interface with:</p>
-<div class="section" id="file-path-str-file">
-<h3><code class="docutils literal"><span class="pre">.file(</span></code> path: str <code class="docutils literal"><span class="pre">)</span></code> -&gt; <a class="reference internal" href="#file">File</a><a class="headerlink" href="#file-path-str-file" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Directory</span></code> extends <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a> and specializes to represent directories in the filesystem.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">Directory</span></code> extends the <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a> interface with:</p>
+<div class="section" id="id1">
+<h3><code class="docutils literal notranslate"><span class="pre">.file(</span></code> path: str <code class="docutils literal notranslate"><span class="pre">)</span></code> -&gt; <a class="reference internal" href="#file">File</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>Returns a <a class="reference internal" href="#file">File</a> with its absolute path being the given path relative to self.</p>
 </div>
 <div class="section" id="list-list-basefilesystemobject">
-<h3><code class="docutils literal"><span class="pre">.list()</span></code> -&gt; List[<a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a>]<a class="headerlink" href="#list-list-basefilesystemobject" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">.list()</span></code> -&gt; List[<a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a>]<a class="headerlink" href="#list-list-basefilesystemobject" title="Permalink to this headline">¶</a></h3>
 <p>Returns the contents of the <a class="reference internal" href="#directory">Directory</a> in the file system as a list of <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a>.</p>
 <p>If the <a class="reference internal" href="#directory">Directory</a> does not exist the list will be empty.</p>
 </div>
 <div class="section" id="subdir-path-str-directory">
-<h3><code class="docutils literal"><span class="pre">.subdir(</span></code> path: str <code class="docutils literal"><span class="pre">)</span></code> -&gt; <a class="reference internal" href="#directory">Directory</a><a class="headerlink" href="#subdir-path-str-directory" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">.subdir(</span></code> path: str <code class="docutils literal notranslate"><span class="pre">)</span></code> -&gt; <a class="reference internal" href="#directory">Directory</a><a class="headerlink" href="#subdir-path-str-directory" title="Permalink to this headline">¶</a></h3>
 <p>Returns a <a class="reference internal" href="#directory">Directory</a> with its absolute path being the given path relative to self.</p>
 </div>
 </div>
 <div class="section" id="file">
 <h2>File<a class="headerlink" href="#file" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal"><span class="pre">File</span></code> extends <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a> and specializes to represent files in the filesystem.</p>
-<p>A <code class="docutils literal"><span class="pre">File</span></code> extends the <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a> interface with:</p>
+<p><code class="docutils literal notranslate"><span class="pre">File</span></code> extends <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a> and specializes to represent files in the filesystem.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">File</span></code> extends the <a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a> interface with:</p>
 <div class="section" id="read-bytes">
-<h3><code class="docutils literal"><span class="pre">.read()</span></code> -&gt; bytes<a class="headerlink" href="#read-bytes" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">.read()</span></code> -&gt; bytes<a class="headerlink" href="#read-bytes" title="Permalink to this headline">¶</a></h3>
 <p>Returns the contents of the <a class="reference internal" href="#file">File</a>.</p>
-<p>If it fails to read the file a <code class="docutils literal"><span class="pre">FileSystemOperationError</span></code> will be raised.</p>
+<p>If it fails to read the file a <code class="docutils literal notranslate"><span class="pre">FileSystemOperationError</span></code> will be raised.</p>
 </div>
 <div class="section" id="write-content-bytes-none">
-<h3><code class="docutils literal"><span class="pre">.write(</span></code> content: bytes <code class="docutils literal"><span class="pre">)</span></code> -&gt; None<a class="headerlink" href="#write-content-bytes-none" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">.write(</span></code> content: bytes <code class="docutils literal notranslate"><span class="pre">)</span></code> -&gt; None<a class="headerlink" href="#write-content-bytes-none" title="Permalink to this headline">¶</a></h3>
 <p>Sets the contents of the <a class="reference internal" href="#file">File</a>. If the parent <a class="reference internal" href="#directory">Directory</a> does not exist it is created.</p>
-<p>If it fails to read the file a <code class="docutils literal"><span class="pre">FileSystemOperationError</span></code> will be raised.</p>
+<p>If it fails to read the file a <code class="docutils literal notranslate"><span class="pre">FileSystemOperationError</span></code> will be raised.</p>
 </div>
 </div>
 </div>
@@ -195,6 +257,7 @@ local or remote.</p>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -210,29 +273,39 @@ local or remote.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#the-norfs-interface">The norfs interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#filesystemclient">FileSystemClient</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dir-path-str-directory"><code class="docutils literal notranslate"><span class="pre">.dir(</span></code> path: str <code class="docutils literal notranslate"><span class="pre">)</span></code> -&gt; Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#file-path-str-file"><code class="docutils literal notranslate"><span class="pre">.file(</span></code> path: str <code class="docutils literal notranslate"><span class="pre">)</span></code> -&gt; File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fs-norfs-fs-base-basefilesystem"><code class="docutils literal notranslate"><span class="pre">.fs</span></code> -&gt; norfs.fs.base.BaseFileSystem</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#copyclient">CopyClient</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#copy-src-basefilesystemobject-dst-basefilesystemobject-none"><code class="docutils literal notranslate"><span class="pre">.copy(</span></code> src: BaseFileSystemObject, dst: BaseFileSystemObject <code class="docutils literal notranslate"><span class="pre">)</span></code> -&gt; None</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copier-norfs-copy-base-copier"><code class="docutils literal notranslate"><span class="pre">.copier</span></code> -&gt; norfs.copy.base.Copier</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#basefilesystemobject">BaseFileSystemObject</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#as-dir-directory"><code class="docutils literal"><span class="pre">.as_dir()</span></code> -&gt; Directory</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#as-file-file"><code class="docutils literal"><span class="pre">.as_file()</span></code> -&gt; File</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#copy-destination-basefilesystemobject-none"><code class="docutils literal"><span class="pre">.copy(</span></code> destination: BaseFileSystemObject <code class="docutils literal"><span class="pre">)</span></code> -&gt; None</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#exists-bool"><code class="docutils literal"><span class="pre">.exists()</span></code> -&gt; bool</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#is-dir-bool"><code class="docutils literal"><span class="pre">.is_dir()</span></code> -&gt; bool</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#is-file-bool"><code class="docutils literal"><span class="pre">.is_file()</span></code> -&gt; bool</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#name-str"><code class="docutils literal"><span class="pre">.name</span></code>: str</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#parent-directory"><code class="docutils literal"><span class="pre">.parent()</span></code> -&gt; Directory</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#path-str"><code class="docutils literal"><span class="pre">.path</span></code>: str</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#remove-none"><code class="docutils literal"><span class="pre">.remove()</span></code> -&gt; None</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uri-str"><code class="docutils literal"><span class="pre">.uri</span></code>: str</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#as-dir-directory"><code class="docutils literal notranslate"><span class="pre">.as_dir()</span></code> -&gt; Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#as-file-file"><code class="docutils literal notranslate"><span class="pre">.as_file()</span></code> -&gt; File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exists-bool"><code class="docutils literal notranslate"><span class="pre">.exists()</span></code> -&gt; bool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#is-dir-bool"><code class="docutils literal notranslate"><span class="pre">.is_dir()</span></code> -&gt; bool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#is-file-bool"><code class="docutils literal notranslate"><span class="pre">.is_file()</span></code> -&gt; bool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#name-str"><code class="docutils literal notranslate"><span class="pre">.name</span></code>: str</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parent-directory"><code class="docutils literal notranslate"><span class="pre">.parent()</span></code> -&gt; Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#path-str"><code class="docutils literal notranslate"><span class="pre">.path</span></code>: str</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#remove-none"><code class="docutils literal notranslate"><span class="pre">.remove()</span></code> -&gt; None</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uri-str"><code class="docutils literal notranslate"><span class="pre">.uri</span></code>: str</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#directory">Directory</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#file-path-str-file"><code class="docutils literal"><span class="pre">.file(</span></code> path: str <code class="docutils literal"><span class="pre">)</span></code> -&gt; File</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#list-list-basefilesystemobject"><code class="docutils literal"><span class="pre">.list()</span></code> -&gt; List[BaseFileSystemObject]</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#subdir-path-str-directory"><code class="docutils literal"><span class="pre">.subdir(</span></code> path: str <code class="docutils literal"><span class="pre">)</span></code> -&gt; Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">.file(</span></code> path: str <code class="docutils literal notranslate"><span class="pre">)</span></code> -&gt; File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#list-list-basefilesystemobject"><code class="docutils literal notranslate"><span class="pre">.list()</span></code> -&gt; List[BaseFileSystemObject]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#subdir-path-str-directory"><code class="docutils literal notranslate"><span class="pre">.subdir(</span></code> path: str <code class="docutils literal notranslate"><span class="pre">)</span></code> -&gt; Directory</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#file">File</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#read-bytes"><code class="docutils literal"><span class="pre">.read()</span></code> -&gt; bytes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#write-content-bytes-none"><code class="docutils literal"><span class="pre">.write(</span></code> content: bytes <code class="docutils literal"><span class="pre">)</span></code> -&gt; None</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-bytes"><code class="docutils literal notranslate"><span class="pre">.read()</span></code> -&gt; bytes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#write-content-bytes-none"><code class="docutils literal notranslate"><span class="pre">.write(</span></code> content: bytes <code class="docutils literal notranslate"><span class="pre">)</span></code> -&gt; None</a></li>
 </ul>
 </li>
 </ul>
@@ -255,12 +328,14 @@ local or remote.</p>
 </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -271,8 +346,8 @@ local or remote.</p>
       &copy;2017, Alessio Linares.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
       
       |
       <a href="_sources/index.rst.txt"

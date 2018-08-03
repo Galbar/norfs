@@ -3,7 +3,7 @@ import os
 from unittest import TestCase
 
 
-from norfs.fs import Path
+from norfs.fs.base import Path
 from norfs.fs.local import LocalFileSystem
 
 from tests.tools import random_local_path

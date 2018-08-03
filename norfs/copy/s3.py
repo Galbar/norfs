@@ -7,18 +7,18 @@ from typing import (
     List,
 )
 
-from . import (
-    GenericCopier,
+from norfs.copy.base import (
     CopyDirectory,
     CopyFile,
+    CopyStrategy,
 )
-from ..fs import (
+from norfs.fs.base import (
     FileSystemOperationError,
     Path,
 )
 
 
-class S3ToS3Copier(GenericCopier):
+class S3ToS3CopyStrategy(CopyStrategy):
 
     def __init__(self, s3_client: Any) -> None:
         self._s3_client = s3_client
@@ -76,7 +76,7 @@ class S3ToS3Copier(GenericCopier):
         self._s3_client.copy(copy_source, dst.path.drive, dst_tail)
 
 
-class S3ToLocalCopier(GenericCopier):
+class S3ToLocalCopyStrategy(CopyStrategy):
 
     def __init__(self, s3_client: Any) -> None:
         self._s3_client = s3_client

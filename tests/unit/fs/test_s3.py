@@ -6,7 +6,7 @@ from unittest import (
     mock,
 )
 
-from norfs.fs import (
+from norfs.fs.base import (
     DirListResult,
     Path,
 )

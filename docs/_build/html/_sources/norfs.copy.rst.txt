@@ -1,8 +1,18 @@
+.. _norfs.copy:
+
 norfs\.copy package
 ===================
 
 Submodules
 ----------
+
+norfs\.copy\.base module
+-------------------------
+
+.. automodule:: norfs.copy.base
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 norfs\.copy\.local module
 -------------------------

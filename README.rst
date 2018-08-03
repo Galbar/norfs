@@ -5,7 +5,15 @@ norfs
 |PyPI License| |PyPI Format|
 
 **Nor**\ malized **f**\ ile\ **s**\ ystem. This library offers a common
-interface to interact with multiple filesystems, local or remote.
+interface to interact with multiple filesystems, local or remote::
+
+    import norfs.helpers
+
+    local = norfs.helpers.local()
+    demo_file = local.file('demo.txt')
+    demo_file.write(b'Hello World')
+    print(demo_file.read())
+
 
 Install with ``pip``: ``pip install norfs``
 
