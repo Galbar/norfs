@@ -1,5 +1,5 @@
 from collections import deque
-import norfs
+import norfs.helpers
 import ast
 import astunparse
 
@@ -93,8 +93,9 @@ def backport_file(src, dst):
 
 
 def get_src_dst_list():
-    root = norfs.localdir('./norfs')
-    target = norfs.localdir('./py3.4/norfs')
+    local = norfs.helpers.local()
+    root = local.dir('./norfs')
+    target = local.dir('./py3.4/norfs')
 
     dirs = deque([(root, target)])
 
