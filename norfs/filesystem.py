@@ -1,3 +1,9 @@
+"""
+:class:`norfs.filesystem.BaseFileSystemObject` represents any object in the filesystem. It is the most abstract
+representation.
+
+A :class:`norfs.filesystem.BaseFileSystemObject` exposes the following interface:
+"""
 from typing import (
     Any,
     List,
@@ -5,15 +11,14 @@ from typing import (
     cast,
 )
 
-from .fs import (
+from norfs.fs.base import (
     BaseFileSystem,
     DirListResult,
     FileSystemOperationError,
     NotAFileError,
     Path,
 )
-from .copy import CopyHandler
-from .copy import (
+from norfs.copy.base import (
     CopyDirectory,
     CopyFile,
     CopyFileSystemObject,
@@ -21,16 +26,13 @@ from .copy import (
 
 
 class BaseFileSystemObject:
-    _copy_handler: CopyHandler
     _fs: BaseFileSystem
     _path: Path
 
-    def __init__(self, filesystem: BaseFileSystem, path_str: Optional[str], copy_handler: CopyHandler, *,
-                 _path: Optional[Path]=None) -> None:
+    def __init__(self, filesystem: BaseFileSystem, path_str: Optional[str], *, _path: Optional[Path]=None) -> None:
         """ Constructor for BaseFileSystemObjects.
         One of `path_str` and `_path` **MUST** be present.
         """
-        self._copy_handler = copy_handler
         self._fs = filesystem
         self._path = _path or self._fs.parse_path(path_str or "")
 
@@ -50,19 +52,21 @@ class BaseFileSystemObject:
         return self._path.basename
 
     def is_file(self) -> bool:
-        """ Returns wether self is a File. """
+        """ Returns whether self is a File. """
         return False
 
     def is_dir(self) -> bool:
-        """ Returns wether self is a Directory. """
+        """ Returns whether self is a Directory. """
         return False
 
     def as_file(self) -> 'File':
-        """ Returns itself as a File instance or raises a NotAFileError. """
+        """ Returns itself as a :class:`norfs.filesystem.File` instance or raises a
+        :class:`norfs.fs.base.NotAFileError`.
+        """
         raise NotAFileError()
 
     def as_dir(self) -> 'Directory':
-        """ Returns itself as a Directory instance or raises a NotADirectoryError. """
+        """ Returns itself as a Directory instance or raises a :class:`NotADirectoryError`. """
         raise NotADirectoryError()
 
     def exists(self) -> bool:
@@ -71,23 +75,19 @@ class BaseFileSystemObject:
 
     def remove(self) -> None:
         """ Tries to remove self from the file system.
-        On failure it raises a FileSystemOperationError
+        On failure it raises a :class:`norfs.fs.base.FileSystemOperationError`
         """
         raise FileSystemOperationError(f"Cannot remove {str(self)}")
 
     def parent(self) -> 'Directory':
-        """ Return parent Directory of self. """
-        return Directory(self._fs, None, self._copy_handler, _path=self._path.parent)
+        """ Return parent :class:`norfs.filesystem.Directory` of self. """
+        return Directory(self._fs, None, _path=self._path.parent)
 
-    def copy(self, destination: 'BaseFileSystemObject') -> None:
-        """ Copy this to `destination`. """
-        self._copy_handler.copy(self._copy_object(), destination._copy_object())
-
-    def _copy_object(self) -> CopyFileSystemObject:
+    def copy_object(self) -> CopyFileSystemObject:
         return CopyFileSystemObject(self._fs, self._path)
 
     def __repr__(self) -> str:
-        return (f"{self.__class__.__name__}(fs={self._fs}, path={self.path}, copy_handler={self._copy_handler})")
+        return (f"{self.__class__.__name__}(fs={self._fs}, path={self.path})")
 
     def __hash__(self) -> int:
         return hash(self.__repr__())
@@ -96,86 +96,92 @@ class BaseFileSystemObject:
         if isinstance(other, self.__class__):
             other_casted: 'BaseFileSystemObject' = cast(BaseFileSystemObject, other)
             return (self._path == other_casted._path and
-                    self._fs == other_casted._fs and
-                    self._copy_handler == other_casted._copy_handler)
+                    self._fs == other_casted._fs)
         return False
 
 
 class Directory(BaseFileSystemObject):
 
     def is_dir(self) -> bool:
-        """ Returns wether self is a Directory. """
+        """ Returns whether self is a :class:`norfs.filesystem.Directory`. """
         return True
 
     def as_dir(self) -> 'Directory':
-        """ Returns itself as a Directory instance or raises a NotADirectoryError. """
+        """ Returns itself as a :class:`norfs.filesystem.Directory` instance or raises a :class:`NotADirectoryError`.
+        """
         return self
 
     def list(self) -> List[BaseFileSystemObject]:
-        """ Returns the contents of the Directory in the file system as a list of BaseFileSystemObjects.
+        """ Returns the contents of the :class:`norfs.filesystem.Directory` in the file system as a list of
+        :class:`norfs.filesystem.BaseFileSystemObject` s.
 
-        If the Directory does not exist the list will be empty.
+        If the :class:`norfs.filesystem.Directory` does not exist the list will be empty.
         """
         contents: DirListResult = self._fs.dir_list(self._path)
         result: List[BaseFileSystemObject] = []
         for dir_path in contents.dirs:
-            result.append(Directory(self._fs, None, self._copy_handler, _path=dir_path))
+            result.append(Directory(self._fs, None, _path=dir_path))
         for file_path in contents.files:
-            result.append(File(self._fs, None, self._copy_handler, _path=file_path))
+            result.append(File(self._fs, None, _path=file_path))
         for other_path in contents.others:
-            result.append(BaseFileSystemObject(self._fs, None, self._copy_handler, _path=other_path))
+            result.append(BaseFileSystemObject(self._fs, None, _path=other_path))
 
         return result
 
     def remove(self) -> None:
         """ Tries to remove self from the file system.
 
-        On failure it raises a FileSystemOperationError
+        On failure it raises a :class:`norfs.fs.base.FileSystemOperationError`
         """
         self._fs.dir_remove(self._path)
 
     def subdir(self, path: str) -> 'Directory':
-        """ Returns a Directory with its path as being the given path relative to the current Directory. """
-        return Directory(self._fs, None, self._copy_handler, _path=self._path.child(path))
+        """ Returns a :class:`norfs.filesystem.Directory` with its path as being the given path relative to the current
+        directory.
+        """
+        return Directory(self._fs, None, _path=self._path.child(path))
 
     def file(self, path: str) -> 'File':
-        """ Returns a File with its path as being the given `path` relative to the current Directory. """
-        return File(self._fs, None, self._copy_handler, _path=self._path.child(path))
+        """ Returns a :class:`norfs.filesystem.File` with its path as being the given `path` relative to the current
+        directory.
+        """
+        return File(self._fs, None, _path=self._path.child(path))
 
-    def _copy_object(self) -> CopyFileSystemObject:
+    def copy_object(self) -> CopyFileSystemObject:
         return CopyDirectory(self._fs, self._path)
 
 
 class File(BaseFileSystemObject):
 
     def is_file(self) -> bool:
-        """ Returns wether self is a File. """
+        """ Returns whether self is a :class:`norfs.filesystem.File`. """
         return True
 
     def as_file(self) -> 'File':
-        """ Returns itself as a File instance or raises a NotAFileError. """
+        """ Returns itself as a :class:`norfs.filesystem.File` instance or raises a :class:`norfs.fs.base.NotAFileError`.
+        """
         return self
 
     def remove(self) -> None:
         """ Tries to remove self from the file system.
 
-        On failure it raises a FileSystemOperationError
+        On failure it raises a :class:`norfs.fs.base.FileSystemOperationError`
         """
         self._fs.file_remove(self._path)
 
     def read(self) -> bytes:
-        """ Returns the contents of the File.
+        """ Returns the contents of the file.
 
-        If it fails to read the file a FileSystemOperationError will be raised.
+        If it fails to read the file a :class:`norfs.fs.base.FileSystemOperationError` will be raised.
         """
         return self._fs.file_read(self._path)
 
     def write(self, content: bytes) -> None:
-        """ Sets the contents of the File. If the parent directory does not exist it is created.
+        """ Sets the contents of the file. If the parent directory does not exist it is created.
 
-        If it fails to write the file a FileSystemOperationError will be raised.
+        If it fails to write the file a :class:`norfs.fs.base.FileSystemOperationError` will be raised.
         """
         self._fs.file_write(self._path, content)
 
-    def _copy_object(self) -> CopyFileSystemObject:
+    def copy_object(self) -> CopyFileSystemObject:
         return CopyFile(self._fs, self._path)

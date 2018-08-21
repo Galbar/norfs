@@ -3,7 +3,7 @@ from typing import (
     Union,
 )
 
-from norfs.fs import (
+from norfs.fs.base import (
     BaseFileSystem,
     DirListResult,
     FileSystemOperationError,

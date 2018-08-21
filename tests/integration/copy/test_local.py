@@ -6,13 +6,13 @@ from unittest import TestCase
 
 from moto import mock_s3
 
-from norfs.fs import Path
+from norfs.fs.base import Path
 from norfs.fs.local import LocalFileSystem
 from norfs.fs.s3 import S3FileSystem
-from norfs.copy import CopyFile
+from norfs.copy.base import CopyFile
 from norfs.copy.local import (
-    LocalToLocalCopier,
-    LocalToS3Copier,
+    LocalToLocalCopyStrategy,
+    LocalToS3CopyStrategy,
 )
 
 from tests.tools import (
@@ -22,10 +22,10 @@ from tests.tools import (
 )
 
 
-class TestLocalToLocalCopier(TestCase):
+class TestLocalToLocalCopyStrategy(TestCase):
 
     def setUp(self) -> None:
-        self.sut: LocalToLocalCopier = LocalToLocalCopier()
+        self.sut: LocalToLocalCopyStrategy = LocalToLocalCopyStrategy()
         self.src_tmp_dir: TemporaryDirectory = TemporaryDirectory()
         self.dst_tmp_dir: TemporaryDirectory = TemporaryDirectory()
         self.fs: LocalFileSystem = LocalFileSystem()
@@ -47,9 +47,9 @@ class TestLocalToLocalCopier(TestCase):
 
 
 @mock_s3
-class TestLocalToS3Copier(TestCase):
+class TestLocalToS3CopyStrategy(TestCase):
     client: Any
-    sut: LocalToS3Copier
+    sut: LocalToS3CopyStrategy
     src_tmp_dir: TemporaryDirectory
     src_fs: LocalFileSystem
     dst_fs: S3FileSystem
@@ -57,7 +57,7 @@ class TestLocalToS3Copier(TestCase):
 
     def setUp(self) -> None:
         self.client = boto3.client("s3")
-        self.sut = LocalToS3Copier(self.client)
+        self.sut = LocalToS3CopyStrategy(self.client)
         self.src_tmp_dir = TemporaryDirectory()
         self.src_fs = LocalFileSystem()
         self.dst_fs = S3FileSystem(self.client)

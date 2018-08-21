@@ -6,7 +6,7 @@ from typing import (
     List,
 )
 
-from . import (
+from norfs.fs.base import (
     BaseFileSystem,
     DirListResult,
     FileSystemOperationError,

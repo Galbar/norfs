@@ -6,7 +6,7 @@ from typing import (
 )
 from unittest import TestCase
 
-from norfs.fs import Path
+from norfs.fs.base import Path
 from norfs.fs.memory import (
     MemoryFileSystem,
     MemoryDirectory,

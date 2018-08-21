@@ -8,7 +8,7 @@ from typing import (
     Tuple,
 )
 
-from norfs.fs import Path
+from norfs.fs.base import Path
 
 
 def randstr(length: int=10, charset: str=string.ascii_letters) -> str:
