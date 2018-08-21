@@ -32,10 +32,16 @@
           <div class="body" role="main">
             
   <h1>Source code for norfs.helpers</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="p">(</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The :mod:`norfs.helpers` offers functions that serve as shortcuts for common operations with the library.</span>
+
+<span class="sd">The :mod:`norfs.helpers` contains the following functions:</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">cast</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">import</span> <span class="nn">norfs.copy.base</span>
 <span class="kn">import</span> <span class="nn">norfs.copy.local</span>
 <span class="kn">import</span> <span class="nn">norfs.copy.s3</span>
 <span class="kn">import</span> <span class="nn">norfs.client</span>
@@ -45,6 +51,34 @@
 
 
 <div class="viewcode-block" id="get_copy_client"><a class="viewcode-back" href="../../norfs.html#norfs.helpers.get_copy_client">[docs]</a><span class="k">def</span> <span class="nf">get_copy_client</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">norfs</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">FileSystemClient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">norfs</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">CopyClient</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Helper function to get a :class:`norfs.copy.base.CopyClient` instance configured with copy strategies for the</span>
+<span class="sd">    given file systems.</span>
+<span class="sd">    This function only sets the built-in :class:`norfs.copy.base.CopyStrategy` s for the built-in file systems, all</span>
+<span class="sd">    other will be ignored.</span>
+<span class="sd">    For example::</span>
+
+<span class="sd">        # Given</span>
+<span class="sd">        s3_boto_1 = boto3.client(&#39;s3&#39;)</span>
+<span class="sd">        s3_boto_2 = boto3.client(&#39;s3&#39;, endpoint_url=&#39;http://my.s3.endpoint&#39;)</span>
+<span class="sd">        local = norfs.helpers.local()</span>
+<span class="sd">        s3_1 = norfs.helpers.s3(s3_boto_1)</span>
+<span class="sd">        s3_2 = norfs.helpers.s3(s3_boto_2)</span>
+<span class="sd">        memory = norfs.helpers.memory()</span>
+
+<span class="sd">        # Doing</span>
+<span class="sd">        cp = get_copy_client(local, s3_1, s3_2, memory)</span>
+
+<span class="sd">        # Is equivalent to</span>
+<span class="sd">        copier = norfs.copy.base.Copier(norfs.copy.base.GenericCopyStrategy())</span>
+<span class="sd">        copier.set_copy_policy(local.fs, local.fs, norfs.copy.local.LocalToLocalCopyStrategy())</span>
+<span class="sd">        copier.set_copy_policy(local.fs, s3_1.fs, norfs.copy.local.LocalToS3CopyStrategy(s3_boto_1))</span>
+<span class="sd">        copier.set_copy_policy(local.fs, s3_2.fs, norfs.copy.local.LocalToS3CopyStrategy(s3_boto_2))</span>
+<span class="sd">        copier.set_copy_policy(s3_1.fs, local.fs, norfs.copy.s3.S3ToLocalCopyStrategy())</span>
+<span class="sd">        copier.set_copy_policy(s3_1.fs, s3_1.fs, norfs.copy.s3.S3ToS3CopyStrategy(s3_boto_1))</span>
+<span class="sd">        copier.set_copy_policy(s3_2.fs, local.fs, norfs.copy.s3.S3ToLocalCopyStrategy())</span>
+<span class="sd">        copier.set_copy_policy(s3_2.fs, s3_2.fs, norfs.copy.s3.S3ToS3CopyStrategy(s3_boto_2))</span>
+<span class="sd">        cp = norfs.client.CopyClient(copier)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">copier</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">copy</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">Copier</span><span class="p">(</span><span class="n">norfs</span><span class="o">.</span><span class="n">copy</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">GenericCopyStrategy</span><span class="p">())</span>
     <span class="n">copy_strategy</span><span class="p">:</span> <span class="n">norfs</span><span class="o">.</span><span class="n">copy</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">CopyStrategy</span>
     <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
@@ -58,7 +92,7 @@
                     <span class="n">copy_strategy</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">copy</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">LocalToS3CopyStrategy</span><span class="p">(</span>
                         <span class="n">cast</span><span class="p">(</span><span class="n">norfs</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">s3</span><span class="o">.</span><span class="n">S3FileSystem</span><span class="p">,</span> <span class="n">dst</span><span class="o">.</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">_s3_client</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Unknown Filesystem type </span><span class="si">{}</span><span class="s2"> of client </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dst_type</span><span class="p">,</span> <span class="n">dst</span><span class="p">))</span>
+                    <span class="k">continue</span>
             <span class="k">elif</span> <span class="n">src_type</span> <span class="ow">is</span> <span class="n">norfs</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">s3</span><span class="o">.</span><span class="n">S3FileSystem</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">dst_type</span> <span class="ow">is</span> <span class="n">norfs</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">LocalFileSystem</span><span class="p">:</span>
                     <span class="n">copy_strategy</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">copy</span><span class="o">.</span><span class="n">s3</span><span class="o">.</span><span class="n">S3ToLocalCopyStrategy</span><span class="p">(</span>
@@ -71,9 +105,9 @@
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">continue</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Unknown Filesystem type </span><span class="si">{}</span><span class="s2"> of client </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dst_type</span><span class="p">,</span> <span class="n">dst</span><span class="p">))</span>
+                    <span class="k">continue</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Unknown Filesystem type </span><span class="si">{}</span><span class="s2"> of client </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">src_type</span><span class="p">,</span> <span class="n">dst</span><span class="p">))</span>
+                <span class="k">continue</span>
 
             <span class="n">copier</span><span class="o">.</span><span class="n">set_copy_policy</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">fs</span><span class="p">,</span> <span class="n">dst</span><span class="o">.</span><span class="n">fs</span><span class="p">,</span> <span class="n">copy_strategy</span><span class="p">)</span>
 
@@ -81,14 +115,27 @@
 
 
 <div class="viewcode-block" id="local"><a class="viewcode-back" href="../../norfs.html#norfs.helpers.local">[docs]</a><span class="k">def</span> <span class="nf">local</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">norfs</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">FileSystemClient</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Returns a new :class:`norfs.client.FileSystemClient` managing a new instance of</span>
+<span class="sd">    :class:`norfs.fs.local.LocalFileSystem`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">norfs</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">FileSystemClient</span><span class="p">(</span><span class="n">norfs</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">LocalFileSystem</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="memory"><a class="viewcode-back" href="../../norfs.html#norfs.helpers.memory">[docs]</a><span class="k">def</span> <span class="nf">memory</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">norfs</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">FileSystemClient</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Returns a new :class:`norfs.client.FileSystemClient` managing a new instance of</span>
+<span class="sd">    :class:`norfs.fs.memory.MemoryFileSystem`.</span>
+
+<span class="sd">    ``kwargs`` is passed directly to the file system constructor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">norfs</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">FileSystemClient</span><span class="p">(</span><span class="n">norfs</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">MemoryFileSystem</span><span class="p">(</span><span class="n">norfs</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">MemoryDirectory</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="s3"><a class="viewcode-back" href="../../norfs.html#norfs.helpers.s3">[docs]</a><span class="k">def</span> <span class="nf">s3</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">norfs</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">FileSystemClient</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Returns a new :class:`norfs.client.FileSystemClient` managing a new instance of</span>
+<span class="sd">    :class:`norfs.fs.s3.S3FileSystem`.</span>
+
+<span class="sd">    ``args`` and ``kwargs`` are passed directly to the file system constructor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">norfs</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">FileSystemClient</span><span class="p">(</span><span class="n">norfs</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">s3</span><span class="o">.</span><span class="n">S3FileSystem</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
 </pre></div>
 

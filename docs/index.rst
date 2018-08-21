@@ -24,6 +24,8 @@ Installation
 ============
 Install with ``pip``: ``pip install norfs``.
 
+For python 3.4 and 3.5 you can install ``pip install norfs-py3.4``.
+
 You can also download the source code from the `git repository`_.
 
 .. _git repository: https://github.com/Galbar/norfs
@@ -80,169 +82,35 @@ Implements the norfs contract to work with files and directories in a very simpl
 The norfs interface
 ===================
 
-The most public interface norfs exposes is composed of the FileSystemClient_, the CopyClient_ and the BaseFileSystemObject_ with its subclasses Directory_ an File_.
+The most public interface norfs exposes is composed of the Clients_, the `Filesystem objects`_ and the `helpers
+module`_.
 
-FileSystemClient
-----------------
+Clients
+-------
 
-``FileSystemClient`` provides a way to access the file system objects of a given file system. It is a handy class that 
-provides easy access to File_ and Directory_ instances. It is usually obtained using the ``norfs.helpers``::
+.. automodule:: norfs.client
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :noindex:
 
-    import norfs.helpers
+Filesystem objects
+-------------------
 
-    local_fs_client = norfs.helpers.local()
+.. automodule:: norfs.filesystem
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :noindex:
 
-    memory_fs_client = norfs.helpers.memory()
+Helpers module
+--------------
 
-    import boto3
-    s3_fs_client = norfs.helpers.s3(s3_client=boto3.client('s3'))
-
-A ``FileSystemClient`` exposes the following interface:
-
-``.dir(`` path: str ``)`` -> Directory_
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Returns a Directory_ instance for the given path.
-
-``.file(`` path: str ``)`` -> File_
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Returns a File_ instance for the given path.
-
-``.fs`` -> norfs.fs.base.BaseFileSystem
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Returns a the BaseFileSystemObject_ the client is managing.
-
-
-CopyClient
-----------
-
-``CopyClient`` provides a unified simple copy API for any File_ or Directory_ from any file system. It is usually 
-accessed by using ``norfs.helpers.get_copy_client()``::
-
-    import norfs.helpers
-
-    local = norfs.helpers.local()
-    cp_local_only = norfs.helpers.get_copy_client(local)
-
-    cp_local_only.copy(local.file('source_file.txt'), local.file('target_file.txt'))
-
-
-    memory = norfs.helpers.memory()
-
-    import boto3
-    s3 = norfs.helpers.s3(s3_client=boto3.client('s3'))
-
-    cp_for_all = norfs.helpers.get_copy_client(local, s3, memory)
-
-    cp_for_all.copy(s3.file('myBucket/source_file.txt'), local.file('target_file.txt'))
-
-``norfs.helpers.get_copy_client()`` returns a CopyClient_ instance configured with copy strategies for each of the 
-file system clients passed. A ``norfs.copy.base.Copier`` can have copy policies set for a pair of source and 
-destination file systems to implement a better strategy of copying between them than read source and write 
-destination. ``norfs.helpers.get_copy_client()`` helps you by setting these for you.
-
-A ``CopyClient`` exposes the following interface:
-
-``.copy(`` src: BaseFileSystemObject_, dst: BaseFileSystemObject_ ``)`` -> None
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Copies ``src`` to ``dst``, no mater the file systems they are on. ``src`` and ``dst`` can by both File_ or Directory_. 
-The only operation not supported is copying from a Directory_ into a File_ as it does not make sense.
-
-If source is a Directory_ and destination is a File_ it raises a ``TypeError``.
-
-On copy failure it raises a ``FileSystemOperationError``.
-
-``.copier`` -> norfs.copy.base.Copier
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Returns the ``Copier`` instance that the client manages.
-
-
-BaseFileSystemObject
---------------------
-
-``BaseFileSystemObject`` represents any object in the filesystem. It is the most abstract representation.
-
-A ``BaseFileSystemObject`` exposes the following interface:
-
-``.as_dir()`` -> Directory_
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Returns itself as a Directory instance or raises a ``NotADirectoryError``.
-
-``.as_file()`` -> File_
-~~~~~~~~~~~~~~~~~~~~~~~
-Returns itself as a File instance or raises a ``NotAFileError``.
-
-``.exists()`` -> bool
-~~~~~~~~~~~~~~~~~~~~~
-Returns whether self exists in the file system.
-
-``.is_dir()`` -> bool
-~~~~~~~~~~~~~~~~~~~~~
-Returns whether self is a Directory_.
-
-``.is_file()`` -> bool
-~~~~~~~~~~~~~~~~~~~~~~
-Returns whether self is a File_.
-
-``.name``: str
-~~~~~~~~~~~~~~
-The name of self.
-
-``.parent()`` -> Directory_
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Return parent Directory_ of self.
-
-``.path``: str
-~~~~~~~~~~~~~~
-The full, absolute, path of self in the file system.
-
-``.remove()`` -> None
-~~~~~~~~~~~~~~~~~~~~~
-Tries to remove self from the file system. On failure it raises a ``FileSystemOperationError``.
-
-``.uri``: str
-~~~~~~~~~~~~~
-The URI that points to self in the file system.
-
-Directory
----------
-
-``Directory`` extends BaseFileSystemObject_ and specializes to represent directories in the filesystem.
-
-A ``Directory`` extends the BaseFileSystemObject_ interface with:
-
-``.file(`` path: str ``)`` -> File_
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Returns a File_ with its absolute path being the given path relative to self.
-
-``.list()`` -> List[BaseFileSystemObject_]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Returns the contents of the Directory_ in the file system as a list of BaseFileSystemObject_.
-
-If the Directory_ does not exist the list will be empty.
-
-``.subdir(`` path: str ``)`` -> Directory_
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Returns a Directory_ with its absolute path being the given path relative to self.
-
-File
-----
-
-``File`` extends BaseFileSystemObject_ and specializes to represent files in the filesystem.
-
-A ``File`` extends the BaseFileSystemObject_ interface with:
-
-``.read()`` -> bytes
-~~~~~~~~~~~~~~~~~~~~
-Returns the contents of the File_.
-
-If it fails to read the file a ``FileSystemOperationError`` will be raised.
-
-``.write(`` content: bytes ``)`` -> None
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Sets the contents of the File_. If the parent Directory_ does not exist it is created.
-
-If it fails to read the file a ``FileSystemOperationError`` will be raised.
-
+.. automodule:: norfs.helpers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :noindex:
 
 Indices and tables
 ==================
