@@ -42,33 +42,93 @@
 
 
 <div class="viewcode-block" id="FileSystemClient"><a class="viewcode-back" href="../../norfs.html#norfs.client.FileSystemClient">[docs]</a><span class="k">class</span> <span class="nc">FileSystemClient</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :class:`norfs.client.FileSystemClient` provides a way to access the file system objects of a given file system. It</span>
+<span class="sd">    is a handy class that provides easy access to :class:`norfs.filesystem.File` and</span>
+<span class="sd">    :class:`norfs.filesystem.Directory` instances. It is usually obtained using :mod:`norfs.helpers`::</span>
+
+<span class="sd">        import norfs.helpers</span>
+
+<span class="sd">        local_fs_client = norfs.helpers.local()</span>
+
+<span class="sd">        memory_fs_client = norfs.helpers.memory()</span>
+
+<span class="sd">        import boto3 s3_fs_client = norfs.helpers.s3(s3_client=boto3.client(&#39;s3&#39;))</span>
+
+<span class="sd">    A :class:`norfs.client.FileSystemClient` exposes the following interface:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_fs</span><span class="p">:</span> <span class="n">BaseFileSystem</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fs</span><span class="p">:</span> <span class="n">BaseFileSystem</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Constructor for :class:`norfs.client.FileSystemClient` s. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span> <span class="o">=</span> <span class="n">fs</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">fs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseFileSystem</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; The :class:`norfs.filesystem.BaseFileSystemObject` the client is managing. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span>
 
 <div class="viewcode-block" id="FileSystemClient.dir"><a class="viewcode-back" href="../../norfs.html#norfs.client.FileSystemClient.dir">[docs]</a>    <span class="k">def</span> <span class="nf">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Directory</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Returns a :class:`norfs.filesystem.Directory` instance for the given path in the managed file system. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Directory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fs</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FileSystemClient.file"><a class="viewcode-back" href="../../norfs.html#norfs.client.FileSystemClient.file">[docs]</a>    <span class="k">def</span> <span class="nf">file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">File</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Returns a :class:`norfs.filesystem.File` instance for the given path in the managed file system. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fs</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="CopyClient"><a class="viewcode-back" href="../../norfs.html#norfs.client.CopyClient">[docs]</a><span class="k">class</span> <span class="nc">CopyClient</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :class:`norfs.client.CopyClient` provides a unified simple copy API for any :class:`norfs.filesystem.File` or</span>
+<span class="sd">    :class:`norfs.filesystem.Directory` from any file system.  It is usually accessed by using</span>
+<span class="sd">    :func:`norfs.helpers.get_copy_client`::</span>
+
+<span class="sd">        import norfs.helpers</span>
+
+<span class="sd">        local = norfs.helpers.local() cp_local_only = norfs.helpers.get_copy_client(local)</span>
+
+<span class="sd">        cp_local_only.copy(local.file(&#39;source_file.txt&#39;), local.file(&#39;target_file.txt&#39;))</span>
+
+
+<span class="sd">        memory = norfs.helpers.memory()</span>
+
+<span class="sd">        import boto3 s3 = norfs.helpers.s3(s3_client=boto3.client(&#39;s3&#39;))</span>
+
+<span class="sd">        cp_for_all = norfs.helpers.get_copy_client(local, s3, memory)</span>
+
+<span class="sd">        cp_for_all.copy(s3.file(&#39;myBucket/source_file.txt&#39;), local.file(&#39;target_file.txt&#39;))</span>
+
+<span class="sd">    :func:`norfs.helpers.get_copy_client` returns a :class:`norfs.client.CopyClient` instance configured with copy</span>
+<span class="sd">    strategies for each of the file system clients passed.</span>
+<span class="sd">    </span>
+<span class="sd">    A :class:`norfs.copy.base.Copier` can have copy policies set for a pair of source and destination file systems to</span>
+<span class="sd">    implement a better strategy of copying between them than read source and write destination.</span>
+<span class="sd">    :func:`norfs.helpers.get_copy_client` helps you by setting these for you.</span>
+
+<span class="sd">    A :class:`norfs.client.CopyClient` exposes the following interface:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_copier</span><span class="p">:</span> <span class="n">Copier</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copier</span><span class="p">:</span> <span class="n">Copier</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Constructor for CopyClients. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_copier</span> <span class="o">=</span> <span class="n">copier</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">copier</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Copier</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; The :class:`norfs.copy.base.Copier` instance managed by the client. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copier</span>
 
 <div class="viewcode-block" id="CopyClient.copy"><a class="viewcode-back" href="../../norfs.html#norfs.client.CopyClient.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="n">BaseFileSystemObject</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">BaseFileSystemObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Copies ``src`` to ``dst``, no mater the file systems they are on. ``src`` and ``dst`` can by both</span>
+<span class="sd">        :class:`norfs.filesystem.File` or :class:`norfs.filesystem.Directory`.  The only operation not supported is</span>
+<span class="sd">        copying from a :class:`norfs.filesystem.Directory` into a :class:`norfs.filesystem.File` as it does not make</span>
+<span class="sd">        sense.</span>
+
+<span class="sd">        If source is a :class:`norfs.filesystem.Directory` and destination is a :class:`norfs.filesystem.File` it raises</span>
+<span class="sd">        a :class:`TypeError`.</span>
+
+<span class="sd">        On copy failure it raises a :class:`norfs.fs.base.FileSystemOperationError`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_copier</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">copy_object</span><span class="p">(),</span> <span class="n">dst</span><span class="o">.</span><span class="n">copy_object</span><span class="p">())</span></div></div>
 </pre></div>
 

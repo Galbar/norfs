@@ -32,7 +32,13 @@
           <div class="body" role="main">
             
   <h1>Source code for norfs.filesystem</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="p">(</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">:class:`norfs.filesystem.BaseFileSystemObject` represents any object in the filesystem. It is the most abstract</span>
+<span class="sd">representation.</span>
+
+<span class="sd">A :class:`norfs.filesystem.BaseFileSystemObject` exposes the following interface:</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">List</span><span class="p">,</span>
     <span class="n">Optional</span><span class="p">,</span>
@@ -80,19 +86,21 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">basename</span>
 
 <div class="viewcode-block" id="BaseFileSystemObject.is_file"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.is_file">[docs]</a>    <span class="k">def</span> <span class="nf">is_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Returns wether self is a File. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Returns whether self is a File. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="BaseFileSystemObject.is_dir"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.is_dir">[docs]</a>    <span class="k">def</span> <span class="nf">is_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Returns wether self is a Directory. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Returns whether self is a Directory. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="BaseFileSystemObject.as_file"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.as_file">[docs]</a>    <span class="k">def</span> <span class="nf">as_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;File&#39;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Returns itself as a File instance or raises a NotAFileError. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Returns itself as a :class:`norfs.filesystem.File` instance or raises a</span>
+<span class="sd">        :class:`norfs.fs.base.NotAFileError`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="n">NotAFileError</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="BaseFileSystemObject.as_dir"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.as_dir">[docs]</a>    <span class="k">def</span> <span class="nf">as_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Directory&#39;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Returns itself as a Directory instance or raises a NotADirectoryError. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Returns itself as a Directory instance or raises a :class:`NotADirectoryError`. &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="BaseFileSystemObject.exists"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.exists">[docs]</a>    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -101,12 +109,12 @@
 
 <div class="viewcode-block" id="BaseFileSystemObject.remove"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Tries to remove self from the file system.</span>
-<span class="sd">        On failure it raises a FileSystemOperationError</span>
+<span class="sd">        On failure it raises a :class:`norfs.fs.base.FileSystemOperationError`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="n">FileSystemOperationError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Cannot remove {str(self)}&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseFileSystemObject.parent"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.parent">[docs]</a>    <span class="k">def</span> <span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Directory&#39;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Return parent Directory of self. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Return parent :class:`norfs.filesystem.Directory` of self. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Directory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseFileSystemObject.copy_object"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.BaseFileSystemObject.copy_object">[docs]</a>    <span class="k">def</span> <span class="nf">copy_object</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CopyFileSystemObject</span><span class="p">:</span>
@@ -129,17 +137,19 @@
 <div class="viewcode-block" id="Directory"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory">[docs]</a><span class="k">class</span> <span class="nc">Directory</span><span class="p">(</span><span class="n">BaseFileSystemObject</span><span class="p">):</span>
 
 <div class="viewcode-block" id="Directory.is_dir"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory.is_dir">[docs]</a>    <span class="k">def</span> <span class="nf">is_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Returns wether self is a Directory. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Returns whether self is a :class:`norfs.filesystem.Directory`. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Directory.as_dir"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory.as_dir">[docs]</a>    <span class="k">def</span> <span class="nf">as_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Directory&#39;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Returns itself as a Directory instance or raises a NotADirectoryError. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Returns itself as a :class:`norfs.filesystem.Directory` instance or raises a :class:`NotADirectoryError`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="Directory.list"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">BaseFileSystemObject</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot; Returns the contents of the Directory in the file system as a list of BaseFileSystemObjects.</span>
+        <span class="sd">&quot;&quot;&quot; Returns the contents of the :class:`norfs.filesystem.Directory` in the file system as a list of</span>
+<span class="sd">        :class:`norfs.filesystem.BaseFileSystemObject` s.</span>
 
-<span class="sd">        If the Directory does not exist the list will be empty.</span>
+<span class="sd">        If the :class:`norfs.filesystem.Directory` does not exist the list will be empty.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">contents</span><span class="p">:</span> <span class="n">DirListResult</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">dir_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span>
         <span class="n">result</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BaseFileSystemObject</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -155,16 +165,20 @@
 <div class="viewcode-block" id="Directory.remove"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Tries to remove self from the file system.</span>
 
-<span class="sd">        On failure it raises a FileSystemOperationError</span>
+<span class="sd">        On failure it raises a :class:`norfs.fs.base.FileSystemOperationError`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">dir_remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Directory.subdir"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory.subdir">[docs]</a>    <span class="k">def</span> <span class="nf">subdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Directory&#39;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Returns a Directory with its path as being the given path relative to the current Directory. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Returns a :class:`norfs.filesystem.Directory` with its path as being the given path relative to the current</span>
+<span class="sd">        directory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Directory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Directory.file"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory.file">[docs]</a>    <span class="k">def</span> <span class="nf">file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;File&#39;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Returns a File with its path as being the given `path` relative to the current Directory. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Returns a :class:`norfs.filesystem.File` with its path as being the given `path` relative to the current</span>
+<span class="sd">        directory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Directory.copy_object"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.Directory.copy_object">[docs]</a>    <span class="k">def</span> <span class="nf">copy_object</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CopyFileSystemObject</span><span class="p">:</span>
@@ -174,31 +188,32 @@
 <div class="viewcode-block" id="File"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.File">[docs]</a><span class="k">class</span> <span class="nc">File</span><span class="p">(</span><span class="n">BaseFileSystemObject</span><span class="p">):</span>
 
 <div class="viewcode-block" id="File.is_file"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.File.is_file">[docs]</a>    <span class="k">def</span> <span class="nf">is_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Returns wether self is a File. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Returns whether self is a :class:`norfs.filesystem.File`. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="File.as_file"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.File.as_file">[docs]</a>    <span class="k">def</span> <span class="nf">as_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;File&#39;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Returns itself as a File instance or raises a NotAFileError. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Returns itself as a :class:`norfs.filesystem.File` instance or raises a :class:`norfs.fs.base.NotAFileError`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="File.remove"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.File.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Tries to remove self from the file system.</span>
 
-<span class="sd">        On failure it raises a FileSystemOperationError</span>
+<span class="sd">        On failure it raises a :class:`norfs.fs.base.FileSystemOperationError`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">file_remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="File.read"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.File.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Returns the contents of the File.</span>
+        <span class="sd">&quot;&quot;&quot; Returns the contents of the file.</span>
 
-<span class="sd">        If it fails to read the file a FileSystemOperationError will be raised.</span>
+<span class="sd">        If it fails to read the file a :class:`norfs.fs.base.FileSystemOperationError` will be raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">file_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="File.write"><a class="viewcode-back" href="../../norfs.html#norfs.filesystem.File.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Sets the contents of the File. If the parent directory does not exist it is created.</span>
+        <span class="sd">&quot;&quot;&quot; Sets the contents of the file. If the parent directory does not exist it is created.</span>
 
-<span class="sd">        If it fails to write the file a FileSystemOperationError will be raised.</span>
+<span class="sd">        If it fails to write the file a :class:`norfs.fs.base.FileSystemOperationError` will be raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fs</span><span class="o">.</span><span class="n">file_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span></div>
 
