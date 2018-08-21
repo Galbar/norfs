@@ -38,13 +38,13 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span>
 
 <span class="kn">from</span> <span class="nn">norfs.copy.base</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">CopyStrategy</span><span class="p">,</span>
+    <span class="n">GenericCopyStrategy</span><span class="p">,</span>
     <span class="n">CopyFile</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">norfs.fs.base</span> <span class="k">import</span> <span class="n">Path</span>
 
 
-<div class="viewcode-block" id="LocalToLocalCopyStrategy"><a class="viewcode-back" href="../../../norfs.copy.html#norfs.copy.local.LocalToLocalCopyStrategy">[docs]</a><span class="k">class</span> <span class="nc">LocalToLocalCopyStrategy</span><span class="p">(</span><span class="n">CopyStrategy</span><span class="p">):</span>
+<div class="viewcode-block" id="LocalToLocalCopyStrategy"><a class="viewcode-back" href="../../../norfs.copy.html#norfs.copy.local.LocalToLocalCopyStrategy">[docs]</a><span class="k">class</span> <span class="nc">LocalToLocalCopyStrategy</span><span class="p">(</span><span class="n">GenericCopyStrategy</span><span class="p">):</span>
 
 <div class="viewcode-block" id="LocalToLocalCopyStrategy.copy_file_to_file"><a class="viewcode-back" href="../../../norfs.copy.html#norfs.copy.local.LocalToLocalCopyStrategy.copy_file_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">copy_file_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="n">CopyFile</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">CopyFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">parent_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">dst</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">parent</span>
@@ -53,7 +53,7 @@
         <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">path_to_string</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">path</span><span class="p">),</span> <span class="n">dst</span><span class="o">.</span><span class="n">fs</span><span class="o">.</span><span class="n">path_to_string</span><span class="p">(</span><span class="n">dst</span><span class="o">.</span><span class="n">path</span><span class="p">))</span></div></div>
 
 
-<div class="viewcode-block" id="LocalToS3CopyStrategy"><a class="viewcode-back" href="../../../norfs.copy.html#norfs.copy.local.LocalToS3CopyStrategy">[docs]</a><span class="k">class</span> <span class="nc">LocalToS3CopyStrategy</span><span class="p">(</span><span class="n">CopyStrategy</span><span class="p">):</span>
+<div class="viewcode-block" id="LocalToS3CopyStrategy"><a class="viewcode-back" href="../../../norfs.copy.html#norfs.copy.local.LocalToS3CopyStrategy">[docs]</a><span class="k">class</span> <span class="nc">LocalToS3CopyStrategy</span><span class="p">(</span><span class="n">GenericCopyStrategy</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s3_client</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_s3_client</span> <span class="o">=</span> <span class="n">s3_client</span>

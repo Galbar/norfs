@@ -10,7 +10,7 @@ from typing import (
 from norfs.copy.base import (
     CopyDirectory,
     CopyFile,
-    CopyStrategy,
+    GenericCopyStrategy,
 )
 from norfs.fs.base import (
     FileSystemOperationError,
@@ -18,7 +18,7 @@ from norfs.fs.base import (
 )
 
 
-class S3ToS3CopyStrategy(CopyStrategy):
+class S3ToS3CopyStrategy(GenericCopyStrategy):
 
     def __init__(self, s3_client: Any) -> None:
         self._s3_client = s3_client
@@ -76,7 +76,7 @@ class S3ToS3CopyStrategy(CopyStrategy):
         self._s3_client.copy(copy_source, dst.path.drive, dst_tail)
 
 
-class S3ToLocalCopyStrategy(CopyStrategy):
+class S3ToLocalCopyStrategy(GenericCopyStrategy):
 
     def __init__(self, s3_client: Any) -> None:
         self._s3_client = s3_client

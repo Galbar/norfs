@@ -113,3 +113,18 @@ class TestS3ToLocalCopyStrategy(TestCase):
         self.sut.copy_file_to_file(CopyFile(self.src_fs, src_path), CopyFile(self.dst_fs, dst_path))
 
         assert self.dst_fs.file_read(dst_path) == content
+
+    def test_copy_dir_to_dir(self) -> None:
+        src_path: Path = random_path(self.bucket_name)
+        dst_path: Path = random_local_path(root=self.dst_tmp_dir.name)[0]
+        content: bytes = randstr().encode()
+
+        scenario: List[Tuple[Path, bytes]] = [(random_path(), randstr().encode()) for _ in range(1500)]
+
+        for path, content in scenario:
+            self.src_fs.file_write(Path(src_path.drive, *src_path.tail, *path.tail), content)
+
+        self.sut.copy_dir_to_dir(CopyDirectory(self.src_fs, src_path), CopyDirectory(self.dst_fs, dst_path))
+
+        for path, content in scenario:
+            assert self.dst_fs.file_read(Path(dst_path.drive, *dst_path.tail, *path.tail)) == content

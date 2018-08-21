@@ -183,7 +183,7 @@
 <dl class="class">
 <dt id="norfs.copy.local.LocalToLocalCopyStrategy">
 <em class="property">class </em><code class="descclassname">norfs.copy.local.</code><code class="descname">LocalToLocalCopyStrategy</code><a class="reference internal" href="_modules/norfs/copy/local.html#LocalToLocalCopyStrategy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.local.LocalToLocalCopyStrategy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#norfs.copy.base.CopyStrategy" title="norfs.copy.base.CopyStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">norfs.copy.base.CopyStrategy</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#norfs.copy.base.GenericCopyStrategy" title="norfs.copy.base.GenericCopyStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">norfs.copy.base.GenericCopyStrategy</span></code></a></p>
 <dl class="method">
 <dt id="norfs.copy.local.LocalToLocalCopyStrategy.copy_file_to_file">
 <code class="descname">copy_file_to_file</code><span class="sig-paren">(</span><em>src: norfs.copy.base.CopyFile</em>, <em>dst: norfs.copy.base.CopyFile</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy/local.html#LocalToLocalCopyStrategy.copy_file_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.local.LocalToLocalCopyStrategy.copy_file_to_file" title="Permalink to this definition">¶</a></dt>
@@ -194,7 +194,7 @@
 <dl class="class">
 <dt id="norfs.copy.local.LocalToS3CopyStrategy">
 <em class="property">class </em><code class="descclassname">norfs.copy.local.</code><code class="descname">LocalToS3CopyStrategy</code><span class="sig-paren">(</span><em>s3_client: Any</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/norfs/copy/local.html#LocalToS3CopyStrategy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.local.LocalToS3CopyStrategy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#norfs.copy.base.CopyStrategy" title="norfs.copy.base.CopyStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">norfs.copy.base.CopyStrategy</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#norfs.copy.base.GenericCopyStrategy" title="norfs.copy.base.GenericCopyStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">norfs.copy.base.GenericCopyStrategy</span></code></a></p>
 <dl class="method">
 <dt id="norfs.copy.local.LocalToS3CopyStrategy.copy_file_to_file">
 <code class="descname">copy_file_to_file</code><span class="sig-paren">(</span><em>src: norfs.copy.base.CopyFile</em>, <em>dst: norfs.copy.base.CopyFile</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy/local.html#LocalToS3CopyStrategy.copy_file_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.local.LocalToS3CopyStrategy.copy_file_to_file" title="Permalink to this definition">¶</a></dt>
@@ -208,7 +208,7 @@
 <dl class="class">
 <dt id="norfs.copy.s3.S3ToLocalCopyStrategy">
 <em class="property">class </em><code class="descclassname">norfs.copy.s3.</code><code class="descname">S3ToLocalCopyStrategy</code><span class="sig-paren">(</span><em>s3_client: Any</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/norfs/copy/s3.html#S3ToLocalCopyStrategy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.s3.S3ToLocalCopyStrategy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#norfs.copy.base.CopyStrategy" title="norfs.copy.base.CopyStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">norfs.copy.base.CopyStrategy</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#norfs.copy.base.GenericCopyStrategy" title="norfs.copy.base.GenericCopyStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">norfs.copy.base.GenericCopyStrategy</span></code></a></p>
 <dl class="method">
 <dt id="norfs.copy.s3.S3ToLocalCopyStrategy.copy_file_to_file">
 <code class="descname">copy_file_to_file</code><span class="sig-paren">(</span><em>src: norfs.copy.base.CopyFile</em>, <em>dst: norfs.copy.base.CopyFile</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy/s3.html#S3ToLocalCopyStrategy.copy_file_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.s3.S3ToLocalCopyStrategy.copy_file_to_file" title="Permalink to this definition">¶</a></dt>
@@ -219,7 +219,7 @@
 <dl class="class">
 <dt id="norfs.copy.s3.S3ToS3CopyStrategy">
 <em class="property">class </em><code class="descclassname">norfs.copy.s3.</code><code class="descname">S3ToS3CopyStrategy</code><span class="sig-paren">(</span><em>s3_client: Any</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/norfs/copy/s3.html#S3ToS3CopyStrategy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.s3.S3ToS3CopyStrategy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#norfs.copy.base.CopyStrategy" title="norfs.copy.base.CopyStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">norfs.copy.base.CopyStrategy</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#norfs.copy.base.GenericCopyStrategy" title="norfs.copy.base.GenericCopyStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">norfs.copy.base.GenericCopyStrategy</span></code></a></p>
 <dl class="method">
 <dt id="norfs.copy.s3.S3ToS3CopyStrategy.copy_dir_to_dir">
 <code class="descname">copy_dir_to_dir</code><span class="sig-paren">(</span><em>src: norfs.copy.base.CopyDirectory</em>, <em>dst: norfs.copy.base.CopyDirectory</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/norfs/copy/s3.html#S3ToS3CopyStrategy.copy_dir_to_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#norfs.copy.s3.S3ToS3CopyStrategy.copy_dir_to_dir" title="Permalink to this definition">¶</a></dt>

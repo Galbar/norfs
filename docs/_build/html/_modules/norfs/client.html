@@ -53,7 +53,8 @@
 
 <span class="sd">        memory_fs_client = norfs.helpers.memory()</span>
 
-<span class="sd">        import boto3 s3_fs_client = norfs.helpers.s3(s3_client=boto3.client(&#39;s3&#39;))</span>
+<span class="sd">        import boto3</span>
+<span class="sd">        s3_fs_client = norfs.helpers.s3(s3_client=boto3.client(&#39;s3&#39;))</span>
 
 <span class="sd">    A :class:`norfs.client.FileSystemClient` exposes the following interface:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -100,7 +101,7 @@
 
 <span class="sd">    :func:`norfs.helpers.get_copy_client` returns a :class:`norfs.client.CopyClient` instance configured with copy</span>
 <span class="sd">    strategies for each of the file system clients passed.</span>
-<span class="sd">    </span>
+
 <span class="sd">    A :class:`norfs.copy.base.Copier` can have copy policies set for a pair of source and destination file systems to</span>
 <span class="sd">    implement a better strategy of copying between them than read source and write destination.</span>
 <span class="sd">    :func:`norfs.helpers.get_copy_client` helps you by setting these for you.</span>

@@ -165,7 +165,8 @@ is a handy class that provides easy access to :class:<cite>norfs.filesystem.Fil
 
 <span class="n">memory_fs_client</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">memory</span><span class="p">()</span>
 
-<span class="kn">import</span> <span class="nn">boto3</span> <span class="n">s3_fs_client</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">s3</span><span class="p">(</span><span class="n">s3_client</span><span class="o">=</span><span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">))</span>
+<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="n">s3_fs_client</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">s3</span><span class="p">(</span><span class="n">s3_client</span><span class="o">=</span><span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>A <a class="reference internal" href="norfs.html#norfs.client.FileSystemClient" title="norfs.client.FileSystemClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">norfs.client.FileSystemClient</span></code></a> exposes the following interface:</p>
