@@ -44,7 +44,7 @@
 <span class="kn">from</span> <span class="nn">norfs.copy.base</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">CopyDirectory</span><span class="p">,</span>
     <span class="n">CopyFile</span><span class="p">,</span>
-    <span class="n">CopyStrategy</span><span class="p">,</span>
+    <span class="n">GenericCopyStrategy</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">norfs.fs.base</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">FileSystemOperationError</span><span class="p">,</span>
@@ -52,7 +52,7 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="S3ToS3CopyStrategy"><a class="viewcode-back" href="../../../norfs.copy.html#norfs.copy.s3.S3ToS3CopyStrategy">[docs]</a><span class="k">class</span> <span class="nc">S3ToS3CopyStrategy</span><span class="p">(</span><span class="n">CopyStrategy</span><span class="p">):</span>
+<div class="viewcode-block" id="S3ToS3CopyStrategy"><a class="viewcode-back" href="../../../norfs.copy.html#norfs.copy.s3.S3ToS3CopyStrategy">[docs]</a><span class="k">class</span> <span class="nc">S3ToS3CopyStrategy</span><span class="p">(</span><span class="n">GenericCopyStrategy</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s3_client</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_s3_client</span> <span class="o">=</span> <span class="n">s3_client</span>
@@ -110,7 +110,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_s3_client</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">copy_source</span><span class="p">,</span> <span class="n">dst</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">drive</span><span class="p">,</span> <span class="n">dst_tail</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="S3ToLocalCopyStrategy"><a class="viewcode-back" href="../../../norfs.copy.html#norfs.copy.s3.S3ToLocalCopyStrategy">[docs]</a><span class="k">class</span> <span class="nc">S3ToLocalCopyStrategy</span><span class="p">(</span><span class="n">CopyStrategy</span><span class="p">):</span>
+<div class="viewcode-block" id="S3ToLocalCopyStrategy"><a class="viewcode-back" href="../../../norfs.copy.html#norfs.copy.s3.S3ToLocalCopyStrategy">[docs]</a><span class="k">class</span> <span class="nc">S3ToLocalCopyStrategy</span><span class="p">(</span><span class="n">GenericCopyStrategy</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s3_client</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_s3_client</span> <span class="o">=</span> <span class="n">s3_client</span>
