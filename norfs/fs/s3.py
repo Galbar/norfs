@@ -28,8 +28,16 @@ class S3FileSystem(BaseFileSystem):
     # General operations
     def parse_path(self, path: str) -> Path:
         bucket_path_separator_position: int = path.find("/")
-        drive: str = path[:bucket_path_separator_position]
-        tail: List[str] = path[bucket_path_separator_position + 1:].split(self._separator)
+        drive: str = path
+        tail: List[str] = []
+        tail_end: int = len(path)
+        if path.endswith(self._separator):
+            tail_end -= len(self._separator)
+        if bucket_path_separator_position > 0:
+            drive = path[:bucket_path_separator_position]
+            tail_start: int = bucket_path_separator_position + 1
+            if tail_end > tail_start:
+                tail = path[tail_start:tail_end].split(self._separator)
         return Path(drive, *tail)
 
     def path_exists(self, path: Path) -> bool:
@@ -55,7 +63,10 @@ class S3FileSystem(BaseFileSystem):
         return False
 
     def path_to_string(self, path: Path) -> str:
-        return f"{path.drive}/{self._separator.join(path.tail)}"
+        joint: str = ""
+        if path.tail:
+            joint = "/"
+        return f"{path.drive}{joint}{self._separator.join(path.tail)}"
 
     def path_to_uri(self, path: Path) -> str:
         return f"{self._protocol}://{self.path_to_string(path)}"
