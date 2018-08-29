@@ -36,7 +36,7 @@ class TestS3FileSystem(TestCase):
         assert self.fs.parse_path(abs_input_path_str + self.separator) == expected_path
 
         expected_path = Path(randstr())
-        abs_input_path_str: str = f"{expected_path.drive}"
+        abs_input_path_str = f"{expected_path.drive}"
         assert self.fs.parse_path(abs_input_path_str) == expected_path
         assert self.fs.parse_path(abs_input_path_str + "/") == expected_path
         assert self.fs.parse_path(abs_input_path_str + "/" + self.separator) == expected_path
@@ -46,8 +46,8 @@ class TestS3FileSystem(TestCase):
         result: str = self.fs.path_to_string(path)
         assert result == f"{path.drive}/{self.separator.join(path.tail)}"
 
-        path: Path = Path(randstr())
-        result: str = self.fs.path_to_string(path)
+        path = Path(randstr())
+        result = self.fs.path_to_string(path)
         assert result == f"{path.drive}"
 
     def test_path_to_uri(self) -> None:

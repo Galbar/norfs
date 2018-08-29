@@ -3,7 +3,7 @@ all: clean flake mypy tests
 clean:
 	find . -regex ".*\.pyc" -delete
 	find . -name "__pycache__" -delete
-	rm -rf .coverage .cache .mypy_cache
+	rm -rf .coverage .cache .mypy_cache build dist norfs.egg-info
 
 flake:
 	python -m flake8 .

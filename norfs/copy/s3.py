@@ -60,9 +60,16 @@ class S3ToS3CopyStrategy(GenericCopyStrategy):
 
         for src_obj_path in self._list_dir(src.path.drive, src_dir_tail):
             dst_obj_path: str = src_obj_path.replace(src_dir_tail, dst_dir_tail)
-            src_file: CopyFile = CopyFile(src.fs, src.fs.parse_path(f'{src.path.drive}/{src_obj_path}'))
-            dst_file: CopyFile = CopyFile(dst.fs, dst.fs.parse_path(f'{dst.path.drive}/{dst_obj_path}'))
-            self.copy_file_to_file(src_file, dst_file)
+            if src_obj_path.endswith("/"):
+                copy_source = {
+                    'Bucket': src.path.drive,
+                    'Key': src_obj_path
+                }
+                self._s3_client.copy(copy_source, dst.path.drive, dst_obj_path)
+            else:
+                src_file: CopyFile = CopyFile(src.fs, src.fs.parse_path(f'{src.path.drive}/{src_obj_path}'))
+                dst_file: CopyFile = CopyFile(dst.fs, dst.fs.parse_path(f'{dst.path.drive}/{dst_obj_path}'))
+                self.copy_file_to_file(src_file, dst_file)
 
     def copy_file_to_file(self, src: CopyFile, dst: CopyFile) -> None:
         src_path_str: str = src.fs.path_to_string(src.path)

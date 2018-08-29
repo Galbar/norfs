@@ -58,7 +58,7 @@ class TestS3ToS3CopyStrategy(TestCase):
         dst_path: Path = random_path(self.dst_bucket_name)
         content: bytes = randstr().encode()
 
-        scenario: List[Tuple[Path, bytes]] = [(random_path(), randstr().encode()) for _ in range(1500)]
+        scenario: List[Tuple[Path, bytes]] = [(random_path(), randstr().encode()) for _ in range(1100)]
 
         for path, content in scenario:
             self.fs.file_write(Path(src_path.drive, *src_path.tail, *path.tail), content)
@@ -119,7 +119,7 @@ class TestS3ToLocalCopyStrategy(TestCase):
         dst_path: Path = random_local_path(root=self.dst_tmp_dir.name)[0]
         content: bytes = randstr().encode()
 
-        scenario: List[Tuple[Path, bytes]] = [(random_path(), randstr().encode()) for _ in range(1500)]
+        scenario: List[Tuple[Path, bytes]] = [(random_path(), randstr().encode()) for _ in range(1100)]
 
         for path, content in scenario:
             self.src_fs.file_write(Path(src_path.drive, *src_path.tail, *path.tail), content)
