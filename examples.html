@@ -15,8 +15,6 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="norfs package" href="norfs.html" />
-    <link rel="prev" title="norfs" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -35,23 +33,232 @@
             
   <div class="section" id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="copy-local-file-to-s3">
-<h2>Copy local file to S3<a class="headerlink" href="#copy-local-file-to-s3" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">norfs.helpers</span>
+<div class="section" id="public-api">
+<h2>Public API<a class="headerlink" href="#public-api" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">norfs.helpers</span>
+</pre></div>
+</div>
+<div class="section" id="filesystem-clients">
+<h3>Filesystem Clients<a class="headerlink" href="#filesystem-clients" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">local_fs_client</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">local</span><span class="p">()</span>
+<span class="n">memory_fs_client</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">memory</span><span class="p">()</span>
+
 <span class="kn">import</span> <span class="nn">boto3</span>
+<span class="n">s3_fs_client</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">s3</span><span class="p">(</span><span class="n">s3_client</span><span class="o">=</span><span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="files-and-directories">
+<h3>Files and Directories<a class="headerlink" href="#files-and-directories" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cwd</span> <span class="o">=</span> <span class="n">local_fs_client</span><span class="o">.</span><span class="n">dir</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cwd</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Directory</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="n">LocalFileSystem</span><span class="p">(),</span> <span class="n">path</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">jovyan</span><span class="o">/</span><span class="n">work</span><span class="o">/.</span><span class="n">ipynb_checkpoints</span><span class="p">),</span>
+ <span class="n">File</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="n">LocalFileSystem</span><span class="p">(),</span> <span class="n">path</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">jovyan</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">Dockerfile</span><span class="p">),</span>
+ <span class="n">File</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="n">LocalFileSystem</span><span class="p">(),</span> <span class="n">path</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">jovyan</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">Public</span> <span class="n">API</span><span class="o">.</span><span class="n">ipynb</span><span class="p">),</span>
+ <span class="n">File</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="n">LocalFileSystem</span><span class="p">(),</span> <span class="n">path</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">jovyan</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">Untitled</span><span class="o">.</span><span class="n">ipynb</span><span class="p">)]</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">local_file</span> <span class="o">=</span> <span class="n">cwd</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s1">&#39;demo.txt&#39;</span><span class="p">)</span>
+<span class="n">local_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;Hello norfs!&#39;</span><span class="p">)</span>
+<span class="n">local_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sa">b</span><span class="s1">&#39;Hello norfs!&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s3_fs_client</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s1">&#39;myBucket/hello-world.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sa">b</span><span class="s1">&#39;Hello World!&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s3_dir</span> <span class="o">=</span> <span class="n">s3_fs_client</span><span class="o">.</span><span class="n">dir</span><span class="p">(</span><span class="s1">&#39;myBucket/norfs-demo/&#39;</span><span class="p">)</span>
+<span class="n">s3_dir</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[]</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">local_file</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">norfs</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">File</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">s3_dir</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s1">&#39;a_file.txt&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">norfs</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">File</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">norfs</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">Directory</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">s3_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">norfs</span><span class="o">.</span><span class="n">filesystem</span><span class="o">.</span><span class="n">Directory</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="copying">
+<h3>Copying<a class="headerlink" href="#copying" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">copy_client</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">get_copy_client</span><span class="p">(</span><span class="n">local_fs_client</span><span class="p">,</span> <span class="n">s3_fs_client</span><span class="p">,</span> <span class="n">memory_fs_client</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">copy_client</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">local_file</span><span class="p">,</span> <span class="n">s3_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s3_dir</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">File</span><span class="p">(</span><span class="n">fs</span><span class="o">=</span><span class="n">S3FileSystem</span><span class="p">(</span><span class="n">s3_client</span><span class="o">=&lt;</span><span class="n">botocore</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">S3</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f5b32227e48</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">uri_protocol</span><span class="o">=</span><span class="n">s3</span><span class="p">,</span> <span class="n">separator</span><span class="o">=/</span><span class="p">),</span> <span class="n">path</span><span class="o">=</span><span class="n">myBucket</span><span class="o">/</span><span class="n">norfs</span><span class="o">-</span><span class="n">demo</span><span class="o">/</span><span class="n">demo</span><span class="o">.</span><span class="n">txt</span><span class="p">)]</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s3_dir</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="n">local_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sa">b</span><span class="s1">&#39;Hello norfs!&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="key-store">
+<h2>Key Store<a class="headerlink" href="#key-store" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">norfs.helpers</span>
 
-<span class="n">s3</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">s3</span><span class="p">(</span><span class="n">s3_client</span><span class="o">=</span><span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">))</span>
-<span class="n">local</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">local</span><span class="p">()</span>
-<span class="n">cp</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">get_copy_client</span><span class="p">(</span><span class="n">s3</span><span class="p">,</span> <span class="n">local</span><span class="p">)</span>
+<span class="n">local_fs_client</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">local</span><span class="p">()</span>
 
-<span class="n">local_file</span> <span class="o">=</span> <span class="n">local</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s2">&quot;some/file.txt&quot;</span><span class="p">)</span>
-<span class="n">local_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;local_file contents&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="n">s3_fs_client</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">s3</span><span class="p">(</span><span class="n">s3_client</span><span class="o">=</span><span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Store</span><span class="p">:</span>
 
-<span class="n">s3_dir</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">dir</span><span class="p">(</span><span class="s2">&quot;myBucket/myDir&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_file</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="o">=</span> <span class="n">store_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_store</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
-<span class="n">cp</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">local_file</span><span class="p">,</span> <span class="n">s3_dir</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_store</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="p">)</span>
 
-<span class="k">assert</span> <span class="n">local_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> <span class="o">==</span> <span class="n">s3_dir</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s2">&quot;file.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span> <span class="k">if</span> <span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">store_file</span> <span class="o">=</span> <span class="n">local_fs_client</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">Store</span><span class="p">(</span><span class="n">store_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">store</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+
+<span class="n">store_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</pre></div>
+</div>
+<pre class="literal-block">
+b'0n7n8n6n3n2n1n9n5n4'
+</pre>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s3_store_file</span> <span class="o">=</span> <span class="n">s3_fs_client</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s1">&#39;myBucket/norfs-demo/store&#39;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">Store</span><span class="p">(</span><span class="n">s3_store_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">store</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+
+<span class="n">s3_store_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</pre></div>
+</div>
+<pre class="literal-block">
+b'0n7n8n6n3n2n1n9n5n4'
+</pre>
+<div class="section" id="from-config-using-uri">
+<h3>From config using URI<a class="headerlink" href="#from-config-using-uri" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FileFactory</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span> <span class="o">=</span> <span class="n">mapping</span>
+
+    <span class="k">def</span> <span class="nf">file_from_uri</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_uri</span><span class="p">):</span>
+        <span class="n">protocol</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">file_uri</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;://&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">[</span><span class="n">protocol</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">file_factory</span> <span class="o">=</span> <span class="n">FileFactory</span><span class="p">({</span><span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="n">local_fs_client</span><span class="p">,</span> <span class="s1">&#39;s3&#39;</span><span class="p">:</span> <span class="n">s3_fs_client</span><span class="p">})</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">store_uri</span><span class="p">):</span>
+    <span class="n">store_file</span> <span class="o">=</span> <span class="n">file_factory</span><span class="o">.</span><span class="n">file_from_uri</span><span class="p">(</span><span class="n">store_uri</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">Store</span><span class="p">(</span><span class="n">store_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">store</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
+            <span class="n">store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">store_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">main</span><span class="p">(</span><span class="s1">&#39;file://./store&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<pre class="literal-block">
+b'15n0n8n7n17n13n10n6n16n19n11n3n2n12n14n18n1n9n5n4'
+</pre>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">main</span><span class="p">(</span><span class="s1">&#39;s3://myBucket/norfs-demo/store&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<pre class="literal-block">
+b'15n0n8n7n17n13n10n6n16n19n11n3n2n12n14n18n1n9n5n4'
+</pre>
+</div>
+</div>
+<div class="section" id="pyspark">
+<h2>PySpark<a class="headerlink" href="#pyspark" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">norfs.helpers</span>
+
+<span class="n">local_fs_client</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">local</span><span class="p">()</span>
+
+<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="n">s3_fs_client</span> <span class="o">=</span> <span class="n">norfs</span><span class="o">.</span><span class="n">helpers</span><span class="o">.</span><span class="n">s3</span><span class="p">(</span><span class="n">s3_client</span><span class="o">=</span><span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark</span> <span class="k">import</span> <span class="n">SparkContext</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">SparkContext</span><span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">spark_count_lines</span><span class="p">(</span><span class="n">input_file</span><span class="p">):</span>
+    <span class="n">rdd</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">textFile</span><span class="p">(</span><span class="n">input_file</span><span class="o">.</span><span class="n">uri</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rdd</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">init_input_file</span><span class="p">(</span><span class="n">input_file</span><span class="p">):</span>
+    <span class="n">input_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">123</span><span class="p">)))</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">local_file</span> <span class="o">=</span> <span class="n">local_fs_client</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s1">&#39;input_file&#39;</span><span class="p">)</span>
+<span class="n">s3_file</span> <span class="o">=</span> <span class="n">s3_fs_client</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s1">&#39;myBucket/norfs-demo/input_file&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">init_input_file</span><span class="p">(</span><span class="n">local_file</span><span class="p">)</span>
+<span class="n">spark_count_lines</span><span class="p">(</span><span class="n">local_file</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">123</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">init_input_file</span><span class="p">(</span><span class="n">s3_file</span><span class="p">)</span>
+<span class="n">spark_count_lines</span><span class="p">(</span><span class="n">s3_file</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">123</span>
 </pre></div>
 </div>
 </div>
@@ -65,31 +272,25 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul class="current">
+  <ul>
 <li class="toctree-l1"><a class="reference internal" href="index.html">norfs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#installation">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#supported-filesystems">Supported Filesystems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#the-norfs-interface">The norfs interface</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#copy-local-file-to-s3">Copy local file to S3</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="norfs.html">norfs package</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#copy-local-file-to-s3">Copy local file to S3</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/01 - Public API.html">norfs - Normalized Filesystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/01 - Public API.html#cleanup">Cleanup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/02 - Example - Key Store.html">Example - Key Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/02 - Example - Key Store.html#from-config-using-uri">From config using URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/02 - Example - Key Store.html#cleanup">Cleanup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/03 - Example - PySpark.html">Example - PySpark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/03 - Example - PySpark.html#cleanup">Cleanup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="norfs.html">norfs package</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">norfs</a></li>
-      <li>Next: <a href="norfs.html" title="next chapter">norfs package</a></li>
   </ul></li>
 </ul>
 </div>
