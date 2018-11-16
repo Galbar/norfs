@@ -124,5 +124,7 @@ Indices and tables
    :hidden:
 
    index
-   examples
+   examples/01 - Public API.ipynb
+   examples/02 - Example - Key Store.ipynb
+   examples/03 - Example - PySpark.ipynb
    norfs
