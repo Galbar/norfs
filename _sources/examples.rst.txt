@@ -29,7 +29,7 @@ Files and Directories
 
 .. code:: ipython3
 
-    cwd.list()
+    list(cwd.list())
 
 
 
@@ -74,7 +74,7 @@ Files and Directories
 .. code:: ipython3
 
     s3_dir = s3_fs_client.dir('myBucket/norfs-demo/')
-    s3_dir.list()
+    list(s3_dir.list())
 
 
 
@@ -150,7 +150,7 @@ Copying
 
 .. code:: ipython3
 
-    s3_dir.list()
+    list(s3_dir.list())
 
 
 
@@ -217,7 +217,7 @@ Key Store
 
 .. parsed-literal::
 
-    b'0\n7\n8\n6\n3\n2\n1\n9\n5\n4'
+    b'0\\n7\\n8\\n6\\n3\\n2\\n1\\n9\\n5\\n4'
 
 
 
@@ -236,7 +236,7 @@ Key Store
 
 .. parsed-literal::
 
-    b'0\n7\n8\n6\n3\n2\n1\n9\n5\n4'
+    b'0\\n7\\n8\\n6\\n3\\n2\\n1\\n9\\n5\\n4'
 
 
 
@@ -276,7 +276,7 @@ From config using URI
 
 .. parsed-literal::
 
-    b'15\n0\n8\n7\n17\n13\n10\n6\n16\n19\n11\n3\n2\n12\n14\n18\n1\n9\n5\n4'
+    b'15\\n0\\n8\\n7\\n17\\n13\\n10\\n6\\n16\\n19\\n11\\n3\\n2\\n12\\n14\\n18\\n1\\n9\\n5\\n4'
 
 
 .. code:: ipython3
@@ -286,7 +286,7 @@ From config using URI
 
 .. parsed-literal::
 
-    b'15\n0\n8\n7\n17\n13\n10\n6\n16\n19\n11\n3\n2\n12\n14\n18\n1\n9\n5\n4'
+    b'15\\n0\\n8\\n7\\n17\\n13\\n10\\n6\\n16\\n19\\n11\\n3\\n2\\n12\\n14\\n18\\n1\\n9\\n5\\n4'
 
 
 

@@ -8,6 +8,7 @@ Subpackages
 
     norfs.copy
     norfs.fs
+    norfs.permissions
 
 Submodules
 ----------
