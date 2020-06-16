@@ -7,7 +7,7 @@ from unittest import (
 )
 
 from norfs.fs.base import (
-    DirListResult,
+    FSObjectType,
     Path,
 )
 from norfs.fs.s3 import S3FileSystem
@@ -77,13 +77,24 @@ class TestS3FileSystem(TestCase):
                 "IsTruncated": False,
             }
         ]
-        result: DirListResult = self.fs.dir_list(input_path)
+        result_files = []
+        result_dirs = []
+        result_others = []
+
+        for obj in self.fs.dir_list(input_path):
+            if obj.type == FSObjectType.DIR:
+                result_dirs.append(obj.path)
+            elif obj.type == FSObjectType.FILE:
+                result_files.append(obj.path)
+            else:
+                result_others.append(obj.path)
 
         expected_call_list: List[mock.call] = [
             mock.call(
                 Bucket=input_path.drive,
                 Prefix=tail_str + self.separator,
-                Delimiter=self.separator
+                Delimiter=self.separator,
+                ContinuationToken=""
             )
         ] + [
             mock.call(
@@ -95,6 +106,6 @@ class TestS3FileSystem(TestCase):
             for cont_token in cont_tokens
         ]
         assert self.client.list_objects_v2.call_args_list == expected_call_list
-        assert result.files == [input_path.child(file) for files_it in files for file in files_it]
-        assert result.dirs == [input_path.child(dir) for dirs_it in dirs for dir in dirs_it]
-        assert result.others == []
+        assert result_files == [input_path.child(file) for files_it in files for file in files_it]
+        assert result_dirs == [input_path.child(dir) for dirs_it in dirs for dir in dirs_it]
+        assert result_others == []

@@ -24,8 +24,6 @@ Installation
 ============
 Install with ``pip``: ``pip install norfs``.
 
-For python 3.4 and 3.5 you can install ``pip install norfs-py3.4``.
-
 You can also download the source code from the `git repository`_.
 
 .. _git repository: https://github.com/Galbar/norfs
@@ -124,7 +122,5 @@ Indices and tables
    :hidden:
 
    index
-   examples/01 - Public API.ipynb
-   examples/02 - Example - Key Store.ipynb
-   examples/03 - Example - PySpark.ipynb
+   examples
    norfs

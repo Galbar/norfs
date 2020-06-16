@@ -1,8 +1,14 @@
 from typing import (
     Any,
+    Dict,
+    Iterable,
     List,
     Tuple,
+    Optional,
 )
+from enum import Enum, auto
+
+from norfs.permissions import Policy
 
 
 class NotAFileError(Exception):
@@ -52,43 +58,30 @@ class Path:
         return False
 
 
-class DirListResult:
-    _files: List[Path]
-    _dirs: List[Path]
-    _others: List[Path]
+class FSObjectType(Enum):
+    FILE = auto()
+    DIR = auto()
+    OTHER = auto()
 
-    def __init__(self, files: List[Path], dirs: List[Path], others: List[Path]) -> None:
-        self._files = files
-        self._dirs = dirs
-        self._others = others
 
-    @property
-    def files(self) -> List[Path]:
-        return self._files
+class FSObjectPath:
+    _type: FSObjectType
+    _path: Path
 
-    @property
-    def dirs(self) -> List[Path]:
-        return self._dirs
+    def __init__(self, type: FSObjectType, path: Path) -> None:
+        self._type = type
+        self._path = path
 
     @property
-    def others(self) -> List[Path]:
-        return self._others
+    def type(self) -> FSObjectType:
+        return self._type
 
-    def __eq__(self, other: Any) -> bool:
-        if other is self:
-            return True
-        if not isinstance(other, DirListResult):
-            return False
-        if set(other.files) != set(self.files):
-            return False
-        if set(other.dirs) != set(self.dirs):
-            return False
-        if set(other.others) != set(self.others):
-            return False
-        return True
+    @property
+    def path(self) -> Path:
+        return self._path
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(files={self._files}, dirs={self._dirs}, others={self._others})"
+        return f"{self.__class__.__name__}(type={self._type}, path={self._path})"
 
 
 class BaseFileSystem:
@@ -117,8 +110,17 @@ class BaseFileSystem:
     def file_remove(self, path: Path) -> None:
         raise FileSystemOperationError(self.ERROR_MESSAGE)
 
+    def file_set_perms(self, path: Path, policies: List[Policy]) -> None:
+        raise FileSystemOperationError(self.ERROR_MESSAGE)
+
+    def file_set_properties(self, path: Path,
+                            content_type: Optional[str] = None,
+                            tags: Optional[Dict[str, str]] = None,
+                            metadata: Optional[Dict[str, str]] = None) -> None:
+        raise FileSystemOperationError(self.ERROR_MESSAGE)
+
     # Directory operations
-    def dir_list(self, path: Path) -> DirListResult:
+    def dir_list(self, path: Path) -> Iterable[FSObjectPath]:
         raise FileSystemOperationError(self.ERROR_MESSAGE)
 
     def dir_remove(self, path: Path) -> None:

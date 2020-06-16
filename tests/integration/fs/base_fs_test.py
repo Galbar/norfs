@@ -1,11 +1,12 @@
 from typing import (
     Dict,
+    List,
     Union,
 )
 
 from norfs.fs.base import (
     BaseFileSystem,
-    DirListResult,
+    FSObjectType,
     FileSystemOperationError,
     Path,
 )
@@ -121,22 +122,24 @@ class BaseTestFileSystem:
         }
         self.setup_scenario(scenario)
 
-        assert self.fs.dir_list(self.make_path()) == DirListResult(
-            [self.make_path(path) for path in ["filec"]],
-            [self.make_path(path) for path in ["dira", "dirb"]],
-            []
-        )
-        assert self.fs.dir_list(self.make_path("dira")) == DirListResult(
-            [self.make_path(*path) for path in [["dira", "fileaa"], ["dira", "fileab"]]],
-            [self.make_path(*path) for path in [["dira", "dirc"]]],
-            []
-        )
-        assert self.fs.dir_list(self.make_path("dira", "dirc")) == DirListResult(
-            [self.make_path(*path) for path in [["dira", "dirc", "fileaca"]]],
-            [], []
-        )
-        assert self.fs.dir_list(self.make_path("dirb")) == DirListResult([], [], [])
-        assert self.fs.dir_list(self.make_path("dira", "non", "existent", "dir")) == DirListResult([], [], [])
+        self._assert_dir_list(self.make_path(),
+                              [self.make_path(path) for path in ["filec"]],
+                              [self.make_path(path) for path in ["dira", "dirb"]],
+                              [])
+        self._assert_dir_list(self.make_path(),
+                              [self.make_path(path) for path in ["filec"]],
+                              [self.make_path(path) for path in ["dira", "dirb"]],
+                              [])
+        self._assert_dir_list(self.make_path("dira"),
+                              [self.make_path(*path) for path in [["dira", "fileaa"], ["dira", "fileab"]]],
+                              [self.make_path(*path) for path in [["dira", "dirc"]]],
+                              [])
+        self._assert_dir_list(self.make_path("dira", "dirc"),
+                              [self.make_path(*path) for path in [["dira", "dirc", "fileaca"]]],
+                              [],
+                              [])
+        self._assert_dir_list(self.make_path("dirb"), [], [], [])
+        self._assert_dir_list(self.make_path("dira", "non", "existent", "dir"), [], [], [])
 
     def test_dir_remove(self) -> None:
         scenario: Scenario = {
@@ -157,3 +160,19 @@ class BaseTestFileSystem:
         self.setup_scenario(scenario)
         self.fs.dir_remove(self.make_path("dira"))
         self.assert_scenario(expected_scenario)
+
+    def _assert_dir_list(self, path: Path, files: List[Path], dirs: List[Path], others: List[Path]) -> None:
+        result_files = []
+        result_dirs = []
+        result_others = []
+        for obj in self.fs.dir_list(path):
+            if obj.type == FSObjectType.DIR:
+                result_dirs.append(obj.path)
+            elif obj.type == FSObjectType.FILE:
+                result_files.append(obj.path)
+            else:
+                result_others.append(obj.path)
+
+        assert set(result_files) == set(files)
+        assert set(result_dirs) == set(dirs)
+        assert set(result_others) == set(others)

@@ -8,12 +8,9 @@ from typing import List
 
 from norfs.fs.base import (
     BaseFileSystem,
-    DirListResult,
     FileSystemOperationError,
     Path,
 )
-
-from tests.tools import random_path
 
 
 class TestPath(TestCase):
@@ -44,49 +41,6 @@ class TestPath(TestCase):
 
     def test_repr(self) -> None:
         assert self.sut.__repr__() == f"Path(drive={self.drive}, tail={tuple(self.tail)})"
-
-
-class TestDirListResult(TestCase):
-    files: List[Path]
-    dirs: List[Path]
-    others: List[Path]
-    sut: DirListResult
-
-    def setUp(self) -> None:
-        self.files = [mock.Mock(spec=Path) for _ in range(random.randint(1, 10))]
-        self.dirs = [mock.Mock(spec=Path) for _ in range(random.randint(1, 10))]
-        self.others = [mock.Mock(spec=Path) for _ in range(random.randint(1, 10))]
-        self.sut = DirListResult(self.files, self.dirs, self.others)
-
-    def test_files(self) -> None:
-        assert self.sut.files == self.files
-
-    def test_dirs(self) -> None:
-        assert self.sut.dirs == self.dirs
-
-    def test_others(self) -> None:
-        assert self.sut.others == self.others
-
-    def test_eq(self) -> None:
-        a: List[Path] = [random_path() for _ in range(random.randint(1, 5))]
-        a_shuffled: List[Path] = a.copy()
-        random.shuffle(a_shuffled)
-        b: List[Path] = [random_path() for _ in range(random.randint(1, 5))]
-        b_shuffled: List[Path] = b.copy()
-        random.shuffle(b_shuffled)
-        c: List[Path] = [random_path() for _ in range(random.randint(1, 5))]
-        c_shuffled: List[Path] = c.copy()
-        random.shuffle(c_shuffled)
-
-        i: DirListResult = DirListResult(a, b, c)
-        assert i == i
-        assert i != mock.Mock()
-        assert i == DirListResult(a_shuffled, b, c)
-        assert i != DirListResult(b, b, c)
-        assert i == DirListResult(a, b_shuffled, c)
-        assert i != DirListResult(a, a, c)
-        assert i == DirListResult(a, b, c_shuffled)
-        assert i != DirListResult(a, b, b)
 
 
 class TestBaseFileSystem(TestCase):

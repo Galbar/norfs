@@ -1,18 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>norfs.fs.local &#8212; norfs 2.0.1 documentation</title>
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
    
@@ -34,16 +35,38 @@
   <h1>Source code for norfs.fs.local</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">stat</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">Iterable</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">norfs.fs.base</span> <span class="k">import</span> <span class="p">(</span>
+
+<span class="kn">from</span> <span class="nn">norfs.fs.base</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">BaseFileSystem</span><span class="p">,</span>
-    <span class="n">DirListResult</span><span class="p">,</span>
+    <span class="n">FSObjectPath</span><span class="p">,</span>
+    <span class="n">FSObjectType</span><span class="p">,</span>
     <span class="n">FileSystemOperationError</span><span class="p">,</span>
     <span class="n">Path</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">norfs.permissions</span> <span class="kn">import</span> <span class="n">Policy</span><span class="p">,</span> <span class="n">Perm</span><span class="p">,</span> <span class="n">Scope</span>
+
+
+<span class="n">_local_fs_perms</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="n">Scope</span><span class="o">.</span><span class="n">OWNER</span><span class="p">,</span> <span class="n">Perm</span><span class="o">.</span><span class="n">READ</span><span class="p">):</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IRUSR</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">Scope</span><span class="o">.</span><span class="n">OWNER</span><span class="p">,</span> <span class="n">Perm</span><span class="o">.</span><span class="n">WRITE</span><span class="p">):</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IWUSR</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">Scope</span><span class="o">.</span><span class="n">OWNER</span><span class="p">,</span> <span class="n">Perm</span><span class="o">.</span><span class="n">EXECUTE</span><span class="p">):</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IXUSR</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">Scope</span><span class="o">.</span><span class="n">GROUP</span><span class="p">,</span> <span class="n">Perm</span><span class="o">.</span><span class="n">READ</span><span class="p">):</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IRGRP</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">Scope</span><span class="o">.</span><span class="n">GROUP</span><span class="p">,</span> <span class="n">Perm</span><span class="o">.</span><span class="n">WRITE</span><span class="p">):</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IWGRP</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">Scope</span><span class="o">.</span><span class="n">GROUP</span><span class="p">,</span> <span class="n">Perm</span><span class="o">.</span><span class="n">EXECUTE</span><span class="p">):</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IXGRP</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">Scope</span><span class="o">.</span><span class="n">OTHERS</span><span class="p">,</span> <span class="n">Perm</span><span class="o">.</span><span class="n">READ</span><span class="p">):</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IROTH</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">Scope</span><span class="o">.</span><span class="n">OTHERS</span><span class="p">,</span> <span class="n">Perm</span><span class="o">.</span><span class="n">WRITE</span><span class="p">):</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IWOTH</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">Scope</span><span class="o">.</span><span class="n">OTHERS</span><span class="p">,</span> <span class="n">Perm</span><span class="o">.</span><span class="n">EXECUTE</span><span class="p">):</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IXOTH</span><span class="p">,</span>
+<span class="p">}</span>
 
 
 <div class="viewcode-block" id="LocalFileSystem"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.local.LocalFileSystem">[docs]</a><span class="k">class</span> <span class="nc">LocalFileSystem</span><span class="p">(</span><span class="n">BaseFileSystem</span><span class="p">):</span>
@@ -90,28 +113,43 @@
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">FileSystemOperationError</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span></div>
 
+<div class="viewcode-block" id="LocalFileSystem.file_set_perms"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.local.LocalFileSystem.file_set_perms">[docs]</a>    <span class="k">def</span> <span class="nf">file_set_perms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">policies</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Policy</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Set permissions for a file.</span>
+
+<span class="sd">        This works as expected on a unix file system. `Perm.WRITE_PERMS` and `Perm.READ_PERMS` are ignored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">policy</span> <span class="ow">in</span> <span class="n">policies</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">policy</span><span class="o">.</span><span class="n">perms</span><span class="p">:</span>
+                <span class="n">mode</span> <span class="o">|=</span> <span class="n">_local_fs_perms</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">policy</span><span class="o">.</span><span class="n">scope</span><span class="p">,</span> <span class="n">perm</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_to_string</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">mode</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LocalFileSystem.file_set_properties"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.local.LocalFileSystem.file_set_properties">[docs]</a>    <span class="k">def</span> <span class="nf">file_set_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+                            <span class="n">content_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">tags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Has no effect.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+
     <span class="c1"># Directory operations</span>
-<div class="viewcode-block" id="LocalFileSystem.dir_list"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.local.LocalFileSystem.dir_list">[docs]</a>    <span class="k">def</span> <span class="nf">dir_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DirListResult</span><span class="p">:</span>
+<div class="viewcode-block" id="LocalFileSystem.dir_list"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.local.LocalFileSystem.dir_list">[docs]</a>    <span class="k">def</span> <span class="nf">dir_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FSObjectPath</span><span class="p">]:</span>
         <span class="n">path_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_to_string</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">items</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path_str</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-            <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">others</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">return</span>
+
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
             <span class="n">full_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path_str</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
             <span class="n">item_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">full_path</span><span class="p">):</span>
-                <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item_path</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">FSObjectPath</span><span class="p">(</span><span class="n">FSObjectType</span><span class="o">.</span><span class="n">FILE</span><span class="p">,</span> <span class="n">item_path</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">full_path</span><span class="p">):</span>
-                <span class="n">dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item_path</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">FSObjectPath</span><span class="p">(</span><span class="n">FSObjectType</span><span class="o">.</span><span class="n">DIR</span><span class="p">,</span> <span class="n">item_path</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">others</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item_path</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">DirListResult</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">others</span><span class="p">)</span></div>
+                <span class="k">yield</span> <span class="n">FSObjectPath</span><span class="p">(</span><span class="n">FSObjectType</span><span class="o">.</span><span class="n">OTHER</span><span class="p">,</span> <span class="n">item_path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LocalFileSystem.dir_remove"><a class="viewcode-back" href="../../../norfs.fs.html#norfs.fs.local.LocalFileSystem.dir_remove">[docs]</a>    <span class="k">def</span> <span class="nf">dir_remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -126,20 +164,14 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <h3><a href="../../../index.html">Table of Contents</a></h3>
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">norfs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html#installation">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html#supported-filesystems">Supported Filesystems</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html#the-norfs-interface">The norfs interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html#indices-and-tables">Indices and tables</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/01 - Public API.html">norfs - Normalized Filesystem</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/01 - Public API.html#cleanup">Cleanup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/02 - Example - Key Store.html">Example - Key Store</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/02 - Example - Key Store.html#from-config-using-uri">From config using URI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/02 - Example - Key Store.html#cleanup">Cleanup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/03 - Example - PySpark.html">Example - PySpark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/03 - Example - PySpark.html#cleanup">Cleanup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../norfs.html">norfs package</a></li>
 </ul>
 <div class="relations">
@@ -154,17 +186,15 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -173,8 +203,8 @@
       &copy;2017, Alessio Linares.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

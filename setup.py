@@ -5,6 +5,7 @@ from norfs import Version
 with open('README.rst', 'r') as f:
     long_description = f.read()
 
+
 setup(name='norfs',
       version=Version.RELEASE,
       author='Alessio Linares',

@@ -1,15 +1,37 @@
 import os
 import shutil
+import stat
 import traceback
 
-from typing import List
+from typing import (
+    Dict,
+    Iterable,
+    List,
+    Optional,
+)
+
 
 from norfs.fs.base import (
     BaseFileSystem,
-    DirListResult,
+    FSObjectPath,
+    FSObjectType,
     FileSystemOperationError,
     Path,
 )
+from norfs.permissions import Policy, Perm, Scope
+
+
+_local_fs_perms = {
+    (Scope.OWNER, Perm.READ): stat.S_IRUSR,
+    (Scope.OWNER, Perm.WRITE): stat.S_IWUSR,
+    (Scope.OWNER, Perm.EXECUTE): stat.S_IXUSR,
+    (Scope.GROUP, Perm.READ): stat.S_IRGRP,
+    (Scope.GROUP, Perm.WRITE): stat.S_IWGRP,
+    (Scope.GROUP, Perm.EXECUTE): stat.S_IXGRP,
+    (Scope.OTHERS, Perm.READ): stat.S_IROTH,
+    (Scope.OTHERS, Perm.WRITE): stat.S_IWOTH,
+    (Scope.OTHERS, Perm.EXECUTE): stat.S_IXOTH,
+}
 
 
 class LocalFileSystem(BaseFileSystem):
@@ -56,28 +78,43 @@ class LocalFileSystem(BaseFileSystem):
         except Exception:
             raise FileSystemOperationError(traceback.format_exc())
 
+    def file_set_perms(self, path: Path, policies: List[Policy]) -> None:
+        """ Set permissions for a file.
+
+        This works as expected on a unix file system. `Perm.WRITE_PERMS` and `Perm.READ_PERMS` are ignored.
+        """
+        mode = 0
+        for policy in policies:
+            for perm in policy.perms:
+                mode |= _local_fs_perms.get((policy.scope, perm), 0)
+        os.chmod(self.path_to_string(path), mode)
+
+    def file_set_properties(self, path: Path,
+                            content_type: Optional[str] = None,
+                            tags: Optional[Dict[str, str]] = None,
+                            metadata: Optional[Dict[str, str]] = None) -> None:
+        """ Has no effect.
+        """
+        ...
+
     # Directory operations
-    def dir_list(self, path: Path) -> DirListResult:
+    def dir_list(self, path: Path) -> Iterable[FSObjectPath]:
         path_str: str = self.path_to_string(path)
         items: List[str]
         try:
             items = os.listdir(path_str)
         except FileNotFoundError:
-            items = []
-        files: List[Path] = []
-        dirs: List[Path] = []
-        others: List[Path] = []
+            return
+
         for item in items:
             full_path: str = os.path.join(path_str, item)
             item_path: Path = path.child(item)
             if os.path.isfile(full_path):
-                files.append(item_path)
+                yield FSObjectPath(FSObjectType.FILE, item_path)
             elif os.path.isdir(full_path):
-                dirs.append(item_path)
+                yield FSObjectPath(FSObjectType.DIR, item_path)
             else:
-                others.append(item_path)
-
-        return DirListResult(files, dirs, others)
+                yield FSObjectPath(FSObjectType.OTHER, item_path)
 
     def dir_remove(self, path: Path) -> None:
         try:

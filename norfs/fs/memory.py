@@ -3,16 +3,20 @@ import traceback
 from collections import deque
 from typing import (
     Dict,
+    Iterable,
     List,
+    Optional,
 )
 
 from norfs.fs.base import (
     BaseFileSystem,
-    DirListResult,
+    FSObjectPath,
+    FSObjectType,
     FileSystemOperationError,
     NotAFileError,
     Path,
 )
+from norfs.permissions import Policy
 
 
 class MemoryDirectory:
@@ -144,21 +148,33 @@ class MemoryFileSystem(BaseFileSystem):
         except (NotADirectoryError, NotAFileError):
             raise FileSystemOperationError(traceback.format_exc())
 
+    def file_set_perms(self, path: Path, policies: List[Policy]) -> None:
+        """ Has no effect. MemoryFileSystem has no concept of permissions.
+        """
+        ...
+
+    def file_set_properties(self, path: Path,
+                            content_type: Optional[str] = None,
+                            tags: Optional[Dict[str, str]] = None,
+                            metadata: Optional[Dict[str, str]] = None) -> None:
+        """ Has no effect.
+        """
+        ...
+
     # Directory operations
-    def dir_list(self, path: Path) -> DirListResult:
+    def dir_list(self, path: Path) -> Iterable[FSObjectPath]:
         files: List[Path]
         dirs: List[Path]
         current_dir: MemoryDirectory
         try:
             current_dir = self._get_dir(path)
         except NotADirectoryError:
-            files = []
-            dirs = []
+            pass
         else:
-            files = [path.child(file_) for file_ in current_dir.list_files()]
-            dirs = [path.child(dir_) for dir_ in current_dir.list_dirs()]
-
-        return DirListResult(files, dirs, [])
+            for file_ in current_dir.list_files():
+                yield FSObjectPath(FSObjectType.FILE, path.child(file_))
+            for dir_ in current_dir.list_dirs():
+                yield FSObjectPath(FSObjectType.DIR, path.child(dir_))
 
     def dir_remove(self, path: Path) -> None:
         try:

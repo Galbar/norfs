@@ -6,6 +6,8 @@ A :class:`norfs.filesystem.BaseFileSystemObject` exposes the following interface
 """
 from typing import (
     Any,
+    Dict,
+    Iterable,
     List,
     Optional,
     cast,
@@ -13,7 +15,8 @@ from typing import (
 
 from norfs.fs.base import (
     BaseFileSystem,
-    DirListResult,
+    FSObjectPath,
+    FSObjectType,
     FileSystemOperationError,
     NotAFileError,
     Path,
@@ -22,7 +25,9 @@ from norfs.copy.base import (
     CopyDirectory,
     CopyFile,
     CopyFileSystemObject,
+    CopyStrategy,
 )
+from norfs.permissions import Policy
 
 
 class BaseFileSystemObject:
@@ -86,6 +91,9 @@ class BaseFileSystemObject:
     def copy_object(self) -> CopyFileSystemObject:
         return CopyFileSystemObject(self._fs, self._path)
 
+    def copy_to(self, dst: 'BaseFileSystemObject', strategy: CopyStrategy) -> None:
+        self.copy_object().copy(dst.copy_object(), strategy)
+
     def __repr__(self) -> str:
         return (f"{self.__class__.__name__}(fs={self._fs}, path={self.path})")
 
@@ -111,22 +119,20 @@ class Directory(BaseFileSystemObject):
         """
         return self
 
-    def list(self) -> List[BaseFileSystemObject]:
+    def list(self) -> Iterable[BaseFileSystemObject]:
         """ Returns the contents of the :class:`norfs.filesystem.Directory` in the file system as a list of
         :class:`norfs.filesystem.BaseFileSystemObject` s.
 
         If the :class:`norfs.filesystem.Directory` does not exist the list will be empty.
         """
-        contents: DirListResult = self._fs.dir_list(self._path)
-        result: List[BaseFileSystemObject] = []
-        for dir_path in contents.dirs:
-            result.append(Directory(self._fs, None, _path=dir_path))
-        for file_path in contents.files:
-            result.append(File(self._fs, None, _path=file_path))
-        for other_path in contents.others:
-            result.append(BaseFileSystemObject(self._fs, None, _path=other_path))
-
-        return result
+        fs_path: FSObjectPath
+        for fs_path in self._fs.dir_list(self._path):
+            if fs_path.type == FSObjectType.DIR:
+                yield Directory(self._fs, None, _path=fs_path.path)
+            elif fs_path.type == FSObjectType.FILE:
+                yield File(self._fs, None, _path=fs_path.path)
+            else:
+                yield BaseFileSystemObject(self._fs, None, _path=fs_path.path)
 
     def remove(self) -> None:
         """ Tries to remove self from the file system.
@@ -185,3 +191,22 @@ class File(BaseFileSystemObject):
 
     def copy_object(self) -> CopyFileSystemObject:
         return CopyFile(self._fs, self._path)
+
+    def set_perms(self, policies: List[Policy]) -> None:
+        """ Set the access policies for the file.
+
+        The actual meaning of the scopes and permissions depends on the underlying
+        :class:`norfs.fs.base.BaseFileSystem` implementation.
+        """
+        self._fs.file_set_perms(self._path, policies)
+
+    def set_props(self, *,
+                  content_type: Optional[str] = None,
+                  tags: Optional[Dict[str, str]] = None,
+                  metadata: Optional[Dict[str, str]] = None) -> None:
+        """ Set the properties for the file.
+
+        The actual setting of the metadata depends on the underlying
+        :class:`norfs.fs.base.BaseFileSystem` implementation.
+        """
+        self._fs.file_set_properties(self._path, content_type=content_type, tags=tags, metadata=metadata)

@@ -9,7 +9,8 @@ from typing import (
 
 from norfs.fs.base import (
     BaseFileSystem,
-    DirListResult,
+    FSObjectPath,
+    FSObjectType,
     Path,
 )
 
@@ -96,17 +97,16 @@ class CopyStrategy:
 class GenericCopyStrategy(CopyStrategy):
 
     def copy_dir_to_dir(self, src: CopyDirectory, dst: CopyDirectory) -> None:
-        contents: DirListResult = src.fs.dir_list(src.path)
-
-        for file_ in contents.files:
-            src_child_file: CopyFile = src.file(file_.basename)
-            dst_child_file: CopyFile = dst.file(file_.basename)
-            self.copy_file_to_file(src_child_file, dst_child_file)
-
-        for dir_ in contents.dirs:
-            src_child_dir: CopyDirectory = src.subdir(dir_.basename)
-            dst_child_dir: CopyDirectory = dst.subdir(dir_.basename)
-            self.copy_dir_to_dir(src_child_dir, dst_child_dir)
+        fs_path: FSObjectPath
+        for fs_path in src.fs.dir_list(src.path):
+            if fs_path.type == FSObjectType.FILE:
+                src_child_file: CopyFile = src.file(fs_path.path.basename)
+                dst_child_file: CopyFile = dst.file(fs_path.path.basename)
+                self.copy_file_to_file(src_child_file, dst_child_file)
+            elif fs_path.type == FSObjectType.DIR:
+                src_child_dir: CopyDirectory = src.subdir(fs_path.path.basename)
+                dst_child_dir: CopyDirectory = dst.subdir(fs_path.path.basename)
+                self.copy_dir_to_dir(src_child_dir, dst_child_dir)
 
     def copy_file_to_file(self, src: CopyFile, dst: CopyFile) -> None:
         dst.fs.file_write(dst.path, src.fs.file_read(src.path))

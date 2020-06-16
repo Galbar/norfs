@@ -1,18 +1,55 @@
 import traceback
 from io import BytesIO
+from urllib.parse import urlencode
 from typing import (
     Any,
     Dict,
+    Iterable,
     List,
     Tuple,
+    Optional,
+    Union,
+    cast
 )
 
 from norfs.fs.base import (
     BaseFileSystem,
-    DirListResult,
+    FSObjectPath,
+    FSObjectType,
     FileSystemOperationError,
     Path,
 )
+
+from norfs.permissions import Policy, Perm, Scope
+
+
+_ALL_PERMS = (Perm.READ, Perm.WRITE, Perm.READ_PERMS, Perm.WRITE_PERMS)
+
+
+s3_scopes = {
+    Scope.GROUP: {
+        'Type': 'Group',
+        'URI': 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers'
+    },
+    Scope.OTHERS: {
+        'Type': 'Group',
+        'URI': 'http://acs.amazonaws.com/groups/global/AllUsers'
+    },
+}
+""" Permission scope mapping for S3 """
+
+s3_perms = {
+    Perm.READ: 'READ',
+    Perm.WRITE: 'WRITE',
+    Perm.READ_PERMS: 'READ_ACP',
+    Perm.WRITE_PERMS: 'WRITE_ACP',
+}
+""" Permission mapping for S3 """
+
+
+class CannedPerms:
+    PRIVATE = [Policy(Scope.OWNER, [Perm.WRITE, Perm.READ, Perm.WRITE_PERMS, Perm.READ_PERMS])]
+    PUBLIC_READ = PRIVATE + [Policy(Scope.GROUP, [Perm.READ]), Policy(Scope.OTHERS, [Perm.READ])]
 
 
 class S3FileSystem(BaseFileSystem):
@@ -100,44 +137,96 @@ class S3FileSystem(BaseFileSystem):
             raise FileSystemOperationError(traceback.format_exc())
 
     def file_remove(self, path: Path) -> None:
-        prefix: str = self._separator.join(path.tail)
+        self._remove(path, False)
+
+    def file_set_perms(self, path: Path, policies: List[Policy]) -> None:
+        """ Set ACL policies for the object.
+
+        Check `norfs.fs.s3.s3_scopes` and `norfs.fs.s3.s3_perms` to understand how :class:`norfs.permissions.Scope` and
+        :class:`norfs.permissions.Perm` map to S3 Grantees and Permissions.
+        """
         try:
-            response: Dict[str, List[Dict[str, str]]] = self._s3_client.list_objects_v2(
+            key = self._separator.join(path.tail)
+            acl = self._s3_client.get_object_acl(Bucket=path.drive, Key=key)
+
+            grants = []
+            for policy in policies:
+                if policy.scope == Scope.OWNER:
+                    grantee = acl['Owner'].copy()
+                    grantee['Type'] = 'CanonicalUser'
+                else:
+                    grantee = s3_scopes.get(policy.scope)
+
+                if all((p in policy.perms for p in _ALL_PERMS)):
+                    grants.append({
+                        'Grantee': grantee,
+                        'Permission': 'FULL_CONTROL',
+                    })
+                else:
+                    for perm in policy.perms:
+                        permission = s3_perms.get(perm)
+                        if permission:
+                            grants.append({
+                                'Grantee': grantee,
+                                'Permission': permission,
+                            })
+
+            self._s3_client.put_object_acl(
+                AccessControlPolicy={
+                    'Grants': grants,
+                    'Owner': acl['Owner'],
+                },
                 Bucket=path.drive,
-                Prefix=prefix,
+                Key=key,
             )
-            contents: List[Dict[str, str]] = response.get('Contents', [])
-            if contents:
-                self._s3_client.delete_objects(
-                    Bucket=path.drive,
-                    Delete={
-                        'Objects': [{'Key': f['Key']} for f in contents if f['Key'] == prefix]
-                    }
-                )
+        except Exception:
+            raise FileSystemOperationError(traceback.format_exc())
+
+    def file_set_properties(self, path: Path,
+                            content_type: Optional[str] = None,
+                            tags: Optional[Dict[str, str]] = None,
+                            metadata: Optional[Dict[str, str]] = None) -> None:
+        """ Set properties for the object.
+        """
+        kwargs: Dict[str, Any] = {}
+
+        if content_type:
+            kwargs['ContentType'] = content_type
+            kwargs['MetadataDirective'] = 'REPLACE'
+
+        if tags:
+            kwargs['Tagging'] = urlencode(tags)
+            kwargs['TaggingDirective'] = 'REPLACE'
+
+        if metadata:
+            kwargs['Metadata'] = metadata
+            kwargs['MetadataDirective'] = 'REPLACE'
+
+        key: str = self._separator.join(path.tail)
+        try:
+            acl = self._s3_client.get_object_acl(Bucket=path.drive, Key=key)
+            self._s3_client.copy_object(Key=key,
+                                        Bucket=path.drive,
+                                        CopySource={"Bucket": path.drive, "Key": key},
+                                        **kwargs)
+            self._s3_client.put_object_acl(
+                AccessControlPolicy={
+                    'Grants': acl['Grants'],
+                    'Owner': acl['Owner'],
+                },
+                Bucket=path.drive,
+                Key=key,
+            )
         except Exception:
             raise FileSystemOperationError(traceback.format_exc())
 
     # Directory operations
-    def dir_list(self, path: Path) -> DirListResult:
+    def dir_list(self, path: Path) -> Iterable[FSObjectPath]:
         tail_str: str = self._separator.join(path.tail)
         if tail_str:
             tail_str += self._separator
 
-        files: List[Path] = []
-        dirs: List[Path] = []
-
-        response: Dict[str, List[Dict[str, str]]]
-        try:
-            response = self._s3_client.list_objects_v2(
-                Bucket=path.drive,
-                Prefix=tail_str,
-                Delimiter=self._separator
-            )
-        except Exception:
-            raise FileSystemOperationError(traceback.format_exc())
-
-        files, dirs = self._extend_files_and_dirs_with_response(tail_str, path, files, dirs, response)
-
+        response: Dict[str, Union[bool, List[Dict[str, str]]]] = {"IsTruncated": True}
         while response.get("IsTruncated", False):
             try:
                 response = self._s3_client.list_objects_v2(
@@ -149,46 +238,47 @@ class S3FileSystem(BaseFileSystem):
             except Exception:
                 raise FileSystemOperationError(traceback.format_exc())
 
-            files, dirs = self._extend_files_and_dirs_with_response(tail_str, path, files, dirs, response)
+            for item in cast(List[Dict[str, str]], response.get("Contents", [])):
+                file_name: str = item["Key"]
+                if file_name != tail_str:
+                    if file_name.endswith(self._separator):
+                        yield FSObjectPath(FSObjectType.DIR,
+                                           Path(path.drive, *(file_name.split(self._separator)[:-1])))
+                    else:
+                        yield FSObjectPath(FSObjectType.FILE,
+                                           Path(path.drive, *file_name.split(self._separator)))
 
-        return DirListResult(files, dirs, [])
+            for item in cast(List[Dict[str, str]], response.get("CommonPrefixes", [])):
+                dir_name: str = item["Prefix"]
+                yield FSObjectPath(FSObjectType.DIR,
+                                   Path(path.drive, *(dir_name.split(self._separator)[:-1])))
 
     def dir_remove(self, path: Path) -> None:
-        try:
-            response: Dict[str, List[Dict[str, str]]] = self._s3_client.list_objects_v2(
-                Bucket=path.drive,
-                Prefix=self._separator.join(path.tail) + self._separator
-            )
-            contents: List[Dict[str, str]] = response.get('Contents', [])
-            if contents:
-                self._s3_client.delete_objects(
-                    Bucket=path.drive,
-                    Delete={
-                        'Objects': [{'Key': f['Key']} for f in contents]
-                    }
-                )
-        except Exception:
-            raise FileSystemOperationError(traceback.format_exc())
+        self._remove(path, True)
 
     def __repr__(self) -> str:
         return (f"{self.__class__.__name__}(s3_client={self._s3_client}, uri_protocol={self._protocol}, "
                 f"separator={self._separator})")
 
-    def _extend_files_and_dirs_with_response(self, tail_str: str, path: Path, files: List[Path], dirs: List[Path],
-                                             response: Dict[str, List[Dict[str, str]]]
-                                             ) -> Tuple[List[Path], List[Path]]:
-        file_name: str
-        for item in response.get("Contents", []):
-            file_name = item["Key"]
-            if file_name != tail_str:
-                if file_name.endswith(self._separator):
-                    dirs.append(Path(path.drive, *(file_name.split(self._separator)[:-1])))
-                else:
-                    files.append(Path(path.drive, *file_name.split(self._separator)))
-
-        dir_name: str
-        for item in response.get("CommonPrefixes", []):
-            dir_name = item["Prefix"]
-            dirs.append(Path(path.drive, *(dir_name.split(self._separator)[:-1])))
-
-        return files, dirs
+    def _remove(self, path: Path, is_dir: bool) -> None:
+        tail_str: str = self._separator.join(path.tail)
+        if is_dir and tail_str:
+            tail_str += self._separator
+        response: Dict[str, Union[bool, List[Dict[str, str]]]] = {"IsTruncated": True}
+        while response.get("IsTruncated", False):
+            try:
+                response = self._s3_client.list_objects_v2(
+                    Bucket=path.drive,
+                    Prefix=tail_str,
+                    ContinuationToken=response.get("NextContinuationToken", "")
+                )
+                contents: List[Dict[str, str]] = cast(List[Dict[str, str]], response.get('Contents', []))
+                if contents:
+                    self._s3_client.delete_objects(
+                        Bucket=path.drive,
+                        Delete={
+                            'Objects': [{'Key': f['Key']} for f in contents if is_dir or f['Key'] == tail_str]
+                        }
+                    )
+            except Exception:
+                raise FileSystemOperationError(traceback.format_exc())

@@ -7,6 +7,7 @@ from unittest import (
 from typing import (
     Any,
     Generic,
+    Iterable,
     List,
     Type,
     TypeVar,
@@ -19,7 +20,8 @@ from norfs.filesystem import (
 )
 from norfs.fs.base import (
     BaseFileSystem,
-    DirListResult,
+    FSObjectPath,
+    FSObjectType,
     FileSystemOperationError,
     NotAFileError,
     Path,
@@ -130,17 +132,20 @@ class TestDirectory(FileSystemObjectTestCase[Directory]):
         self.filesystem.dir_remove.assert_called_once_with(self.path)
 
     def test_list(self) -> None:
-        files: List[Path] = [random_path() for _ in range(random.randint(1, 5))]
-        dirs: List[Path] = [random_path() for _ in range(random.randint(1, 5))]
-        others: List[Path] = [random_path() for _ in range(random.randint(1, 5))]
+        files: List[FSObjectPath] = [FSObjectPath(FSObjectType.FILE, random_path())
+                                     for _ in range(random.randint(1, 5))]
+        dirs: List[FSObjectPath] = [FSObjectPath(FSObjectType.DIR, random_path())
+                                    for _ in range(random.randint(1, 5))]
+        others: List[FSObjectPath] = [FSObjectPath(FSObjectType.OTHER, random_path())
+                                      for _ in range(random.randint(1, 5))]
 
-        self.filesystem.dir_list.return_value = DirListResult(files, dirs, others)
+        self.filesystem.dir_list.return_value = iter(files + dirs + others)
 
-        actual: List[BaseFileSystemObject] = self.sut.list()
+        actual: Iterable[BaseFileSystemObject] = self.sut.list()
         expected: List[BaseFileSystemObject] = (
-            [BaseFileSystemObject(self.filesystem, None, _path=path) for path in others] +
-            [File(self.filesystem, None, _path=path) for path in files] +
-            [Directory(self.filesystem, None, _path=path) for path in dirs]
+            [BaseFileSystemObject(self.filesystem, None, _path=path.path) for path in others] +
+            [File(self.filesystem, None, _path=path.path) for path in files] +
+            [Directory(self.filesystem, None, _path=path.path) for path in dirs]
         )
         assert set(actual) == set(expected)
 
