@@ -26,7 +26,7 @@ class S3ToS3CopyStrategy(GenericCopyStrategy):
     def _list_dir(self, dir_drive: str, dir_tail: str) -> List[str]:
         response: Dict[str, List[Dict[str, str]]]
         try:
-            response = self._s3_client.list_objects_v2(
+            response = self._s3_client.list_objects(
                 Bucket=dir_drive,
                 Prefix=dir_tail
             )
@@ -38,11 +38,12 @@ class S3ToS3CopyStrategy(GenericCopyStrategy):
             items.append(item["Key"])
 
         while response.get("IsTruncated", False):
+            marker = response.get("NextMarker") or items[-1]
             try:
-                response = self._s3_client.list_objects_v2(
+                response = self._s3_client.list_objects(
                     Bucket=dir_drive,
                     Prefix=dir_tail,
-                    ContinuationToken=response.get("NextContinuationToken", "")
+                    Marker=marker
                 )
             except Exception:
                 raise FileSystemOperationError(traceback.format_exc())

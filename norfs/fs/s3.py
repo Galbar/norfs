@@ -79,7 +79,7 @@ class S3FileSystem(BaseFileSystem):
 
     def path_exists(self, path: Path) -> bool:
         prefix: str = self._separator.join(path.tail)
-        response: Dict[str, List[Dict[str, str]]] = self._s3_client.list_objects_v2(
+        response: Dict[str, List[Dict[str, str]]] = self._s3_client.list_objects(
             Bucket=path.drive,
             Prefix=prefix,
             Delimiter=self._separator
@@ -227,13 +227,14 @@ class S3FileSystem(BaseFileSystem):
             tail_str += self._separator
 
         response: Dict[str, Union[bool, List[Dict[str, str]]]] = {"IsTruncated": True}
+        marker = ""
         while response.get("IsTruncated", False):
             try:
-                response = self._s3_client.list_objects_v2(
+                response = self._s3_client.list_objects(
                     Bucket=path.drive,
                     Prefix=tail_str,
                     Delimiter=self._separator,
-                    ContinuationToken=response.get("NextContinuationToken", "")
+                    Marker=marker
                 )
             except Exception:
                 raise FileSystemOperationError(traceback.format_exc())
@@ -253,6 +254,8 @@ class S3FileSystem(BaseFileSystem):
                 yield FSObjectPath(FSObjectType.DIR,
                                    Path(path.drive, *(dir_name.split(self._separator)[:-1])))
 
+            marker = response.get("NextMarker") or response.get("Contents", [{"Key": ""}])[-1]["Key"]
+
     def dir_remove(self, path: Path) -> None:
         self._remove(path, True)
 
@@ -267,10 +270,10 @@ class S3FileSystem(BaseFileSystem):
         response: Dict[str, Union[bool, List[Dict[str, str]]]] = {"IsTruncated": True}
         while response.get("IsTruncated", False):
             try:
-                response = self._s3_client.list_objects_v2(
+                response = self._s3_client.list_objects(
                     Bucket=path.drive,
                     Prefix=tail_str,
-                    ContinuationToken=response.get("NextContinuationToken", "")
+                    Marker=response.get("NextMarker") or response.get('Contents', [{"Key": ""}])[-1]["Key"]
                 )
                 contents: List[Dict[str, str]] = cast(List[Dict[str, str]], response.get('Contents', []))
                 if contents:

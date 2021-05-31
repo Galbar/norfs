@@ -62,12 +62,12 @@ class TestS3FileSystem(TestCase):
         files: List[List[str]] = [[randstr() for _ in range(random.randint(1, 3))] for _ in range(times)]
         dirs: List[List[str]] = [[randstr() for _ in range(random.randint(1, 3))] for _ in range(times)]
         cont_tokens: List[str] = [randstr() for _ in range(times - 1)]
-        self.client.list_objects_v2.side_effect = [
+        self.client.list_objects.side_effect = [
             {
                 "Contents": [{"Key": tail_str + self.separator + file} for file in iter_files],
                 "CommonPrefixes": [{"Prefix": tail_str + self.separator + dir + self.separator} for dir in iter_dirs],
                 "IsTruncated": True,
-                "NextContinuationToken": cont_token
+                "NextMarker": cont_token
             }
             for iter_files, iter_dirs, cont_token in zip(files[:-1], dirs[:-1], cont_tokens)
         ] + [
@@ -94,18 +94,18 @@ class TestS3FileSystem(TestCase):
                 Bucket=input_path.drive,
                 Prefix=tail_str + self.separator,
                 Delimiter=self.separator,
-                ContinuationToken=""
+                Marker=""
             )
         ] + [
             mock.call(
                 Bucket=input_path.drive,
                 Prefix=tail_str + self.separator,
                 Delimiter=self.separator,
-                ContinuationToken=cont_token
+                Marker=cont_token
             )
             for cont_token in cont_tokens
         ]
-        assert self.client.list_objects_v2.call_args_list == expected_call_list
+        assert self.client.list_objects.call_args_list == expected_call_list
         assert result_files == [input_path.child(file) for files_it in files for file in files_it]
         assert result_dirs == [input_path.child(dir) for dirs_it in dirs for dir in dirs_it]
         assert result_others == []
