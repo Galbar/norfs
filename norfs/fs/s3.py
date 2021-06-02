@@ -226,7 +226,7 @@ class S3FileSystem(BaseFileSystem):
         if tail_str:
             tail_str += self._separator
 
-        response: Dict[str, Union[bool, List[Dict[str, str]]]] = {"IsTruncated": True}
+        response: Dict[str, Union[bool, List[Dict[str, str]], str]] = {"IsTruncated": True}
         marker = ""
         while response.get("IsTruncated", False):
             try:
@@ -239,7 +239,8 @@ class S3FileSystem(BaseFileSystem):
             except Exception:
                 raise FileSystemOperationError(traceback.format_exc())
 
-            for item in cast(List[Dict[str, str]], response.get("Contents", [])):
+            contents = cast(List[Dict[str, str]], response.get("Contents", []))
+            for item in contents:
                 file_name: str = item["Key"]
                 if file_name != tail_str:
                     if file_name.endswith(self._separator):
@@ -254,7 +255,11 @@ class S3FileSystem(BaseFileSystem):
                 yield FSObjectPath(FSObjectType.DIR,
                                    Path(path.drive, *(dir_name.split(self._separator)[:-1])))
 
-            marker = response.get("NextMarker") or response.get("Contents", [{"Key": ""}])[-1]["Key"]
+                marker = cast(str, response.get("NextMarker"))
+                if not marker and contents:
+                    marker = contents[-1]["Key"]
+                if not marker:
+                    marker = ""
 
     def dir_remove(self, path: Path) -> None:
         self._remove(path, True)
@@ -269,13 +274,19 @@ class S3FileSystem(BaseFileSystem):
             tail_str += self._separator
         response: Dict[str, Union[bool, List[Dict[str, str]]]] = {"IsTruncated": True}
         while response.get("IsTruncated", False):
+            contents = cast(List[Dict[str, str]], response.get("Contents", []))
+            marker = cast(str, response.get("NextMarker"))
+            if not marker and contents:
+                marker = contents[-1]["Key"]
+            if not marker:
+                marker = ""
             try:
                 response = self._s3_client.list_objects(
                     Bucket=path.drive,
                     Prefix=tail_str,
-                    Marker=response.get("NextMarker") or response.get('Contents', [{"Key": ""}])[-1]["Key"]
+                    Marker=marker,
                 )
-                contents: List[Dict[str, str]] = cast(List[Dict[str, str]], response.get('Contents', []))
+                contents = cast(List[Dict[str, str]], response.get('Contents', []))
                 if contents:
                     self._s3_client.delete_objects(
                         Bucket=path.drive,
